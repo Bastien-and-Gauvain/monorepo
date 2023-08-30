@@ -1,103 +1,99 @@
-import type { Provider, User } from "@supabase/supabase-js"
-import { useEffect, useState } from "react"
+import type { Provider, User } from '@supabase/supabase-js';
+import { useEffect, useState } from 'react';
 
-import { sendToBackground } from "@plasmohq/messaging"
-import { Storage } from "@plasmohq/storage"
-import { useStorage } from "@plasmohq/storage/hook"
+import { sendToBackground } from '@plasmohq/messaging';
+import { Storage } from '@plasmohq/storage';
+import { useStorage } from '@plasmohq/storage/hook';
 
-import { supabase } from "~core/supabase"
+import { supabase } from '~core/supabase';
 
 function IndexOptions() {
   const [user, setUser] = useStorage<User>({
-    key: "user",
+    key: 'user',
     instance: new Storage({
-      area: "local"
-    })
-  })
+      area: 'local',
+    }),
+  });
 
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   useEffect(() => {
     async function init() {
-      const { data, error } = await supabase.auth.getSession()
+      const { data, error } = await supabase.auth.getSession();
 
       if (error) {
-        console.error(error)
-        return
+        console.error(error);
+        return;
       }
-      if (!!data.session) {
-        setUser(data.session.user)
+      if (data.session) {
+        setUser(data.session.user);
         sendToBackground({
-          name: "init-session",
+          name: 'init-session',
           body: {
             refresh_token: data.session.refresh_token,
-            access_token: data.session.access_token
-          }
-        })
+            access_token: data.session.access_token,
+          },
+        });
       }
     }
 
-    init()
-  }, [])
+    init();
+  }, []);
 
-  const handleEmailLogin = async (
-    type: "LOGIN" | "SIGNUP",
-    username: string,
-    password: string
-  ) => {
+  const handleEmailLogin = async (type: 'LOGIN' | 'SIGNUP', username: string, password: string) => {
     try {
       const {
         error,
-        data: { user }
+        data: { user },
       } =
-        type === "LOGIN"
+        type === 'LOGIN'
           ? await supabase.auth.signInWithPassword({
               email: username,
-              password
+              password,
             })
-          : await supabase.auth.signUp({ email: username, password })
+          : await supabase.auth.signUp({ email: username, password });
 
       if (error) {
-        alert("Error with auth: " + error.message)
+        alert('Error with auth: ' + error.message);
       } else if (!user) {
-        alert("Signup successful, confirmation mail should be sent soon!")
+        alert('Signup successful, confirmation mail should be sent soon!');
       } else {
-        setUser(user)
+        setUser(user);
       }
     } catch (error) {
-      console.log("error", error)
-      alert(error.error_description || error)
+      console.log('error', error);
+      alert(error.error_description || error);
     }
-  }
+  };
 
-  const handleOAuthLogin = async (provider: Provider, scopes = "email") => {
+  const handleOAuthLogin = async (provider: Provider, scopes = 'email') => {
     await supabase.auth.signInWithOAuth({
       provider,
       options: {
         scopes,
-        redirectTo: location.href
-      }
-    })
-  }
+        redirectTo: location.href,
+      },
+    });
+  };
 
   return (
     <main
       style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
         top: 240,
-        position: "relative"
+        position: 'relative',
       }}>
       <div
         style={{
-          display: "flex",
-          flexDirection: "column",
+          display: 'flex',
+          flexDirection: 'column',
           width: 240,
-          justifyContent: "space-between",
-          gap: 4.2
+          justifyContent: 'space-between',
+          gap: 4.2,
         }}>
         {user && (
           <>
@@ -106,8 +102,8 @@ function IndexOptions() {
             </h3>
             <button
               onClick={() => {
-                supabase.auth.signOut()
-                setUser(null)
+                supabase.auth.signOut();
+                setUser(null);
               }}>
               Logout
             </button>
@@ -131,21 +127,21 @@ function IndexOptions() {
             />
 
             <button
-              onClick={(e) => {
-                handleEmailLogin("SIGNUP", username, password)
+              onClick={() => {
+                handleEmailLogin('SIGNUP', username, password);
               }}>
               Sign up
             </button>
             <button
-              onClick={(e) => {
-                handleEmailLogin("LOGIN", username, password)
+              onClick={() => {
+                handleEmailLogin('LOGIN', username, password);
               }}>
               Login
             </button>
 
             <button
-              onClick={(e) => {
-                handleOAuthLogin("github")
+              onClick={() => {
+                handleOAuthLogin('github');
               }}>
               Sign in with GitHub
             </button>
@@ -153,7 +149,7 @@ function IndexOptions() {
         )}
       </div>
     </main>
-  )
+  );
 }
 
-export default IndexOptions
+export default IndexOptions;

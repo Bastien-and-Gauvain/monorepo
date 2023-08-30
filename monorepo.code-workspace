@@ -7,6 +7,10 @@
     {
       "path": "apps/linkedin-to-notion",
       "name": "LinkedIn to Notion"
+    },
+    {
+      "path": "libs/design-system",
+      "name": "Design System"
     }
   ]
 }
