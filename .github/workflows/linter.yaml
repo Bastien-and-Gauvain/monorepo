@@ -1,0 +1,20 @@
+name: Linter
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  eslint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install modules
+        run: pnpm install
+      - name: Run ESlint
+        run: pnpm exec eslint .
