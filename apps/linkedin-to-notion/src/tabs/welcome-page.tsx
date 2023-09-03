@@ -1,6 +1,6 @@
-import logo from 'data-base64:~assets/icon.png';
-
 import './../../style.css';
+
+import logo from 'data-base64:~assets/icon.png';
 
 const WelcomePage = () => {
   return (
