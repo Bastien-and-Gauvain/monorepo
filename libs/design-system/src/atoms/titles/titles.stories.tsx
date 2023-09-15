@@ -3,7 +3,7 @@ import type { Meta, StoryFn } from '@storybook/react';
 import { Heading1, Heading2, Heading3 } from '.';
 
 const meta = {
-  title: 'Example/Titles',
+  title: 'Atoms/Titles',
   component: Heading1,
   parameters: {
     layout: 'centered',

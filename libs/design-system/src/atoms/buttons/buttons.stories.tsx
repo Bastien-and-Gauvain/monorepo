@@ -3,7 +3,7 @@ import type { Meta, StoryFn } from '@storybook/react';
 import { ButtonPrimary, ButtonSecondary } from '.';
 
 const meta = {
-  title: 'Example/Buttons',
+  title: 'Atoms/Buttons',
   component: ButtonPrimary,
   parameters: {
     layout: 'centered',
