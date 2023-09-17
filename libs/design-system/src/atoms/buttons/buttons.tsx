@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'; // createElement,
+import { ReactNode } from 'react';
 
 import './../../index.css';
 
