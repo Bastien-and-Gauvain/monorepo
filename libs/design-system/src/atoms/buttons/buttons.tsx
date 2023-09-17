@@ -29,19 +29,9 @@ interface ButtonProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-const fontSizeOptions = {
-  primary: 'text-5',
-  secondary: 'text-3',
-};
-
-const borderRadiusOptions = {
-  primary: 'rounded-md',
-  secondary: 'rounded',
-};
-
-const paddingOptions = {
-  primary: 'px-4 py-2',
-  secondary: 'px-2 py-1',
+const typeSpecificClasses = {
+  primary: 'px-4 py-2 rounded-md text-5',
+  secondary: 'px-2 py-1 rounded text-3',
 };
 
 const Button = ({ children, type = 'primary', className, onClick }: ButtonProps) => {
@@ -49,9 +39,7 @@ const Button = ({ children, type = 'primary', className, onClick }: ButtonProps)
     <button
       className={cn(
         'text-white bg-ocean-blue shadow-lg shadow-grey-light hover:bg-green transition-colors duration-300 ease-in-out',
-        borderRadiusOptions[type],
-        fontSizeOptions[type],
-        paddingOptions[type],
+        typeSpecificClasses[type],
         className
       )}
       onClick={onClick}>
