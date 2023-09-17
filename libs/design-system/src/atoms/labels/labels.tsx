@@ -1,6 +1,6 @@
 import { cn } from '../../shared/classnames';
 
-type LabelProps = {
+export type LabelProps = {
   type?: 'sm' | 'base';
   inputId?: string;
   children: React.ReactNode;
