@@ -7,6 +7,7 @@ export default {
       sans: ['Roboto', 'sans-serif'],
     },
     fontSize: {
+      3: '0.7rem',
       3.5: '0.875rem', // 14px
       4: '1rem', // 16px
       5: '1.25rem', // 20px
@@ -38,6 +39,20 @@ export default {
       16: '4rem', // 64px
       18: '4.5rem', // 72px
       20: '5rem', // 80px
+    },
+    colors: {
+      transparent: 'transparent',
+      current: 'currentColor',
+      'ocean-blue': '#00011d',
+      cyan: '#acd8ff',
+      pink: '#fcb2d9',
+      green: '#2ee59d',
+      white: '#ffffff',
+      grey: {
+        light: '#798186',
+        DEFAULT: '#212529',
+      },
+      black: '#000000',
     },
     extend: {},
   },
