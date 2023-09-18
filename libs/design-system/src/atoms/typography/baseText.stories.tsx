@@ -3,7 +3,7 @@ import type { Meta, StoryFn } from '@storybook/react';
 import { BaseParagraph, LargeParagraph, SmallParagraph } from '.';
 
 const meta = {
-  title: 'Example/Paragraphs',
+  title: 'Atoms/Paragraphs',
   component: BaseParagraph,
   parameters: {
     layout: 'centered',
