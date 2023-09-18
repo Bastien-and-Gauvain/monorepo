@@ -13,7 +13,7 @@ const fontSizeMapping = {
   lg: 'text-5',
 };
 
-const aligmentMapping = {
+const alignmentMapping = {
   left: 'text-left',
   center: 'text-center',
   right: 'text-right',
@@ -21,7 +21,7 @@ const aligmentMapping = {
 
 const Paragraph = ({ type = 'base', alignment = 'left', className, children }: ParagraphProps) => {
   return (
-    <p className={cn('antialiased', 'text-gray', fontSizeMapping[type], aligmentMapping[alignment], className)}>
+    <p className={cn('antialiased', 'text-gray', fontSizeMapping[type], alignmentMapping[alignment], className)}>
       {children}
     </p>
   );
