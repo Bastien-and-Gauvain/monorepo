@@ -1,13 +1,18 @@
-// import { cn } from '../../shared/classnames';
-
 import { TextInput, TextInputProps } from '../../atoms/inputs/textInputs';
 import { BaseLabel, LabelProps } from '../../atoms/labels/labels';
 
 export type TextEntryProps = LabelProps & TextInputProps;
 
-export const TextEntry = ({ inputId, placeholder, required, initialValue, handleChange }: TextEntryProps) => {
+export const TextEntry = ({
+  inputId,
+  placeholder,
+  required,
+  initialValue,
+  handleChange,
+  className,
+}: TextEntryProps) => {
   return (
-    <div>
+    <div className="flex flex-col">
       <BaseLabel inputId={inputId}>First Name</BaseLabel>
       <TextInput
         inputId={inputId}
@@ -15,6 +20,7 @@ export const TextEntry = ({ inputId, placeholder, required, initialValue, handle
         initialValue={initialValue}
         handleChange={handleChange}
         required={required}
+        className={className}
       />
     </div>
   );
