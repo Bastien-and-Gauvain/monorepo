@@ -29,15 +29,15 @@ export const TextInput = ({
       name={inputId}
       className={cn(
         'antialiased',
-        'text-gray-900',
+        'text-gray',
         'border',
         'border-solid',
-        'border-gray-400',
+        'border-gray',
         'rounded-md',
         'w-full',
         'p-2',
         'focus:outline-none',
-        'focus:border-blue-500',
+        'focus:border-cyan',
         className
       )}
       placeholder={placeholder}
