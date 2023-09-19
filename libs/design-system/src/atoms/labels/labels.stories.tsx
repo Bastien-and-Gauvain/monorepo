@@ -3,7 +3,7 @@ import type { Meta, StoryFn } from '@storybook/react';
 import { BaseLabel, SmallLabel } from '.';
 
 const meta = {
-  title: 'Example/Labels',
+  title: 'Atoms/Labels',
   component: BaseLabel,
   parameters: {
     layout: 'centered',

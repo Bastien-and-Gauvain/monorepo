@@ -14,7 +14,7 @@ const fontSizeMapping = {
 
 const Label = ({ type = 'base', inputId, children, className }: LabelProps) => {
   return (
-    <label htmlFor={inputId} className={cn('antialiased', 'text-gray-600', fontSizeMapping[type], className)}>
+    <label htmlFor={inputId} className={cn('antialiased', 'text-gray', fontSizeMapping[type], className)}>
       {children}
     </label>
   );
