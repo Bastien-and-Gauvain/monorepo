@@ -48,7 +48,7 @@ export default {
       pink: '#fcb2d9',
       green: '#2ee59d',
       white: '#ffffff',
-      grey: {
+      gray: {
         light: '#798186',
         DEFAULT: '#212529',
       },
