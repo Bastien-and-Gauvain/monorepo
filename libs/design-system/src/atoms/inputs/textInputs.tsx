@@ -48,16 +48,7 @@ export const TextInput = ({
       id={inputId}
       name={inputId}
       className={cn(
-        'antialiased',
-        'text-gray',
-        'border',
-        'border-solid',
-        'border-gray',
-        'rounded-md',
-        'w-full',
-        'p-2',
-        'focus:outline-none',
-        'focus:border-cyan',
+        'antialiased text-gray border border-solid border-gray rounded-md w-full p-2 focus:outline-none focus:border-cyan',
         className
       )}
       placeholder={placeholder}

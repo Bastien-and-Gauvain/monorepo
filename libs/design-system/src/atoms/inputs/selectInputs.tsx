@@ -77,16 +77,7 @@ export const SelectInput = ({
       required={required}
       id={id}
       name={id}
-      className={cn(
-        'antialiased',
-        'border',
-        'border-solid',
-        'rounded-md',
-        'p-2',
-        'focus:outline-none',
-        variations[type],
-        className
-      )}
+      className={cn('antialiased border border-solid rounded-md p-2 focus:outline-none', variations[type], className)}
       onChange={handleChange}>
       {options.map(({ id, label, value }) => (
         <option key={id} id={id} label={label} selected={value === (initialValue || options[0].value)}>
