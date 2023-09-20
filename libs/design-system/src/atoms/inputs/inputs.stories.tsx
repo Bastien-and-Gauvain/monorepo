@@ -1,6 +1,6 @@
 import type { Meta, StoryFn } from '@storybook/react';
 
-import { SelectInput, SelectInputProps, TextInput, TextInputProps } from '.';
+import { SelectInput, TextInput } from '.';
 
 const meta = {
   title: 'Atoms/Inputs',
@@ -8,7 +8,7 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-} satisfies Meta<TextInputProps | SelectInputProps>;
+} satisfies Meta<typeof TextInput | typeof SelectInput>;
 
 export default meta;
 

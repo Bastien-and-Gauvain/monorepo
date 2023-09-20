@@ -2,7 +2,7 @@ import { useRef } from 'react';
 
 import { cn } from '../../shared/classnames';
 
-export type SelectOptionsProps = {
+type SelectOptionsProps = {
   id: string;
   value: string;
 };

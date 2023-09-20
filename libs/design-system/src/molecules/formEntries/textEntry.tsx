@@ -1,7 +1,7 @@
 import { TextInput, TextInputProps } from '../../atoms/inputs/textInputs';
 import { BaseLabel, LabelProps } from '../../atoms/labels/labels';
 
-export type TextEntryProps = LabelProps & TextInputProps;
+type TextEntryProps = LabelProps & TextInputProps;
 
 export const TextEntry = ({
   inputId,

@@ -1,7 +1,7 @@
 import { SelectInput, SelectInputProps } from '../../atoms/inputs/selectInputs';
 import { BaseLabel, LabelProps } from '../../atoms/labels/labels';
 
-export type SelectEntryProps = LabelProps & SelectInputProps;
+type SelectEntryProps = LabelProps & SelectInputProps;
 
 export const SelectEntry = ({ id, required, handleChange, options, labelText, className }: SelectEntryProps) => {
   return (

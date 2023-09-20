@@ -1,6 +1,6 @@
 import type { Meta, StoryFn } from '@storybook/react';
 
-import { SelectEntry, SelectEntryProps, TextEntry, TextEntryProps } from '.';
+import { SelectEntry, TextEntry } from '.';
 
 const meta = {
   title: 'Molecules/Form Entries',
@@ -8,7 +8,7 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-} satisfies Meta<TextEntryProps | SelectEntryProps>;
+} satisfies Meta<typeof TextEntry | typeof SelectEntry>;
 
 export default meta;
 
