@@ -4,7 +4,6 @@ import { SelectEntry, SelectEntryProps, TextEntry, TextEntryProps } from '.';
 
 const meta = {
   title: 'Molecules/Form Entries',
-  component: TextEntry,
   parameters: {
     layout: 'centered',
   },

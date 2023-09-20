@@ -4,7 +4,6 @@ import { SelectInput, SelectInputProps, TextInput, TextInputProps } from '.';
 
 const meta = {
   title: 'Atoms/Inputs',
-  component: TextInput,
   parameters: {
     layout: 'centered',
   },
