@@ -14,9 +14,13 @@ const meta = {
 export default meta;
 
 export const Text: StoryFn = () => (
-  <TextEntry inputId="firstName" required handleChange={(event) => console.log(event.target.value)} className="w-80">
-    First Name
-  </TextEntry>
+  <TextEntry
+    inputId="firstName"
+    required
+    handleChange={(event) => console.log(event.target.value)}
+    className="w-80"
+    labelText="First Name"
+  />
 );
 
 export const Select: StoryFn = () => {
@@ -32,8 +36,8 @@ export const Select: StoryFn = () => {
       handleChange={(event) => console.log(event.target.value)}
       options={options}
       className="w-80"
-      required>
-      Country
-    </SelectEntry>
+      labelText="Country"
+      required
+    />
   );
 };

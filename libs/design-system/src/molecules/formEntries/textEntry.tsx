@@ -9,11 +9,12 @@ export const TextEntry = ({
   required,
   initialValue,
   handleChange,
+  labelText,
   className,
 }: TextEntryProps) => {
   return (
     <div className="flex flex-col">
-      <BaseLabel inputId={inputId}>First Name</BaseLabel>
+      <BaseLabel inputId={inputId} labelText={labelText} />
       <TextInput
         inputId={inputId}
         placeholder={placeholder}

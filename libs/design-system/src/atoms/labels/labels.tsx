@@ -15,9 +15,9 @@ export type LabelProps = {
   inputId?: string;
 
   /**
-   * The content of the label another react node when it should only be a string.
+   * The actual label.
    */
-  children: React.ReactNode;
+  labelText: string;
 
   /**
    * Some extra classes to apply to the label.
@@ -30,10 +30,10 @@ const fontSizeMapping = {
   base: 'text-4',
 };
 
-const Label = ({ type = 'base', inputId, children, className }: LabelProps) => {
+const Label = ({ type = 'base', inputId, labelText, className }: LabelProps) => {
   return (
     <label htmlFor={inputId} className={cn('antialiased', 'text-gray', fontSizeMapping[type], className)}>
-      {children}
+      {labelText}
     </label>
   );
 };
