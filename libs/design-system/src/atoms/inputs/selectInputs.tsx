@@ -40,7 +40,7 @@ export type SelectInputProps = {
    * The index of the initial value.
    * It's 0 by default.
    */
-  initialValueIndex?: number;
+  initialValue?: string;
 
   /**
    * Some additional class name.
@@ -67,7 +67,7 @@ export const SelectInput = ({
   type = 'primary',
   id,
   required,
-  initialValueIndex = 0,
+  initialValue,
   className,
   handleChange,
   options,
@@ -88,8 +88,8 @@ export const SelectInput = ({
         className
       )}
       onChange={handleChange}>
-      {options.map(({ id, label, value }, index) => (
-        <option key={id} id={id} label={label} selected={index === initialValueIndex}>
+      {options.map(({ id, label, value }) => (
+        <option key={id} id={id} label={label} selected={value === (initialValue || options[0].value)}>
           {value}
         </option>
       ))}
