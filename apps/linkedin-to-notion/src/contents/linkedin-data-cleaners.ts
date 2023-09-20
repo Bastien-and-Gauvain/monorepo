@@ -12,7 +12,7 @@ export const splitName = (fullName: string): { firstName?: string; lastName?: st
   }
   return {
     firstName: names[0].trim(),
-    lastName: names.slice(1).join(" ").trim(),
+    lastName: names.slice(1).join(' ').trim(),
   };
 };
 
