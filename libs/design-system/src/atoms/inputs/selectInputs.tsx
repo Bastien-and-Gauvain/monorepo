@@ -7,6 +7,11 @@ type SelectOptionsProps = {
   id: string;
 
   /**
+   * The label of the option.
+   */
+  label: string;
+
+  /**
    * The value of the option.
    */
   value: string;
@@ -83,8 +88,8 @@ export const SelectInput = ({
         className
       )}
       onChange={handleChange}>
-      {options.map(({ id, value }, index) => (
-        <option key={id} id={id} value={value} selected={index === initialValueIndex}>
+      {options.map(({ id, label, value }, index) => (
+        <option key={id} id={id} label={label} selected={index === initialValueIndex}>
           {value}
         </option>
       ))}
