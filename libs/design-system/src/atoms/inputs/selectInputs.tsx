@@ -1,5 +1,3 @@
-import { useRef } from 'react';
-
 import { cn } from '../../shared/classnames';
 
 type SelectOptionsProps = {
@@ -69,8 +67,6 @@ export const SelectInput = ({
   handleChange,
   options,
 }: SelectInputProps) => {
-  const inputRef = useRef<HTMLSelectElement>(null);
-
   return (
     <select
       required={required}
@@ -86,7 +82,6 @@ export const SelectInput = ({
         variations[type],
         className
       )}
-      ref={inputRef}
       onChange={handleChange}>
       {options.map(({ id, value }, index) => (
         <option key={id} id={id} value={value} selected={index === initialValueIndex}>

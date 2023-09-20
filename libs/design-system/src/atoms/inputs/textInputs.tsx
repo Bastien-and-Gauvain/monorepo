@@ -1,5 +1,3 @@
-import { useRef } from 'react';
-
 import { cn } from '../../shared/classnames';
 
 export type TextInputProps = {
@@ -43,8 +41,6 @@ export const TextInput = ({
   className,
   handleChange,
 }: TextInputProps) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-
   return (
     <input
       type="text"
@@ -66,7 +62,6 @@ export const TextInput = ({
       )}
       placeholder={placeholder}
       value={initialValue}
-      ref={inputRef}
       onChange={handleChange}
     />
   );
