@@ -8,6 +8,7 @@ export type SelectOptionsProps = {
 };
 
 export type SelectInputProps = {
+  type?: 'primary' | 'secondary';
   id: string;
   required?: boolean;
   initialValueIndex?: number;
@@ -16,7 +17,13 @@ export type SelectInputProps = {
   options: SelectOptionsProps[];
 };
 
+const variations = {
+  primary: 'text-gray border-gray focus:border-cyan focus:ring-cyan w-full',
+  secondary: 'text-3.5 text-white bg-ocean-blue border-ocean-blue focus:border-green focus:ring-green w-2/5',
+};
+
 export const SelectInput = ({
+  type = 'primary',
   id,
   required,
   initialValueIndex = 0,
@@ -33,16 +40,12 @@ export const SelectInput = ({
       name={id}
       className={cn(
         'antialiased',
-        'text-gray',
         'border',
         'border-solid',
-        'border-gray',
         'rounded-md',
-        'w-full',
         'p-2',
         'focus:outline-none',
-        'focus:border-cyan',
-        'focus:ring-cyan',
+        variations[type],
         className
       )}
       ref={inputRef}
