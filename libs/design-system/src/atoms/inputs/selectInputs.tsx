@@ -3,17 +3,55 @@ import { useRef } from 'react';
 import { cn } from '../../shared/classnames';
 
 type SelectOptionsProps = {
+  /**
+   * The id of the option.
+   */
   id: string;
+
+  /**
+   * The value of the option.
+   */
   value: string;
 };
 
 export type SelectInputProps = {
+  /**
+   * The type of the input.
+   * It's 'primary' by default (big and white). "Secondary" is small and blue.
+   */
   type?: 'primary' | 'secondary';
+
+  /**
+   * The id of the input.
+   * It's also used as the name of the input.
+   * It's also used as the label of the input.
+   */
   id: string;
+
+  /**
+   * Whether the input is required or not.
+   */
   required?: boolean;
+
+  /**
+   * The index of the initial value.
+   * It's 0 by default.
+   */
   initialValueIndex?: number;
+
+  /**
+   * Some additional class name.
+   */
   className?: string;
+
+  /**
+   * The function that handles the change of the input.
+   */
   handleChange: React.ChangeEventHandler<HTMLSelectElement>;
+
+  /**
+   * The options of the input. It's an array of options to put in the dropdown select of type OptionProps.
+   */
   options: SelectOptionsProps[];
 };
 

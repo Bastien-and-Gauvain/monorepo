@@ -1,6 +1,11 @@
 import { TextInput, TextInputProps } from '../../atoms/inputs/textInputs';
 import { BaseLabel, LabelProps } from '../../atoms/labels/labels';
 
+/**
+ * The props for the TextEntry component.
+ * It extends the TextInputProps and the LabelProps.
+ * It's the combination of both.
+ */
 type TextEntryProps = LabelProps & TextInputProps;
 
 export const TextEntry = ({

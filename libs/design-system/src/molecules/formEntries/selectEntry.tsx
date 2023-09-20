@@ -1,6 +1,11 @@
 import { SelectInput, SelectInputProps } from '../../atoms/inputs/selectInputs';
 import { BaseLabel, LabelProps } from '../../atoms/labels/labels';
 
+/**
+ * The props for the SelectEntry component.
+ * It extends the SelectInputProps and the LabelProps.
+ * It's the combination of both.
+ */
 type SelectEntryProps = LabelProps & SelectInputProps;
 
 export const SelectEntry = ({ id, required, handleChange, options, labelText, className }: SelectEntryProps) => {

@@ -3,11 +3,35 @@ import { useRef } from 'react';
 import { cn } from '../../shared/classnames';
 
 export type TextInputProps = {
+  /**
+   * The id of the input.
+   */
   inputId: string;
+
+  /**
+   * Whether the input is required or not.
+   * It's false by default.
+   */
   required?: boolean;
+
+  /**
+   * The placeholder of the input.
+   */
   placeholder?: string;
+
+  /**
+   * The initial value of the input.
+   */
   initialValue?: string;
+
+  /**
+   * Some additional class names.
+   */
   className?: string;
+
+  /**
+   * The function that handles the change of the input.
+   */
   handleChange: React.ChangeEventHandler<HTMLInputElement>;
 };
 
