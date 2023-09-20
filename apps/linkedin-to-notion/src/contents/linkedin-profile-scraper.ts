@@ -4,6 +4,7 @@ import { cleanJobTitle, splitName } from './linkedin-data-cleaners';
 
 export const config: PlasmoCSConfig = {
   matches: ['https://www.linkedin.com/in/*'],
+  run_at: 'document_idle',
 };
 
 type LinkedInProfileInformation = {
@@ -46,24 +47,31 @@ const getName = (): {
 };
 
 const getJobTitle = (): string => {
+  const fallbackCurrentJob = cleanJobTitle(document.querySelector('div.text-body-medium.break-words')?.textContent);
+
   const experienceAnchor = document.getElementById('experience');
   if (!experienceAnchor) {
-    return '';
+    return fallbackCurrentJob ?? '';
   }
 
   const experienceList = experienceAnchor.parentElement;
   if (!experienceList) {
-    return '';
+    return fallbackCurrentJob ?? '';
   }
 
   const lastJob = experienceList.querySelector('li');
   if (!lastJob) {
-    return '';
+    return fallbackCurrentJob ?? '';
   }
 
   const jobTitle = lastJob.querySelector('div.display-flex.align-items-center.mr1.t-bold > span');
   if (!jobTitle) {
-    return '';
+    return fallbackCurrentJob ?? '';
+  }
+
+  // This covers the case of a person with several experiences in a same company
+  if (jobTitle.textContent === getCurrentCompany()) {
+    return fallbackCurrentJob;
   }
 
   return cleanJobTitle(jobTitle.textContent);
