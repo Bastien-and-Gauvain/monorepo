@@ -1,6 +1,6 @@
 import type { Meta, StoryFn } from '@storybook/react';
 
-import { SelectEntry, TextEntry } from '.';
+import { SelectEntry, TextAreaEntry, TextEntry } from '.';
 
 const meta = {
   title: 'Molecules/Form Entries',
@@ -22,20 +22,13 @@ export const Text: StoryFn = () => (
   />
 );
 
-export const Select: StoryFn = () => {
-  const options = [
-    { id: '1', label: 'Option 1', value: 'Option 1' },
-    { id: '2', label: 'Option 2', value: 'Option 2' },
-    { id: '3', label: 'Option 3', value: 'Option 3' },
-  ];
-
+export const TextArea: StoryFn = () => {
   return (
-    <SelectEntry
-      id="country"
+    <TextAreaEntry
+      inputId="comment"
       handleChange={(event) => console.log(event.target.value)}
-      options={options}
       className="w-80"
-      labelText="Country"
+      labelText="Comment"
       required
     />
   );
