@@ -1,9 +1,28 @@
 import { cn } from '../../shared/classnames';
 
 type ParagraphProps = {
+  /**
+   * The type of the paragraph.
+   * It's 'base' by default.
+   * It can also be 'sm' (small) or 'lg' (large).
+   */
   type?: 'sm' | 'base' | 'lg';
+
+  /**
+   * The alignment of the paragraph.
+   * It's 'left' by default.
+   * It can also be 'center' or 'right'.
+   */
   alignment?: 'left' | 'center' | 'right';
+
+  /**
+   * Some additional class name.
+   */
   className?: string;
+
+  /**
+   * The children of the paragraph.
+   */
   children: React.ReactNode;
 };
 
