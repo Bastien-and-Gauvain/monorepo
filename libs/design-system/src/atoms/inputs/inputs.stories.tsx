@@ -1,6 +1,6 @@
 import type { Meta, StoryFn } from '@storybook/react';
 
-import { SelectInput, TextInput } from '.';
+import { SelectInput, TextAreaInput, TextInput } from '.';
 
 const meta = {
   title: 'Atoms/Inputs',
@@ -8,7 +8,7 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-} satisfies Meta<typeof TextInput | typeof SelectInput>;
+} satisfies Meta<typeof TextInput | typeof SelectInput | typeof TextAreaInput>;
 
 export default meta;
 
@@ -53,3 +53,12 @@ export const SelectSecondary: StoryFn = () => {
     />
   );
 };
+
+export const TextArea: StoryFn = () => (
+  <TextAreaInput
+    inputId="comment"
+    handleChange={(event) => console.log(event.target.value)}
+    className="w-80"
+    required
+  />
+);
