@@ -8,7 +8,7 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-} satisfies Meta<typeof TextInput | typeof SelectInput | typeof TextAreaInput>;
+} satisfies Meta;
 
 export default meta;
 
