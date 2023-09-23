@@ -47,7 +47,7 @@ type SidePanelProps = {
 
 export const IFramedSidePanel = ({
   isOpen,
-  onCloseCallback: onClose,
+  onCloseCallback,
   hasCloseButton,
   hasTranslateButton,
   head,
@@ -66,7 +66,7 @@ export const IFramedSidePanel = ({
       {(hasCloseButton || hasTranslateButton) && (
         <div className="flex flex-row space-x-3 mb-4">
           {hasCloseButton && (
-            <ButtonSecondary onClick={onClose} className="relative top-0 left-0 w-8">
+            <ButtonSecondary onClick={() => onCloseCallback && onCloseCallback()} className="relative top-0 left-0 w-8">
               ⤬
             </ButtonSecondary>
           )}

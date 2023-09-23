@@ -12,11 +12,11 @@ export const getIFrameStyle = () => {
 export const LinkedInNotionSidePanelContent = ({
   id,
   isOpen,
-  toggler,
+  onCloseCallback,
 }: {
   id: string;
   isOpen: boolean;
-  toggler: () => void;
+  onCloseCallback: () => void;
 }) => {
   return (
     <IFramedSidePanel
@@ -24,7 +24,7 @@ export const LinkedInNotionSidePanelContent = ({
       hasTranslateButton={true}
       head={getIFrameStyle()}
       isOpen={isOpen}
-      onCloseCallback={toggler}
+      onCloseCallback={() => onCloseCallback()}
       id={id}
       className="top-48 space-y-4 flex flex-col">
       <div className="flex flex-col items-center">

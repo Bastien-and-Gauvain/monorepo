@@ -29,7 +29,7 @@ const LinkedinNotionSidePanel = () => {
   return (
     <LinkedInNotionSidePanelContent
       isOpen={isOpen}
-      toggler={() => setIsOpen(!open)}
+      onCloseCallback={() => setIsOpen(false)}
       id="linkedin-to-notion-side-panel"
     />
   );
