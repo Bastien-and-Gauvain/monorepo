@@ -12,5 +12,11 @@
       "path": "libs/design-system",
       "name": "Design System"
     }
-  ]
+  ],
+  "settings": {
+    "cSpell.words": [
+      "plasmohq",
+      "supabase"
+    ]
+  }
 }
