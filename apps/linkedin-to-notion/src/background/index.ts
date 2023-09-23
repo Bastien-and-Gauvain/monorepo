@@ -1,5 +1,5 @@
 export {};
 
-chrome.action.onClicked.addListener(() => {
-  chrome.runtime.openOptionsPage();
+chrome.action.onClicked.addListener((tab) => {
+  chrome.tabs.sendMessage(tab.id, 'toggleLinkedInNotionSidePanel');
 });
