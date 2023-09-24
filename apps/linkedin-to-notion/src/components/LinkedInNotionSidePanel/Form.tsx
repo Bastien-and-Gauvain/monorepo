@@ -1,15 +1,12 @@
 import { ButtonPrimary, SelectEntry, TextAreaEntry, TextEntry } from 'design-system';
 import { useState } from 'react';
 
-import { type LinkedInProfileInformation } from './../../contents/linkedin-profile-scraper';
+import {
+  getLinkedInProfileInformation,
+  type LinkedInProfileInformation,
+} from './../../contents/linkedin-profile-scraper';
 
-export const Form = ({
-  initialValues,
-  onReload,
-}: {
-  initialValues: LinkedInProfileInformation;
-  onReload: () => void;
-}) => {
+export const Form = ({ initialValues }: { initialValues: LinkedInProfileInformation }) => {
   // From LinkedIn
   const [firstName, setFirstName] = useState<string>(initialValues.name.firstName);
   const [lastName, setLastName] = useState<string>(initialValues.name.lastName);
@@ -22,8 +19,19 @@ export const Form = ({
   const [gender, setGender] = useState<string>('');
   const [comment, setComment] = useState<string>('');
 
+  const onReload = async () => {
+    const scrapingResult = await getLinkedInProfileInformation();
+    const { name, jobTitle, currentCompany, location } = scrapingResult;
+    const { firstName, lastName } = name;
+    setFirstName(firstName);
+    setLastName(lastName);
+    setJobTitle(jobTitle);
+    setCurrentCompany(currentCompany);
+    setLocation(location);
+  };
+
   return (
-    <form className="flex flex-col space-y-3">
+    <div className="flex flex-col space-y-3">
       <SelectEntry
         labelText="Status"
         id="status"
@@ -137,6 +145,6 @@ export const Form = ({
         <ButtonPrimary className="flex-grow">Save</ButtonPrimary>
         <ButtonPrimary onClick={onReload}>🔄</ButtonPrimary>
       </div>
-    </form>
+    </div>
   );
 };

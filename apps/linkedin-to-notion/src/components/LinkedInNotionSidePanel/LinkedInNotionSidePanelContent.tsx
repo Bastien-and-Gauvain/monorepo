@@ -56,14 +56,7 @@ export const LinkedInNotionSidePanelContent = ({
         <img src={logo} className="w-12" />
         <Heading2>LinkedIn to Notion</Heading2>
       </div>
-      {linkedInProfileInformation ? (
-        <Form
-          onReload={() => [setLinkedInProfileInformation(null), injectLinkedInInformation()]}
-          initialValues={linkedInProfileInformation}
-        />
-      ) : (
-        <Spinner />
-      )}
+      {linkedInProfileInformation ? <Form initialValues={linkedInProfileInformation} /> : <Spinner />}
     </IFramedSidePanel>
   );
 };
