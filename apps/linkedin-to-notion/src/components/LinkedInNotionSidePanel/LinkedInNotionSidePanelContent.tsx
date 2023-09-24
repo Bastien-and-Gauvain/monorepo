@@ -10,7 +10,6 @@ import {
   type LinkedInProfileInformation,
 } from './../../contents/linkedin-profile-scraper';
 import { Form } from './Form';
-import { isScrapingComplete } from './helpers';
 
 export const getIFrameStyle = () => {
   return createElement('style', {}, cssText);
@@ -27,40 +26,20 @@ export const LinkedInNotionSidePanelContent = ({
 }) => {
   const [linkedInProfileInformation, setLinkedInProfileInformation] = useState<LinkedInProfileInformation | null>(null);
 
-  const injectLinkedInScraping = async () => {
-    let delay = 100;
-    // Wait for the page to be loaded, works better this way than with event listeners
-    while (document.readyState !== 'complete') {
-      await new Promise((resolve) => setTimeout(resolve, delay));
-      delay = delay * 2;
-    }
-    const scrapingResult = getLinkedInProfileInformation();
+  const injectLinkedInInformation = async () => {
+    const scrapingResult = await getLinkedInProfileInformation();
     setLinkedInProfileInformation(scrapingResult);
   };
 
   useEffect(() => {
-    injectLinkedInScraping();
+    injectLinkedInInformation();
   }, []);
-
-  useEffect(() => {
-    const retryScraping = async () => {
-      let numberOfRetries = 0;
-      while (!isScrapingComplete(linkedInProfileInformation) && numberOfRetries < 2) {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        const scrapingResult = getLinkedInProfileInformation();
-        setLinkedInProfileInformation(scrapingResult);
-        numberOfRetries++;
-      }
-    };
-
-    retryScraping();
-  }, [linkedInProfileInformation]);
 
   // Listen the icon onClick message from the background script
   chrome.runtime.onMessage.addListener((msg) => {
     if (msg === 'updateLinkedInNotionSidePanel') {
       setLinkedInProfileInformation(null);
-      injectLinkedInScraping();
+      injectLinkedInInformation();
     }
   });
 
@@ -79,11 +58,8 @@ export const LinkedInNotionSidePanelContent = ({
       </div>
       {linkedInProfileInformation ? (
         <Form
+          onReload={() => [setLinkedInProfileInformation(null), injectLinkedInInformation()]}
           initialValues={linkedInProfileInformation}
-          onReload={() => {
-            setLinkedInProfileInformation(null);
-            injectLinkedInScraping();
-          }}
         />
       ) : (
         <Spinner />

@@ -1,5 +1,6 @@
 import type { PlasmoCSConfig } from 'plasmo';
 
+import { isScrapingComplete } from './helpers';
 import { cleanJobTitle, splitName } from './linkedin-data-cleaners';
 
 export const config: PlasmoCSConfig = {
@@ -105,14 +106,24 @@ const getLocation = (): string => {
   return location.textContent.trim();
 };
 
-export const getLinkedInProfileInformation = (): LinkedInProfileInformation => {
+export const getLinkedInProfileInformation = async (
+  maxNumberOfRetries = 3,
+  currentRetry = 0
+): Promise<LinkedInProfileInformation> => {
+  let delay = 100;
+  // Wait for the page to be loaded, works better this way than with event listeners
+  while (document.readyState !== 'complete') {
+    await new Promise((resolve) => setTimeout(resolve, delay));
+    delay = delay * 2;
+  }
+
   const { firstName, lastName, fullName } = getName();
   const jobTitle = getJobTitle();
   const currentCompany = getCurrentCompany();
   const location = getLocation();
   const linkedInURL = window.location.href;
 
-  return {
+  let scrapingResult = {
     name: {
       firstName: firstName || fullName,
       lastName: lastName,
@@ -122,6 +133,13 @@ export const getLinkedInProfileInformation = (): LinkedInProfileInformation => {
     location,
     linkedInURL,
   };
+
+  while (!isScrapingComplete(scrapingResult) && currentRetry < maxNumberOfRetries) {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    scrapingResult = await getLinkedInProfileInformation(maxNumberOfRetries, currentRetry + 1);
+  }
+
+  return scrapingResult;
 };
 
 // Keeping these lines to test if needed

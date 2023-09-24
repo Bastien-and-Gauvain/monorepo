@@ -1,6 +1,7 @@
 import { ButtonPrimary, SelectEntry, TextAreaEntry, TextEntry } from 'design-system';
+import { useState } from 'react';
 
-import type { LinkedInProfileInformation } from './../../contents/linkedin-profile-scraper';
+import { type LinkedInProfileInformation } from './../../contents/linkedin-profile-scraper';
 
 export const Form = ({
   initialValues,
@@ -9,12 +10,25 @@ export const Form = ({
   initialValues: LinkedInProfileInformation;
   onReload: () => void;
 }) => {
+  // From LinkedIn
+  const [firstName, setFirstName] = useState<string>(initialValues.name.firstName);
+  const [lastName, setLastName] = useState<string>(initialValues.name.lastName);
+  const [jobTitle, setJobTitle] = useState<string>(initialValues.jobTitle);
+  const [currentCompany, setCurrentCompany] = useState<string>(initialValues.currentCompany);
+  const [location, setLocation] = useState<string>(initialValues.location);
+
+  // Not from LinkedIn
+  const [status, setStatus] = useState<string>('contacted');
+  const [gender, setGender] = useState<string>('');
+  const [comment, setComment] = useState<string>('');
+
   return (
-    <form className="flex flex-col space-y-4">
+    <form className="flex flex-col space-y-3">
       <SelectEntry
         labelText="Status"
         id="status"
-        handleChange={() => {}}
+        handleChange={(e) => setStatus(e.target.value)}
+        initialValue={status}
         options={[
           {
             id: 'not-contacted',
@@ -50,48 +64,49 @@ export const Form = ({
       />
       <div className="flex space-x-4">
         <TextEntry
-          initialValue={initialValues.name.firstName}
+          initialValue={firstName}
           placeholder="Guy"
           inputId="linkedin-first-name"
-          handleChange={() => {}}
+          handleChange={(e) => setFirstName(e.target.value)}
           labelText="First Name"
         />
         <TextEntry
-          initialValue={initialValues.name.lastName}
+          initialValue={lastName}
           placeholder="Tarenbois"
           inputId="linkedin-last-name"
-          handleChange={() => {}}
+          handleChange={(e) => setLastName(e.target.value)}
           labelText="Last Name"
         />
       </div>
       <TextEntry
-        initialValue={initialValues.jobTitle}
+        initialValue={jobTitle}
         placeholder="Musicien"
         inputId="linkedin-job-title"
-        handleChange={() => {}}
+        handleChange={(e) => setJobTitle(e.target.value)}
         labelText="Job title"
       />
       <TextEntry
-        initialValue={initialValues.currentCompany}
+        initialValue={currentCompany}
         placeholder="Rock Band"
         inputId="linkedin-current-company"
-        handleChange={() => {}}
+        handleChange={(e) => setCurrentCompany(e.target.value)}
         labelText="Current company"
       />
       <TextEntry
-        initialValue={initialValues.location}
+        initialValue={location}
         placeholder="Paris"
         inputId="linkedin-location"
-        handleChange={() => {}}
+        handleChange={(e) => setLocation(e.target.value)}
         labelText="Location"
       />
       <SelectEntry
         labelText="Gender"
         id="gender"
-        handleChange={() => {}}
+        handleChange={(e) => setGender(e.target.value)}
+        initialValue={gender}
         options={[
           {
-            id: '',
+            id: 'empty-gender',
             label: '',
             value: '',
           },
@@ -112,7 +127,12 @@ export const Form = ({
           },
         ]}
       />
-      <TextAreaEntry inputId="comment" labelText="Comment" handleChange={() => {}} />
+      <TextAreaEntry
+        inputId="comment"
+        labelText="Comment"
+        value={comment}
+        handleChange={(e) => setComment(e.target.value)}
+      />
       <div className="flex space-x-2">
         <ButtonPrimary className="flex-grow">Save</ButtonPrimary>
         <ButtonPrimary onClick={onReload}>🔄</ButtonPrimary>
