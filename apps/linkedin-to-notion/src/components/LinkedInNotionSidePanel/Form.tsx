@@ -1,4 +1,4 @@
-import { ButtonPrimary, SelectEntry, TextEntry } from 'design-system';
+import { ButtonPrimary, SelectEntry, TextAreaEntry, TextEntry } from 'design-system';
 
 import type { LinkedInProfileInformation } from './../../contents/linkedin-profile-scraper';
 
@@ -112,6 +112,7 @@ export const Form = ({
           },
         ]}
       />
+      <TextAreaEntry inputId="comment" labelText="Comment" handleChange={() => {}} />
       <div className="flex space-x-2">
         <ButtonPrimary className="flex-grow">Save</ButtonPrimary>
         <ButtonPrimary onClick={onReload}>🔄</ButtonPrimary>
