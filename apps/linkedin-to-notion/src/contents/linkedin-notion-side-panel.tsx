@@ -22,7 +22,11 @@ const LinkedinNotionSidePanel = () => {
   // Listen the icon onClick message from the background script
   chrome.runtime.onMessage.addListener((msg) => {
     if (msg === 'toggleLinkedInNotionSidePanel') {
-      setIsOpen(!isOpen);
+      return setIsOpen(!isOpen);
+    }
+
+    if (msg === 'closeLinkedInNotionSidePanel') {
+      return setIsOpen(false);
     }
   });
 

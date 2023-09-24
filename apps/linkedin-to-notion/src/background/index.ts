@@ -10,6 +10,7 @@ chrome.action.onClicked.addListener((tab) => {
 
 chrome.tabs.onUpdated.addListener((tabId, _, tab) => {
   if (tab.url.match(linkedInURLRegex)) {
-    chrome.tabs.sendMessage(tabId, 'updateLinkedInNotionSidePanel');
+    return chrome.tabs.sendMessage(tabId, 'updateLinkedInNotionSidePanel');
   }
+  return chrome.tabs.sendMessage(tabId, 'closeLinkedInNotionSidePanel');
 });
