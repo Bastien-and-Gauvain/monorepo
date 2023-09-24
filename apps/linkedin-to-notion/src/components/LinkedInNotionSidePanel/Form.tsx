@@ -15,7 +15,7 @@ export const Form = ({ initialValues }: { initialValues: LinkedInProfileInformat
   const [location, setLocation] = useState<string>(initialValues.location);
 
   // Not from LinkedIn
-  const [status, setStatus] = useState<string>('contacted');
+  const [status, setStatus] = useState<string>('notContacted');
   const [gender, setGender] = useState<string>('');
   const [comment, setComment] = useState<string>('');
 

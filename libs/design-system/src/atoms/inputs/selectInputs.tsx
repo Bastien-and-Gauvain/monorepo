@@ -78,9 +78,10 @@ export const SelectInput = ({
       id={id}
       name={id}
       className={cn('antialiased border border-solid rounded-md p-2 focus:outline-none', variations[type], className)}
-      onChange={handleChange}>
-      {options.map(({ id, label }) => (
-        <option key={id} id={id} label={label} defaultValue={initialValue || options[0].value}>
+      onChange={handleChange}
+      defaultValue={initialValue || options[0].value}>
+      {options.map(({ id, value, label }) => (
+        <option key={id} id={id} value={value}>
           {label}
         </option>
       ))}
