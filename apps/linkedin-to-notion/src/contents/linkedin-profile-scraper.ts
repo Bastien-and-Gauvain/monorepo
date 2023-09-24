@@ -7,7 +7,7 @@ export const config: PlasmoCSConfig = {
   run_at: 'document_idle',
 };
 
-type LinkedInProfileInformation = {
+export type LinkedInProfileInformation = {
   name: {
     firstName: string;
     lastName: string;
@@ -124,11 +124,11 @@ export const getLinkedInProfileInformation = (): LinkedInProfileInformation => {
   };
 };
 
-// Keeping these lines to test the script as the front isn't yet implemented. To remove in PLAS-20: https://www.notion.so/bvelitchkine/Integrate-the-form-on-the-side-panel-af97bf09aa6346469c57bd0269751554?pvs=4
-window.addEventListener('load', () => {
-  // Adding a timeout as I'm still having issues to detect a proper load - must be resolved when using getLinkedInProfileInformation but not here
-  setTimeout(() => {
-    const LinkedInProfileInformation = getLinkedInProfileInformation();
-    console.log('🔥 ・ LinkedInProfileInformation:', LinkedInProfileInformation);
-  }, 5000);
-});
+// Keeping these lines to test if needed
+// window.addEventListener('load', () => {
+//   // Adding a timeout as I'm still having issues to detect a proper load - must be resolved when using getLinkedInProfileInformation but not here
+//   setTimeout(() => {
+//     const LinkedInProfileInformation = getLinkedInProfileInformation();
+//     console.log('🔥 ・ LinkedInProfileInformation:', LinkedInProfileInformation);
+//   }, 5000);
+// });

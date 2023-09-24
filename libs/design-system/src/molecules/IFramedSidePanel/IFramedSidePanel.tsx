@@ -89,7 +89,7 @@ export const IFramedSidePanel = ({
       // To avoid this, we're using fixed width and height
       // However, this remains true for breakpoints or default tailwind classes
       className={cn(
-        'fixed top-0 min-h-full w-[296px] xl:w-[396px] bg-white z-10 shadow-2xl overflow-scroll',
+        'fixed top-0 min-h-full w-[296px] 2xl:w-[396px] bg-white z-10 shadow-2xl overflow-scroll',
         isRight ? 'right-0 rounded-l-md' : 'left-0 rounded-r-md',
         isOpen ? '' : 'hidden'
       )}
