@@ -128,11 +128,6 @@ export const Form = ({ initialValues }: { initialValues: LinkedInProfileInformat
             label: 'Male',
             value: 'male',
           },
-          {
-            id: 'other',
-            label: 'Other',
-            value: 'other',
-          },
         ]}
       />
       <TextAreaEntry
