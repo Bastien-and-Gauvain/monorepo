@@ -1,5 +1,6 @@
 import type { PlasmoCSConfig } from 'plasmo';
 
+import { isScrapingComplete } from './helpers';
 import { cleanJobTitle, splitName } from './linkedin-data-cleaners';
 
 export const config: PlasmoCSConfig = {
@@ -7,7 +8,7 @@ export const config: PlasmoCSConfig = {
   run_at: 'document_idle',
 };
 
-type LinkedInProfileInformation = {
+export type LinkedInProfileInformation = {
   name: {
     firstName: string;
     lastName: string;
@@ -105,14 +106,24 @@ const getLocation = (): string => {
   return location.textContent.trim();
 };
 
-export const getLinkedInProfileInformation = (): LinkedInProfileInformation => {
+export const getLinkedInProfileInformation = async (
+  maxNumberOfRetries = 3,
+  currentRetry = 0
+): Promise<LinkedInProfileInformation> => {
+  let delay = 100;
+  // Wait for the page to be loaded, works better this way than with event listeners
+  while (document.readyState !== 'complete') {
+    await new Promise((resolve) => setTimeout(resolve, delay));
+    delay = delay * 2;
+  }
+
   const { firstName, lastName, fullName } = getName();
   const jobTitle = getJobTitle();
   const currentCompany = getCurrentCompany();
   const location = getLocation();
   const linkedInURL = window.location.href;
 
-  return {
+  let scrapingResult = {
     name: {
       firstName: firstName || fullName,
       lastName: lastName,
@@ -122,13 +133,20 @@ export const getLinkedInProfileInformation = (): LinkedInProfileInformation => {
     location,
     linkedInURL,
   };
+
+  while (!isScrapingComplete(scrapingResult) && currentRetry < maxNumberOfRetries) {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    scrapingResult = await getLinkedInProfileInformation(maxNumberOfRetries, currentRetry + 1);
+  }
+
+  return scrapingResult;
 };
 
-// Keeping these lines to test the script as the front isn't yet implemented. To remove in PLAS-20: https://www.notion.so/bvelitchkine/Integrate-the-form-on-the-side-panel-af97bf09aa6346469c57bd0269751554?pvs=4
-window.addEventListener('load', () => {
-  // Adding a timeout as I'm still having issues to detect a proper load - must be resolved when using getLinkedInProfileInformation but not here
-  setTimeout(() => {
-    const LinkedInProfileInformation = getLinkedInProfileInformation();
-    console.log('🔥 ・ LinkedInProfileInformation:', LinkedInProfileInformation);
-  }, 5000);
-});
+// Keeping these lines to test if needed
+// window.addEventListener('load', () => {
+//   // Adding a timeout as I'm still having issues to detect a proper load - must be resolved when using getLinkedInProfileInformation but not here
+//   setTimeout(() => {
+//     const LinkedInProfileInformation = getLinkedInProfileInformation();
+//     console.log('🔥 ・ LinkedInProfileInformation:', LinkedInProfileInformation);
+//   }, 5000);
+// });

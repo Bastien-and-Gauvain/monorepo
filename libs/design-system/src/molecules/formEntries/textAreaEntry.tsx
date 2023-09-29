@@ -16,6 +16,7 @@ export const TextAreaEntry = ({
   handleChange,
   labelText,
   className,
+  value,
 }: TextEntryProps) => {
   return (
     <div className="flex flex-col">
@@ -27,6 +28,7 @@ export const TextAreaEntry = ({
         handleChange={handleChange}
         required={required}
         className={className}
+        value={value}
       />
     </div>
   );

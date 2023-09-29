@@ -30,7 +30,12 @@ export type TextAreaInputProps = {
   /**
    * The function that handles the change of the input.
    */
-  handleChange: React.ChangeEventHandler<HTMLTextAreaElement>;
+  handleChange?: React.ChangeEventHandler<HTMLTextAreaElement>;
+
+  /**
+   * The value of the input.
+   */
+  value?: string;
 };
 
 export const TextAreaInput = ({
@@ -40,6 +45,7 @@ export const TextAreaInput = ({
   rows = 3,
   className,
   handleChange,
+  value,
 }: TextAreaInputProps) => {
   return (
     <textarea
@@ -53,6 +59,7 @@ export const TextAreaInput = ({
       placeholder={placeholder}
       rows={rows}
       onChange={handleChange}
+      value={value}
     />
   );
 };

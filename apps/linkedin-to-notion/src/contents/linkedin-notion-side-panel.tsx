@@ -17,12 +17,16 @@ export const getStyle: PlasmoGetStyle = () => {
 };
 
 const LinkedinNotionSidePanel = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true); // set-back to false before deployment
 
   // Listen the icon onClick message from the background script
   chrome.runtime.onMessage.addListener((msg) => {
     if (msg === 'toggleLinkedInNotionSidePanel') {
-      setIsOpen(!isOpen);
+      return setIsOpen(!isOpen);
+    }
+
+    if (msg === 'closeLinkedInNotionSidePanel') {
+      return setIsOpen(false);
     }
   });
 

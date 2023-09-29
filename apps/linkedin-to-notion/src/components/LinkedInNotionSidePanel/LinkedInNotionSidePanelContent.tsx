@@ -1,9 +1,15 @@
 import logo from 'data-base64:~assets/icon.png';
 import cssText from 'data-text:~style.css';
-import { ButtonPrimary, Heading2, IFramedSidePanel } from 'design-system';
-import { createElement } from 'react';
+import { Heading2, IFramedSidePanel, Spinner } from 'design-system';
+import { createElement, useEffect, useState } from 'react';
 
 import './../../../style.css'; // for the font to load
+
+import {
+  getLinkedInProfileInformation,
+  type LinkedInProfileInformation,
+} from './../../contents/linkedin-profile-scraper';
+import { Form } from './Form';
 
 export const getIFrameStyle = () => {
   return createElement('style', {}, cssText);
@@ -18,6 +24,25 @@ export const LinkedInNotionSidePanelContent = ({
   isOpen: boolean;
   onCloseCallback: () => void;
 }) => {
+  const [linkedInProfileInformation, setLinkedInProfileInformation] = useState<LinkedInProfileInformation | null>(null);
+
+  const injectLinkedInInformation = async () => {
+    const scrapingResult = await getLinkedInProfileInformation();
+    setLinkedInProfileInformation(scrapingResult);
+  };
+
+  useEffect(() => {
+    injectLinkedInInformation();
+  }, []);
+
+  // Listen the icon onClick message from the background script
+  chrome.runtime.onMessage.addListener((msg) => {
+    if (msg === 'updateLinkedInNotionSidePanel') {
+      setLinkedInProfileInformation(null);
+      injectLinkedInInformation();
+    }
+  });
+
   return (
     <IFramedSidePanel
       hasCloseButton={true}
@@ -28,10 +53,10 @@ export const LinkedInNotionSidePanelContent = ({
       id={id}
       className="top-48 space-y-4 flex flex-col">
       <div className="flex flex-col items-center">
-        <img src={logo} className="w-20" />
+        <img src={logo} className="w-12" />
         <Heading2>LinkedIn to Notion</Heading2>
       </div>
-      <ButtonPrimary>Click me</ButtonPrimary>
+      {linkedInProfileInformation ? <Form initialValues={linkedInProfileInformation} /> : <Spinner />}
     </IFramedSidePanel>
   );
 };
