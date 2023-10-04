@@ -33,7 +33,7 @@ export const GoBackToLinkedInContent = ({
       id={id}
       className="top-48 space-y-4 flex flex-col">
       <div className="flex flex-col items-center">
-        <img src={logo} className="w-12" />
+        <img src={logo} className="w-12 mb-4" />
         <ButtonPrimary onClick={askToOpenLinkedInTab}>Go Back To Linkedin</ButtonPrimary>
       </div>
     </IFramedSidePanel>
