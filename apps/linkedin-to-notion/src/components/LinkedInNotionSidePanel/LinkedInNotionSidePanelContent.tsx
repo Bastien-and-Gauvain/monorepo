@@ -39,7 +39,8 @@ export const LinkedInNotionSidePanelContent = ({
   chrome.runtime.onMessage.addListener((msg) => {
     if (msg === 'updateLinkedInNotionSidePanel') {
       setLinkedInProfileInformation(null);
-      injectLinkedInInformation();
+      // We set a timeout to wait for the page to be fully loaded before attempting to scrape the information
+      setTimeout(() => injectLinkedInInformation(), 2000);
     }
   });
 

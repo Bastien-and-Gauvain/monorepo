@@ -8,9 +8,12 @@ chrome.action.onClicked.addListener((tab) => {
   }
 });
 
-chrome.tabs.onUpdated.addListener((tabId, _, tab) => {
-  if (tab.url.match(linkedInURLRegex)) {
-    return chrome.tabs.sendMessage(tabId, 'updateLinkedInNotionSidePanel');
+chrome.tabs.onUpdated.addListener((tabId, { status }, tab) => {
+  if (tab.url?.match(linkedInURLRegex)) {
+    if (status === 'complete') {
+      chrome.tabs.sendMessage(tabId, 'updateLinkedInNotionSidePanel');
+    }
+  } else {
+    chrome.tabs.sendMessage(tabId, 'closeLinkedInNotionSidePanel');
   }
-  return chrome.tabs.sendMessage(tabId, 'closeLinkedInNotionSidePanel');
 });
