@@ -2,23 +2,23 @@ export {};
 
 const linkedInURLRegex = /linkedin.com\/in\/.+/;
 
-chrome.action.onClicked.addListener((tab) => {
+chrome.action.onClicked.addListener(async (tab) => {
   if (tab.url.match(linkedInURLRegex)) {
-    chrome.tabs.sendMessage(tab.id, 'toggleLinkedInNotionSidePanel');
+    return await chrome.tabs.sendMessage(tab.id, 'toggleLinkedInNotionSidePanel');
   } else {
-    chrome.tabs.sendMessage(tab.id, 'toggleGoBackToLinkedInSidePanel');
+    return await chrome.tabs.sendMessage(tab.id, 'toggleGoBackToLinkedInSidePanel');
   }
 });
 
-chrome.tabs.onUpdated.addListener((tabId, _, tab) => {
+chrome.tabs.onUpdated.addListener(async (tabId, _, tab) => {
   if (tab.url.match(linkedInURLRegex)) {
-    return chrome.tabs.sendMessage(tabId, 'updateLinkedInNotionSidePanel');
+    return await chrome.tabs.sendMessage(tabId, 'updateLinkedInNotionSidePanel');
   }
-  return chrome.tabs.sendMessage(tabId, 'closeSidePanels');
+  return await chrome.tabs.sendMessage(tabId, 'closeSidePanels');
 });
 
-chrome.runtime.onMessage.addListener((msg) => {
+chrome.runtime.onMessage.addListener(async (msg) => {
   if (msg === 'openLinkedInTab') {
-    chrome.tabs.create({ url: 'https://www.linkedin.com/in/me/' });
+    return await chrome.tabs.create({ url: 'https://www.linkedin.com/in/me/' });
   }
 });
