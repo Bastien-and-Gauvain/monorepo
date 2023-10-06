@@ -1,5 +1,5 @@
 import type { Provider, User } from '@supabase/supabase-js';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { sendToBackground } from '@plasmohq/messaging';
 import { Storage } from '@plasmohq/storage';
@@ -14,9 +14,6 @@ function IndexOptions() {
       area: 'local',
     }),
   });
-
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
 
   useEffect(() => {
     async function init() {
@@ -41,38 +38,11 @@ function IndexOptions() {
     init();
   }, []);
 
-  const handleEmailLogin = async (type: 'LOGIN' | 'SIGNUP', username: string, password: string) => {
-    try {
-      const {
-        error,
-        data: { user },
-      } =
-        type === 'LOGIN'
-          ? await supabase.auth.signInWithPassword({
-              email: username,
-              password,
-            })
-          : await supabase.auth.signUp({ email: username, password });
-
-      if (error) {
-        alert('Error with auth: ' + error.message);
-      } else if (!user) {
-        alert('Signup successful, confirmation mail should be sent soon!');
-      } else {
-        setUser(user);
-      }
-    } catch (error) {
-      console.log('error', error);
-      alert(error.error_description || error);
-    }
-  };
-
   const handleOAuthLogin = async (provider: Provider, scopes = 'email') => {
     await supabase.auth.signInWithOAuth({
       provider,
       options: {
         scopes,
-        redirectTo: location.href,
       },
     });
   };
@@ -110,42 +80,12 @@ function IndexOptions() {
           </>
         )}
         {!user && (
-          <>
-            <label>Email</label>
-            <input
-              type="text"
-              placeholder="Your Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-            <label>Password</label>
-            <input
-              type="password"
-              placeholder="Your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-
-            <button
-              onClick={() => {
-                handleEmailLogin('SIGNUP', username, password);
-              }}>
-              Sign up
-            </button>
-            <button
-              onClick={() => {
-                handleEmailLogin('LOGIN', username, password);
-              }}>
-              Login
-            </button>
-
-            <button
-              onClick={() => {
-                handleOAuthLogin('github');
-              }}>
-              Sign in with GitHub
-            </button>
-          </>
+          <button
+            onClick={() => {
+              handleOAuthLogin('notion');
+            }}>
+            Sign in with Notion
+          </button>
         )}
       </div>
     </main>
