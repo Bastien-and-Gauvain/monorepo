@@ -1,6 +1,6 @@
 import logo from 'data-base64:~assets/icon.png';
 import cssText from 'data-text:~style.css';
-import { Heading2, IFramedSidePanel, Spinner } from 'design-system';
+import { ButtonPrimary, Heading2, IFramedSidePanel, Spinner } from 'design-system';
 import { createElement, useEffect, useState } from 'react';
 
 import './../../../style.css'; // for the font to load
@@ -25,14 +25,33 @@ export const LinkedInNotionSidePanelContent = ({
   onCloseCallback: () => void;
 }) => {
   const [linkedInProfileInformation, setLinkedInProfileInformation] = useState<LinkedInProfileInformation | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   const injectLinkedInInformation = async () => {
     const scrapingResult = await getLinkedInProfileInformation();
     setLinkedInProfileInformation(scrapingResult);
   };
 
+  // Watch changes in the chrome storage to see if we log in or out
+  // If we log in, the profile page should be scraped
+  // If we log out, we should remove the form and display the login button
+  chrome.storage.onChanged.addListener((changes) => {
+    if (changes.api) {
+      const loggedIn = !!changes.api.newValue;
+      setIsLoggedIn(loggedIn);
+      if (loggedIn) injectLinkedInInformation();
+    }
+  });
+
   useEffect(() => {
-    injectLinkedInInformation();
+    // Check if we are logged in
+    chrome.storage.local.get('api', ({ api }) => {
+      // Only scrape content if we are
+      if (api) {
+        setIsLoggedIn(true);
+        injectLinkedInInformation();
+      }
+    });
   }, []);
 
   // Listen the icon onClick message from the background script
@@ -58,7 +77,15 @@ export const LinkedInNotionSidePanelContent = ({
         <img src={logo} className="w-12" />
         <Heading2>LinkedIn to Notion</Heading2>
       </div>
-      {linkedInProfileInformation ? <Form initialValues={linkedInProfileInformation} /> : <Spinner />}
+      {isLoggedIn ? (
+        linkedInProfileInformation ? (
+          <Form initialValues={linkedInProfileInformation} />
+        ) : (
+          <Spinner />
+        )
+      ) : (
+        <ButtonPrimary onClick={() => console.log('asked to login')}>LOGIN</ButtonPrimary>
+      )}
     </IFramedSidePanel>
   );
 };
