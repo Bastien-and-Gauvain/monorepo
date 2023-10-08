@@ -1,8 +1,13 @@
+import type { Provider, User } from '@supabase/supabase-js';
 import cssText from 'data-text:~style.css';
 import type { PlasmoCSConfig, PlasmoGetStyle } from 'plasmo';
 import { useEffect, useState } from 'react';
 
 import { sendToBackground } from '@plasmohq/messaging';
+import { Storage } from '@plasmohq/storage';
+import { useStorage } from '@plasmohq/storage/hook';
+
+import { supabase } from '~core/supabase';
 
 import { LinkedInNotionSidePanelContent } from '../components/LinkedInNotionSidePanel/LinkedInNotionSidePanelContent';
 
@@ -20,32 +25,42 @@ export const getStyle: PlasmoGetStyle = () => {
 
 const LinkedinNotionSidePanel = () => {
   const [isOpen, setIsOpen] = useState(true); // set-back to false before deployment
-  const [user, setUser] = useState(null);
-  console.log('🔥 ・ LinkedinNotionSidePanel ・ user:', user);
+  const [user, setUser] = useStorage<User>({
+    key: 'user',
+    instance: new Storage({
+      area: 'local',
+    }),
+  });
 
   useEffect(() => {
-    const getUser = async () => {
-      console.log('🔥 ・ onClickHandler ・ onClickHandler:', 'YO');
-      const resp = await sendToBackground({
-        name: 'users/resolvers/get-user',
-        body: {
-          jwt: 'e4819e8f-32a2-496a-b767-def00c30447e',
-        },
-      });
-      setUser(resp);
-    };
+    async function init() {
+      const { data, error } = await supabase.auth.getSession();
 
-    if (isOpen) {
-      getUser();
+      if (error) {
+        console.error(error);
+        return;
+      }
+      if (data.session) {
+        setUser(data.session.user);
+        sendToBackground({
+          name: 'users/resolvers/init-session',
+          body: {
+            refresh_token: data.session.refresh_token,
+            access_token: data.session.access_token,
+          },
+        });
+      }
     }
-  }, [isOpen]);
+
+    init();
+  }, []);
 
   const handleOAuthLogin = async (provider: Provider, scopes = 'email') => {
     await supabase.auth.signInWithOAuth({
       provider,
       options: {
+        redirectTo: window.location.href,
         scopes,
-        redirectTo: location.href,
       },
     });
   };
@@ -64,6 +79,9 @@ const LinkedinNotionSidePanel = () => {
   return (
     <LinkedInNotionSidePanelContent
       isOpen={isOpen}
+      isLoggedIn={!!user?.id}
+      loginCallback={() => handleOAuthLogin('notion')}
+      logoutCallBack={() => [supabase.auth.signOut(), setUser(null)]}
       onCloseCallback={() => setIsOpen(false)}
       id="linkedin-to-notion-side-panel"
     />

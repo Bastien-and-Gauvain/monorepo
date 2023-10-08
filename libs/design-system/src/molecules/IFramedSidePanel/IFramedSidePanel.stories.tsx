@@ -34,6 +34,7 @@ export const DefaultSidePanel: StoryFn = () => {
       <IFramedSidePanel
         hasCloseButton={true}
         hasTranslateButton={true}
+        hasLogoutButton={true}
         head={styleNode}
         isOpen={isOpen}
         onCloseCallback={() => setIsOpen(false)}
