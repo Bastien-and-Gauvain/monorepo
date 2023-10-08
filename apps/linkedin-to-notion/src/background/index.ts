@@ -10,11 +10,14 @@ chrome.action.onClicked.addListener(async (tab) => {
   }
 });
 
-chrome.tabs.onUpdated.addListener(async (tabId, _, tab) => {
-  if (tab.url.match(linkedInURLRegex)) {
-    return await chrome.tabs.sendMessage(tabId, 'updateLinkedInNotionSidePanel');
+chrome.tabs.onUpdated.addListener(async (tabId, { status }, tab) => {
+  if (tab.url && tab.url.match(linkedInURLRegex)) {
+    if (status === 'complete') {
+      return await chrome.tabs.sendMessage(tabId, 'updateLinkedInNotionSidePanel');
+    }
+  } else {
+    return await chrome.tabs.sendMessage(tabId, 'closeSidePanels');
   }
-  return await chrome.tabs.sendMessage(tabId, 'closeSidePanels');
 });
 
 chrome.runtime.onMessage.addListener(async (msg) => {
