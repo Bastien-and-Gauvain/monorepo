@@ -5,6 +5,8 @@ const linkedInURLRegex = /linkedin.com\/in\/.+/;
 chrome.action.onClicked.addListener(async (tab) => {
   if (tab.url.match(linkedInURLRegex)) {
     return await chrome.tabs.sendMessage(tab.id, 'toggleLinkedInNotionSidePanel');
+  } else {
+    return await chrome.tabs.sendMessage(tab.id, 'toggleGoBackToLinkedInSidePanel');
   }
 });
 
