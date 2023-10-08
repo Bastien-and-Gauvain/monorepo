@@ -56,7 +56,7 @@ const LinkedinNotionSidePanel = () => {
       return setIsOpen(!isOpen);
     }
 
-    if (msg === 'closeLinkedInNotionSidePanel') {
+    if (msg === 'closeSidePanels') {
       return setIsOpen(false);
     }
   });
