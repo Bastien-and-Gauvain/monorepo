@@ -1,13 +1,10 @@
 import type { PlasmoMessaging } from '@plasmohq/messaging';
 
-import { supabase } from '~core/supabase';
+import UserService from '../services/user.service';
 
 const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
-  supabase.auth.onAuthStateChange((event, session) => {
-    console.log(event, session);
-  });
-
-  await supabase.auth.setSession(req.body);
+  const userService = new UserService();
+  await userService.initSession(req.body);
 
   res.send({ success: true });
 };
