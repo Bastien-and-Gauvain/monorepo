@@ -2,10 +2,10 @@ import cssText from 'data-text:~style.css';
 import type { PlasmoCSConfig, PlasmoGetStyle } from 'plasmo';
 import { useState } from 'react';
 
-import { LinkedInNotionSidePanelContent } from '../components/LinkedInNotionSidePanel/LinkedInNotionSidePanelContent';
+import { GoBackToLinkedInContent } from '../components/GoBackToLinkedIn/GoBackToLinkedIn';
 
 export const config: PlasmoCSConfig = {
-  matches: ['https://www.linkedin.com/in/*'],
+  matches: ['<all_urls>'],
   all_frames: false,
 };
 
@@ -16,12 +16,12 @@ export const getStyle: PlasmoGetStyle = () => {
   return style;
 };
 
-const LinkedinNotionSidePanel = () => {
-  const [isOpen, setIsOpen] = useState(true); // set-back to false before deployment
+const GoBackToLinkedInSidePanel = () => {
+  const [isOpen, setIsOpen] = useState(false); // set-back to false before deployment
 
   // Listen the icon onClick message from the background script
   chrome.runtime.onMessage.addListener((msg) => {
-    if (msg === 'toggleLinkedInNotionSidePanel') {
+    if (msg === 'toggleGoBackToLinkedInSidePanel') {
       return setIsOpen(!isOpen);
     }
 
@@ -31,12 +31,12 @@ const LinkedinNotionSidePanel = () => {
   });
 
   return (
-    <LinkedInNotionSidePanelContent
+    <GoBackToLinkedInContent
       isOpen={isOpen}
       onCloseCallback={() => setIsOpen(false)}
-      id="linkedin-to-notion-side-panel"
+      id="go-back-to-linkedin-side-panel"
     />
   );
 };
 
-export default LinkedinNotionSidePanel;
+export default GoBackToLinkedInSidePanel;
