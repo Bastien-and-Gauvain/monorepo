@@ -4,5 +4,5 @@ export const isScrapingComplete = (values: LinkedInProfileInformation): boolean 
   if (!values) {
     return false;
   }
-  return Object.values(values).every((value) => value != null);
+  return Object.values(values).every((value) => value !== null);
 };
