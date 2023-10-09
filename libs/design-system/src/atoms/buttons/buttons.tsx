@@ -4,7 +4,7 @@ import './../../index.css';
 
 import { cn } from '../../shared/classnames';
 
-interface ButtonProps {
+type ButtonProps = {
   /**
    * Children elements
    */
@@ -27,7 +27,7 @@ interface ButtonProps {
    * A callback to detect clicks on the text (default: undefined)
    */
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
-}
+};
 
 const typeSpecificClasses = {
   primary: 'px-4 py-2 rounded-md text-5',
