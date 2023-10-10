@@ -1,6 +1,6 @@
 import { supabase } from '~core/supabase';
 
-export default class UserService {
+export default class SessionService {
   constructor() {}
 
   async initSession(currentSession: { access_token: string; refresh_token: string }) {

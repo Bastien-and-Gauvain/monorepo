@@ -43,7 +43,7 @@ const LinkedinNotionSidePanel = () => {
       if (data.session) {
         setUser(data.session.user);
         sendToBackground({
-          name: 'users/resolvers/init-session',
+          name: 'sessions/resolvers/init-session',
           body: {
             refresh_token: data.session.refresh_token,
             access_token: data.session.access_token,
