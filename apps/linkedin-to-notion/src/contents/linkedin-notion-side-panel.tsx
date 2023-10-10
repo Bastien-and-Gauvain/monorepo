@@ -55,7 +55,7 @@ const LinkedinNotionSidePanel = () => {
     init();
   }, []);
 
-  const handleOAuthLogin = async (provider: Provider, scopes = 'email') => {
+  const handleOAuthLogin = async (provider: Provider, scopes?: string) => {
     await supabase.auth.signInWithOAuth({
       provider,
       options: {
