@@ -59,7 +59,7 @@ const LinkedinNotionSidePanel = () => {
     await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: window.location.href,
+        redirectTo: window.location.href.match(/https:\/\/[a-z]{2,3}\.linkedin\.com\/in\/[^/]+\//)[0],
         scopes,
       },
     });
