@@ -4,7 +4,7 @@ import './../../index.css';
 
 import { cn } from '../../shared/classnames';
 
-interface TitleProps {
+type TitleProps = {
   /**
    * Children elements
    */
@@ -32,7 +32,7 @@ interface TitleProps {
    * A callback to detect clicks on the text (default: undefined)
    */
   onClick?: React.MouseEventHandler<HTMLElement>;
-}
+};
 
 const headingsDesktop = {
   h1: 'text-15 leading-14 uppercase',
