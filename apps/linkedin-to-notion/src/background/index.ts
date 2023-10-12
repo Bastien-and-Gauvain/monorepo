@@ -2,7 +2,7 @@ export {};
 
 // You can test the regex here: https://regex101.com/r/RJgYar/1
 // Don't forget to update the comment when you update the regex on regex101.com
-const linkedInURLRegex = /linkedin\.com\/in\/[^/]+\/$/;
+export const linkedInURLRegex = /linkedin\.com\/in\/[^/]+\/$/;
 
 chrome.action.onClicked.addListener(async (tab) => {
   if (tab.url.match(linkedInURLRegex)) {

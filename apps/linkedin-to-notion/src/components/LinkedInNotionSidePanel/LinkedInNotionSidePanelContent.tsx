@@ -1,6 +1,6 @@
 import logo from 'data-base64:~assets/icon.png';
 import cssText from 'data-text:~style.css';
-import { Heading2, IFramedSidePanel, Spinner } from 'design-system';
+import { ButtonPrimary, Heading2, IFramedSidePanel, Spinner } from 'design-system';
 import { createElement, useEffect, useState } from 'react';
 
 import './../../../style.css'; // for the font to load
@@ -19,10 +19,16 @@ export const LinkedInNotionSidePanelContent = ({
   id,
   isOpen,
   onCloseCallback,
+  isLoggedIn,
+  loginCallback,
+  logoutCallBack,
 }: {
   id: string;
   isOpen: boolean;
   onCloseCallback: () => void;
+  isLoggedIn: boolean;
+  loginCallback: () => void;
+  logoutCallBack: () => void;
 }) => {
   const [linkedInProfileInformation, setLinkedInProfileInformation] = useState<LinkedInProfileInformation | null>(null);
 
@@ -49,16 +55,26 @@ export const LinkedInNotionSidePanelContent = ({
     <IFramedSidePanel
       hasCloseButton={true}
       hasTranslateButton={true}
+      hasLogoutButton={isLoggedIn}
       head={getIFrameStyle()}
       isOpen={isOpen}
       onCloseCallback={() => onCloseCallback()}
+      onLogoutCallback={() => logoutCallBack()}
       id={id}
       className="top-48 space-y-4 flex flex-col">
       <div className="flex flex-col items-center">
         <img src={logo} className="w-12" />
         <Heading2>LinkedIn to Notion</Heading2>
       </div>
-      {linkedInProfileInformation ? <Form initialValues={linkedInProfileInformation} /> : <Spinner />}
+      {isLoggedIn ? (
+        linkedInProfileInformation ? (
+          <Form initialValues={linkedInProfileInformation} />
+        ) : (
+          <Spinner />
+        )
+      ) : (
+        <ButtonPrimary onClick={loginCallback}>Sign in with Notion</ButtonPrimary>
+      )}
     </IFramedSidePanel>
   );
 };

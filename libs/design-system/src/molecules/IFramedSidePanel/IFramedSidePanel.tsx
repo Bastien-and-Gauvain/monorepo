@@ -15,6 +15,11 @@ type SidePanelProps = {
   onCloseCallback?: () => void;
 
   /**
+   * Callback on the logout button
+   */
+  onLogoutCallback?: () => void;
+
+  /**
    * Should the side panel have a close button?
    */
   hasCloseButton?: boolean;
@@ -23,6 +28,11 @@ type SidePanelProps = {
    * Should the side panel have a translate button?
    */
   hasTranslateButton?: boolean;
+
+  /**
+   * Should the side panel have a logout button?
+   */
+  hasLogoutButton?: boolean;
 
   /**
    * The head of the iFrame, very useful to inject styles and tailwind
@@ -48,8 +58,10 @@ type SidePanelProps = {
 export const IFramedSidePanel = ({
   isOpen,
   onCloseCallback,
+  onLogoutCallback,
   hasCloseButton,
   hasTranslateButton,
+  hasLogoutButton,
   head,
   children,
   className,
@@ -64,16 +76,21 @@ export const IFramedSidePanel = ({
   const content = (
     <div className={cn('p-4', className)}>
       {(hasCloseButton || hasTranslateButton) && (
-        <div className="flex flex-row space-x-3 mb-4">
-          {hasCloseButton && (
-            <ButtonSecondary onClick={() => onCloseCallback && onCloseCallback()} className="relative top-0 left-0 w-8">
-              ⤬
-            </ButtonSecondary>
-          )}
-          {hasTranslateButton && (
-            <ButtonSecondary onClick={() => setIsRight(!isRight)} className="relative top-0 left-0 w-8">
-              ↔
-            </ButtonSecondary>
+        <div className="flex justify-between mb-4">
+          <div className="flex flex-row space-x-3">
+            {hasCloseButton && (
+              <ButtonSecondary onClick={() => onCloseCallback && onCloseCallback()} className="w-8">
+                ⤬
+              </ButtonSecondary>
+            )}
+            {hasTranslateButton && (
+              <ButtonSecondary onClick={() => setIsRight(!isRight)} className="w-8">
+                ↔
+              </ButtonSecondary>
+            )}
+          </div>
+          {hasLogoutButton && (
+            <ButtonSecondary onClick={() => onLogoutCallback && onLogoutCallback()}>Logout</ButtonSecondary>
           )}
         </div>
       )}
