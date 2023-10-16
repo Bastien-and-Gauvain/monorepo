@@ -2,7 +2,7 @@ import type { Meta, StoryFn } from '@storybook/react';
 import { useState } from 'react';
 
 import { SelectInput, TextAreaInput, TextInput } from '.';
-import { ToggleInput } from './toggleInput';
+import { ToggleInput } from './toggleInputs';
 
 const meta = {
   title: 'Atoms/Inputs',
