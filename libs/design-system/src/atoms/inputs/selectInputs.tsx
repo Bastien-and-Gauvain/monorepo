@@ -40,7 +40,7 @@ export type SelectInputProps = {
    * The index of the initial value.
    * It's 0 by default.
    */
-  initialValue?: string;
+  selectedValue?: string;
 
   /**
    * Some additional class name.
@@ -67,7 +67,7 @@ export const SelectInput = ({
   type = 'primary',
   id,
   required,
-  initialValue,
+  selectedValue,
   className,
   handleChange,
   options,
@@ -79,9 +79,9 @@ export const SelectInput = ({
       name={id}
       className={cn('antialiased border border-solid rounded-md p-2 focus:outline-none', variations[type], className)}
       onChange={handleChange}
-      defaultValue={initialValue || options[0].value}>
+      defaultValue={options[0].value}>
       {options.map(({ id, value, label }) => (
-        <option key={id} id={id} value={value}>
+        <option key={id} id={id} value={value} selected={selectedValue === value}>
           {label}
         </option>
       ))}
