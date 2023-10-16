@@ -1,6 +1,8 @@
 import type { Meta, StoryFn } from '@storybook/react';
+import { useState } from 'react';
 
 import { SelectEntry, TextAreaEntry, TextEntry } from '.';
+import { ToggleEntry } from './toggleEntry';
 
 const meta = {
   title: 'Molecules/Form Entries',
@@ -30,6 +32,24 @@ export const TextArea: StoryFn = () => {
       className="w-80"
       labelText="Comment"
       required
+    />
+  );
+};
+
+export const Toggle: StoryFn = () => {
+  const [checked, setChecked] = useState<boolean>(false);
+  const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
+  };
+
+  return (
+    <ToggleEntry
+      inputId="toggle"
+      handleChange={changeHandler}
+      // className="w-80"
+      labelText="Display data stored in:"
+      checked={checked}
+      options={{ unchecked: 'LinkedIn', checked: 'Notion' }}
     />
   );
 };
