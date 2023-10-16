@@ -73,7 +73,7 @@ export const Toggle: StoryFn = () => {
   };
   return (
     <ToggleInput
-      labels={{ checked: 'Notion', unchecked: 'LinkedIn' }}
+      options={{ checked: 'Notion', unchecked: 'LinkedIn' }}
       checked={checked}
       inputId="linkedinNotionSwitch"
       handleChange={changeHandler}

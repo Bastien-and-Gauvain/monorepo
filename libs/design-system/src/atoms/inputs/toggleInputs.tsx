@@ -2,9 +2,9 @@ import { cn } from '../../shared/classnames';
 
 export type ToggleInputProps = {
   /**
-   * Labels associated to both states of the input.
+   * Options associated to both states of the input.
    */
-  labels: {
+  options: {
     checked: string;
     unchecked: string;
   };
@@ -30,7 +30,7 @@ export type ToggleInputProps = {
   handleChange: React.ChangeEventHandler<HTMLInputElement>;
 };
 
-export const ToggleInput = ({ labels, checked = false, inputId, className, handleChange }: ToggleInputProps) => {
+export const ToggleInput = ({ options, checked = false, inputId, className, handleChange }: ToggleInputProps) => {
   return (
     <div className="flex space-x-4 w-36">
       <input
@@ -45,7 +45,7 @@ export const ToggleInput = ({ labels, checked = false, inputId, className, handl
         onChange={handleChange}
       />
       <label className="inline-block pl-[0.15rem] hover:cursor-pointer" htmlFor={inputId}>
-        {labels[checked ? 'checked' : 'unchecked']}
+        {options[checked ? 'checked' : 'unchecked']}
       </label>
     </div>
   );
