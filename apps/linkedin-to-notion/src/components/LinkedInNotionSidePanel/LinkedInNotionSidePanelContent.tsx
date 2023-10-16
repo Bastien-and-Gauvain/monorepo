@@ -9,7 +9,7 @@ import {
   getLinkedInProfileInformation,
   type LinkedInProfileInformation,
 } from './../../contents/linkedin-profile-scraper';
-import { Form } from './Form';
+import { Form, type NotionProfileInformation } from './Form';
 
 export const getIFrameStyle = () => {
   return createElement('style', {}, cssText);
@@ -31,14 +31,38 @@ export const LinkedInNotionSidePanelContent = ({
   logoutCallBack: () => void;
 }) => {
   const [linkedInProfileInformation, setLinkedInProfileInformation] = useState<LinkedInProfileInformation | null>(null);
+  const [notionProfileInformation, setNotionProfileInformation] = useState<NotionProfileInformation | null>(null);
 
-  const injectLinkedInInformation = async () => {
+  const setLinkedInValues = async () => {
     const scrapingResult = await getLinkedInProfileInformation();
     setLinkedInProfileInformation(scrapingResult);
   };
 
+  const setNotionValues = async () => {
+    const firstName = 'Will';
+    const lastName = 'Ramos';
+    const jobTitle = 'Vocalist';
+    const currentCompany = 'Lorna Shore';
+    const location = 'Los Angeles';
+    const status = 'hired';
+    const linkedInURL = 'https://www.linkedin.com/in/will-ramos';
+    const gender = 'M';
+    const comment = 'Best deathcore vocalist ever.';
+    setNotionProfileInformation({
+      name: { firstName, lastName },
+      jobTitle,
+      currentCompany,
+      location,
+      linkedInURL,
+      status,
+      gender,
+      comment,
+    });
+  };
+
   useEffect(() => {
-    injectLinkedInInformation();
+    setLinkedInValues();
+    setNotionValues();
   }, []);
 
   // Listen the icon onClick message from the background script
@@ -47,7 +71,7 @@ export const LinkedInNotionSidePanelContent = ({
       setLinkedInProfileInformation(null);
       // TODO: find a more robust alternative than a timeout
       // Couldn't put the timeout in the bg (don't know why)
-      setTimeout(() => injectLinkedInInformation(), 2000);
+      setTimeout(() => setLinkedInValues(), 2000);
     }
   });
 
@@ -68,7 +92,11 @@ export const LinkedInNotionSidePanelContent = ({
       </div>
       {isLoggedIn ? (
         linkedInProfileInformation ? (
-          <Form initialValues={linkedInProfileInformation} />
+          <Form
+            linkedinValues={linkedInProfileInformation}
+            notionValues={notionProfileInformation}
+            onReload={setLinkedInValues}
+          />
         ) : (
           <Spinner />
         )
