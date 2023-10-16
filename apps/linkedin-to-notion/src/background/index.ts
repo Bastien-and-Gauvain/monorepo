@@ -1,3 +1,5 @@
+import { SecureStorage } from '@plasmohq/storage/secure';
+
 export {};
 
 // You can test the regex here: https://regex101.com/r/RJgYar/1
@@ -28,4 +30,18 @@ chrome.runtime.onMessage.addListener(async (msg) => {
   }
 });
 
-// test('authData');
+/**
+ * A function that display changes in the secure storage on the authData key
+ * Should be removed, only there for testing purposes
+ */
+const temp = async () => {
+  const storage = new SecureStorage({ area: 'local' });
+  await storage.setPassword('napoleon');
+  storage.watch({
+    authData: (c) => {
+      console.log(c.newValue);
+    },
+  });
+};
+
+temp();
