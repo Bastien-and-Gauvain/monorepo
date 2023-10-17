@@ -49,11 +49,16 @@ const LinkedinNotionSidePanel = () => {
       }
       if (data.session) {
         setUser(data.session.user);
+
         // There's one thing we're specifically interested in in the data.session object
         // It's the provider_token (i.e notion's api access token in this case)
         // This token is necessary to make api calls to notion elsewhere in the app
         // There's no way to retrieve this token if we don't save it here
-        storeEntriesSecurely('authData', data.session);
+        // However, it's only available in the session object when the user logs in, not afterwards
+        // So, to make sure it's stored once and not erased afterwards, we store it in the secure storage
+        // after assessing it's in data.session
+        if (Object.keys(data.session).includes('provider_token')) storeEntriesSecurely('session', data.session);
+
         sendToBackground({
           name: 'sessions/resolvers/init-session',
           body: {

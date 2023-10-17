@@ -30,18 +30,15 @@ chrome.runtime.onMessage.addListener(async (msg) => {
   }
 });
 
-/**
- * A function that display changes in the secure storage on the authData key
- * Should be removed, only there for testing purposes
- */
-const temp = async () => {
+// TODO Should be removed, only there for temporary testing purposes
+const displayChangesInSecureStorage = async () => {
   const storage = new SecureStorage({ area: 'local' });
   await storage.setPassword('napoleon');
   storage.watch({
-    authData: (c) => {
+    session: (c) => {
       console.log(c.newValue);
     },
   });
 };
 
-temp();
+displayChangesInSecureStorage();
