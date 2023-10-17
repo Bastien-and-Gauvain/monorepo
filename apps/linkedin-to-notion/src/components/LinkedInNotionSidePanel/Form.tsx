@@ -187,7 +187,7 @@ export const Form = ({
         labelText="Gender"
         id="gender"
         handleChange={(e) => setGender(e.target.value)}
-        initialValue={gender}
+        selectedValue={gender}
         options={[
           {
             id: 'empty-gender',
