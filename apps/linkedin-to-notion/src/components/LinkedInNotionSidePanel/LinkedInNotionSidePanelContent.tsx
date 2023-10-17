@@ -9,7 +9,8 @@ import {
   getLinkedInProfileInformation,
   type LinkedInProfileInformation,
 } from './../../contents/linkedin-profile-scraper';
-import { Form, type NotionProfileInformation } from './Form';
+// import { Form, type NotionProfileInformation } from './Form';
+import { Form } from './Form';
 
 export const getIFrameStyle = () => {
   return createElement('style', {}, cssText);
@@ -31,38 +32,38 @@ export const LinkedInNotionSidePanelContent = ({
   logoutCallBack: () => void;
 }) => {
   const [linkedInProfileInformation, setLinkedInProfileInformation] = useState<LinkedInProfileInformation | null>(null);
-  const [notionProfileInformation, setNotionProfileInformation] = useState<NotionProfileInformation | null>(null);
+  // const [notionProfileInformation, setNotionProfileInformation] = useState<NotionProfileInformation | null>(null);
 
   const setLinkedInValues = async () => {
     const scrapingResult = await getLinkedInProfileInformation();
     setLinkedInProfileInformation(scrapingResult);
   };
 
-  const setNotionValues = async () => {
-    const firstName = 'Will';
-    const lastName = 'Ramos';
-    const jobTitle = 'Vocalist';
-    const currentCompany = 'Lorna Shore';
-    const location = 'Los Angeles';
-    const status = 'hired';
-    const linkedInURL = 'https://www.linkedin.com/in/will-ramos';
-    const gender = 'M';
-    const comment = 'Best deathcore vocalist ever.';
-    setNotionProfileInformation({
-      name: { firstName, lastName },
-      jobTitle,
-      currentCompany,
-      location,
-      linkedInURL,
-      status,
-      gender,
-      comment,
-    });
-  };
+  // const setNotionValues = async () => {
+  //   const firstName = 'Will';
+  //   const lastName = 'Ramos';
+  //   const jobTitle = 'Vocalist';
+  //   const currentCompany = 'Lorna Shore';
+  //   const location = 'Los Angeles';
+  //   const status = 'hired';
+  //   const linkedInURL = 'https://www.linkedin.com/in/will-ramos';
+  //   const gender = 'M';
+  //   const comment = 'Best deathcore vocalist ever.';
+  //   setNotionProfileInformation({
+  //     name: { firstName, lastName },
+  //     jobTitle,
+  //     currentCompany,
+  //     location,
+  //     linkedInURL,
+  //     status,
+  //     gender,
+  //     comment,
+  //   });
+  // };
 
   useEffect(() => {
     setLinkedInValues();
-    setNotionValues();
+    // setNotionValues();
   }, []);
 
   // Listen the icon onClick message from the background script
@@ -94,7 +95,7 @@ export const LinkedInNotionSidePanelContent = ({
         linkedInProfileInformation ? (
           <Form
             linkedinValues={linkedInProfileInformation}
-            notionValues={notionProfileInformation}
+            // notionValues={notionProfileInformation}
             onReload={setLinkedInValues}
           />
         ) : (

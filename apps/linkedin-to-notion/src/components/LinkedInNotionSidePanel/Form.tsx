@@ -54,7 +54,7 @@ export const Form = ({
   onReload,
 }: {
   linkedinValues: LinkedInProfileInformation;
-  notionValues: NotionProfileInformation;
+  notionValues?: NotionProfileInformation;
   onReload: () => void;
 }) => {
   const [firstName, setFirstName] = useState<string>('');
@@ -101,13 +101,15 @@ export const Form = ({
 
   return (
     <div className="flex flex-col space-y-3">
-      <ToggleEntry
-        options={{ unchecked: 'LinkedIn', checked: 'Notion' }}
-        inputId="linkedInOrNotion"
-        handleChange={onSwitch}
-        checked={checked}
-        labelText="Data from:"
-      />
+      {notionValues && (
+        <ToggleEntry
+          options={{ unchecked: 'LinkedIn', checked: 'Notion' }}
+          inputId="linkedInOrNotion"
+          handleChange={onSwitch}
+          checked={checked}
+          labelText="Data from:"
+        />
+      )}
       <SelectEntry
         labelText="Status"
         id="status"
