@@ -46,7 +46,6 @@ export const Toggle: StoryFn = () => {
     <ToggleEntry
       inputId="toggle"
       handleChange={changeHandler}
-      // className="w-80"
       labelText="Display data stored in:"
       checked={checked}
       options={{ unchecked: 'LinkedIn', checked: 'Notion' }}
