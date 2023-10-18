@@ -39,6 +39,7 @@ export const LinkedInNotionSidePanelContent = ({
     setLinkedInProfileInformation(scrapingResult);
   };
 
+  // TODO Uncomment the function below when you want the toggle switch to work
   // const setNotionValues = async () => {
   //   const firstName = 'Will';
   //   const lastName = 'Ramos';
@@ -63,6 +64,7 @@ export const LinkedInNotionSidePanelContent = ({
 
   useEffect(() => {
     setLinkedInValues();
+    // TODO Uncomment the function below when you want the toggle switch to work
     // setNotionValues();
   }, []);
 
@@ -95,6 +97,7 @@ export const LinkedInNotionSidePanelContent = ({
         linkedInProfileInformation ? (
           <Form
             linkedinValues={linkedInProfileInformation}
+            // TODO Uncomment the line below when you want the toggle switch to work
             // notionValues={notionProfileInformation}
             onReload={setLinkedInValues}
           />
