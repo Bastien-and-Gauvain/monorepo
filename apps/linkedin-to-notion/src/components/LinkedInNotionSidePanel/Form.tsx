@@ -35,7 +35,7 @@ export type NotionProfileInformation = {
   /**
    * The status of the profile that's stored in Notion
    */
-  status: 'notContacted' | 'contacted' | 'inProcess' | 'noMatch' | 'notInterested' | 'hired' | '';
+  status: 'notContacted' | 'contacted' | 'inProcess' | 'noMatch' | 'notInterested' | 'hired';
 
   /**
    * The gender of the profile stored in Notion
@@ -62,7 +62,7 @@ export const Form = ({
   const [jobTitle, setJobTitle] = useState<string>('');
   const [currentCompany, setCurrentCompany] = useState<string>('');
   const [location, setLocation] = useState<string>('');
-  const [status, setStatus] = useState<string>('');
+  const [status, setStatus] = useState<string>('notContacted');
   const [gender, setGender] = useState<string>('');
   const [comment, setComment] = useState<string>('');
   const [checked, setChecked] = useState<boolean>(false);
@@ -75,7 +75,7 @@ export const Form = ({
     setJobTitle(jobTitle);
     setCurrentCompany(currentCompany);
     setLocation(location);
-    setStatus('');
+    setStatus('notContacted');
     setGender('');
     setComment('');
   };
@@ -114,7 +114,8 @@ export const Form = ({
         labelText="Status"
         id="status"
         handleChange={(e) => setStatus(e.target.value)}
-        selectedValue={status}
+        initialValue={'notContacted'}
+        value={status}
         options={[
           {
             id: 'not-contacted',
@@ -189,7 +190,8 @@ export const Form = ({
         labelText="Gender"
         id="gender"
         handleChange={(e) => setGender(e.target.value)}
-        selectedValue={gender}
+        initialValue={''}
+        value={gender}
         options={[
           {
             id: 'empty-gender',

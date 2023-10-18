@@ -14,7 +14,8 @@ export const SelectEntry = ({
   handleChange,
   options,
   labelText,
-  selectedValue,
+  initialValue,
+  value,
   className,
 }: SelectEntryProps) => {
   return (
@@ -26,7 +27,8 @@ export const SelectEntry = ({
         handleChange={handleChange}
         required={required}
         className={className}
-        selectedValue={selectedValue}
+        initialValue={initialValue}
+        value={value}
       />
     </div>
   );
