@@ -9,7 +9,10 @@ import {
   getLinkedInProfileInformation,
   type LinkedInProfileInformation,
 } from './../../contents/linkedin-profile-scraper';
+// TODO Uncomment the line below when you want the toggle switch to work
 // import { Form, type NotionProfileInformation } from './Form';
+
+// TODO Comment the line below when you want the toggle switch to work
 import { Form } from './Form';
 
 export const getIFrameStyle = () => {
@@ -32,6 +35,7 @@ export const LinkedInNotionSidePanelContent = ({
   logoutCallBack: () => void;
 }) => {
   const [linkedInProfileInformation, setLinkedInProfileInformation] = useState<LinkedInProfileInformation | null>(null);
+  // TODO Uncomment the line below when you want the toggle switch to work
   // const [notionProfileInformation, setNotionProfileInformation] = useState<NotionProfileInformation | null>(null);
 
   const setLinkedInValues = async () => {
