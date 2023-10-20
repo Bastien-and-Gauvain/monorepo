@@ -35,8 +35,8 @@ const displayChangesInSecureStorage = async () => {
   const storage = new SecureStorage({ area: 'local' });
   await storage.setPassword('napoleon');
   storage.watch({
-    session: (c) => {
-      console.log(c.newValue);
+    notionToken: (c) => {
+      console.log('New value of notionToken: ', c.newValue);
     },
   });
 };

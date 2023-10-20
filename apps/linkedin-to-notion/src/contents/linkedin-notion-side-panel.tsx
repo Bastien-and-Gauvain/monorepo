@@ -33,7 +33,7 @@ const LinkedinNotionSidePanel = () => {
     }),
   });
 
-  const storeEntriesSecurely = async (key: string, value: object): Promise<void> => {
+  const storeEntriesSecurely = async (key: string, value: Record<string, string>): Promise<void> => {
     const storage = new SecureStorage({ area: 'local' });
     await storage.setPassword('napoleon');
     await storage.set(key, value);
@@ -57,7 +57,12 @@ const LinkedinNotionSidePanel = () => {
         // However, it's only available in the session object when the user logs in, not afterwards
         // So, to make sure it's stored once and not erased afterwards, we store it in the secure storage
         // after assessing it's in data.session
-        if (Object.keys(data.session).includes('provider_token')) storeEntriesSecurely('session', data.session);
+        if (data.session.provider_token) {
+          storeEntriesSecurely('notionToken', {
+            accessToken: data.session.provider_token,
+            refreshToken: data.session.refresh_token,
+          });
+        }
 
         sendToBackground({
           name: 'sessions/resolvers/init-session',
