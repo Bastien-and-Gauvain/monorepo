@@ -37,10 +37,15 @@ export type SelectInputProps = {
   required?: boolean;
 
   /**
-   * The index of the initial value.
-   * It's 0 by default.
+   * The initial value.
+   * It's the first option by default.
    */
   initialValue?: string;
+
+  /**
+   * The value of the input (to be controlled from outside the component)
+   */
+  value?: string;
 
   /**
    * Some additional class name.
@@ -68,6 +73,7 @@ export const SelectInput = ({
   id,
   required,
   initialValue,
+  value,
   className,
   handleChange,
   options,
@@ -79,7 +85,8 @@ export const SelectInput = ({
       name={id}
       className={cn('antialiased border border-solid rounded-md p-2 focus:outline-none', variations[type], className)}
       onChange={handleChange}
-      defaultValue={initialValue || options[0].value}>
+      defaultValue={initialValue || options[0].value}
+      value={value}>
       {options.map(({ id, value, label }) => (
         <option key={id} id={id} value={value}>
           {label}

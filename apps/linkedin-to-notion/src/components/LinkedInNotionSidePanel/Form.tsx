@@ -1,42 +1,121 @@
-import { ButtonPrimary, SelectEntry, TextAreaEntry, TextEntry } from 'design-system';
-import { useState } from 'react';
+import { ButtonPrimary, SelectEntry, TextAreaEntry, TextEntry, ToggleEntry } from 'design-system';
+import { useEffect, useState } from 'react';
 
-import {
-  getLinkedInProfileInformation,
-  type LinkedInProfileInformation,
-} from './../../contents/linkedin-profile-scraper';
+import { type LinkedInProfileInformation } from './../../contents/linkedin-profile-scraper';
 
-export const Form = ({ initialValues }: { initialValues: LinkedInProfileInformation }) => {
-  // From LinkedIn
-  const [firstName, setFirstName] = useState<string>(initialValues.name.firstName);
-  const [lastName, setLastName] = useState<string>(initialValues.name.lastName);
-  const [jobTitle, setJobTitle] = useState<string>(initialValues.jobTitle);
-  const [currentCompany, setCurrentCompany] = useState<string>(initialValues.currentCompany);
-  const [location, setLocation] = useState<string>(initialValues.location);
+export type NotionProfileInformation = {
+  /**
+   * The name of the profile stored in Notion
+   */
+  name: {
+    firstName: string;
+    lastName: string;
+  };
 
-  // Not from LinkedIn
+  /**
+   * The job title of the profile stored in Notion
+   */
+  jobTitle: string;
+
+  /**
+   * The current company of the profile stored in Notion
+   */
+  currentCompany: string;
+
+  /**
+   * The location of the profile stored in Notion
+   */
+  location: string;
+
+  /**
+   * The LinkedIn URL of the profile stored in Notion
+   */
+  linkedInURL: string;
+
+  /**
+   * The status of the profile that's stored in Notion
+   */
+  status: 'notContacted' | 'contacted' | 'inProcess' | 'noMatch' | 'notInterested' | 'hired';
+
+  /**
+   * The gender of the profile stored in Notion
+   */
+  gender: '' | 'M' | 'F';
+
+  /**
+   * Any comments on the profile, stored in Notion
+   */
+  comment: string;
+};
+
+export const Form = ({
+  linkedinValues,
+  notionValues,
+  onReload,
+}: {
+  linkedinValues: LinkedInProfileInformation;
+  notionValues?: NotionProfileInformation;
+  onReload: () => void;
+}) => {
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+  const [jobTitle, setJobTitle] = useState<string>('');
+  const [currentCompany, setCurrentCompany] = useState<string>('');
+  const [location, setLocation] = useState<string>('');
   const [status, setStatus] = useState<string>('notContacted');
   const [gender, setGender] = useState<string>('');
   const [comment, setComment] = useState<string>('');
+  const [checked, setChecked] = useState<boolean>(false);
 
-  const onReload = async () => {
-    const scrapingResult = await getLinkedInProfileInformation();
-    const { name, jobTitle, currentCompany, location } = scrapingResult;
+  const setLinkedInValues = async () => {
+    const { name, jobTitle, currentCompany, location } = linkedinValues;
     const { firstName, lastName } = name;
     setFirstName(firstName);
     setLastName(lastName);
     setJobTitle(jobTitle);
     setCurrentCompany(currentCompany);
     setLocation(location);
+    setStatus('notContacted');
+    setGender('');
+    setComment('');
   };
+
+  const setNotionValues = async () => {
+    const { name, jobTitle, currentCompany, location, status, gender, comment } = notionValues;
+    const { firstName, lastName } = name;
+    setFirstName(firstName);
+    setLastName(lastName);
+    setJobTitle(jobTitle);
+    setCurrentCompany(currentCompany);
+    setLocation(location);
+    setStatus(status);
+    setGender(gender);
+    setComment(comment);
+  };
+
+  const onSwitch = async (event: React.ChangeEvent<HTMLInputElement>) => setChecked(event.target.checked);
+
+  useEffect(() => {
+    checked ? setNotionValues() : setLinkedInValues();
+  }, [checked]);
 
   return (
     <div className="flex flex-col space-y-3">
+      {notionValues && (
+        <ToggleEntry
+          options={{ unchecked: 'LinkedIn', checked: 'Notion' }}
+          inputId="linkedInOrNotion"
+          handleChange={onSwitch}
+          checked={checked}
+          labelText="Data from:"
+        />
+      )}
       <SelectEntry
         labelText="Status"
         id="status"
         handleChange={(e) => setStatus(e.target.value)}
-        initialValue={status}
+        initialValue={'notContacted'}
+        value={status}
         options={[
           {
             id: 'not-contacted',
@@ -111,7 +190,8 @@ export const Form = ({ initialValues }: { initialValues: LinkedInProfileInformat
         labelText="Gender"
         id="gender"
         handleChange={(e) => setGender(e.target.value)}
-        initialValue={gender}
+        initialValue={''}
+        value={gender}
         options={[
           {
             id: 'empty-gender',

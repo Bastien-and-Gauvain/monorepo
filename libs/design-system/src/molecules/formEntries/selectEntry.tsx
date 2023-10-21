@@ -15,6 +15,7 @@ export const SelectEntry = ({
   options,
   labelText,
   initialValue,
+  value,
   className,
 }: SelectEntryProps) => {
   return (
@@ -27,6 +28,7 @@ export const SelectEntry = ({
         required={required}
         className={className}
         initialValue={initialValue}
+        value={value}
       />
     </div>
   );

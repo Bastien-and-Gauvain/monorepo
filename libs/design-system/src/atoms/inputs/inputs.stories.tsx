@@ -1,6 +1,8 @@
 import type { Meta, StoryFn } from '@storybook/react';
+import { useState } from 'react';
 
 import { SelectInput, TextAreaInput, TextInput } from '.';
+import { ToggleInput } from './toggleInputs';
 
 const meta = {
   title: 'Atoms/Inputs',
@@ -62,3 +64,19 @@ export const TextArea: StoryFn = () => (
     required
   />
 );
+
+export const Toggle: StoryFn = () => {
+  const [checked, setChecked] = useState<boolean>(false);
+  const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
+    console.log(event.target.checked);
+  };
+  return (
+    <ToggleInput
+      options={{ checked: 'Notion', unchecked: 'LinkedIn' }}
+      checked={checked}
+      inputId="linkedinNotionSwitch"
+      handleChange={changeHandler}
+    />
+  );
+};
