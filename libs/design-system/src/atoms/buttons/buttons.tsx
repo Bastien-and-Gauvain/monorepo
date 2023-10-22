@@ -38,7 +38,7 @@ const Button = ({ children, type = 'primary', className, onClick }: ButtonProps)
   return (
     <button
       className={cn(
-        'plasmo-text-white plasmo-bg-ocean-blue plasmo-shadow-lg plasmo-shadow-grey-light plasmo-hover:bg-green plasmo-transition-colors plasmo-duration-300 plasmo-ease-in-out',
+        'plasmo-text-white plasmo-bg-ocean-blue plasmo-shadow-lg plasmo-shadow-grey-light hover:plasmo-bg-green plasmo-transition-colors plasmo-duration-300 plasmo-ease-in-out',
         typeSpecificClasses[type],
         className
       )}

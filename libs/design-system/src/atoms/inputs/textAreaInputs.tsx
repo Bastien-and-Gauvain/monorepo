@@ -53,7 +53,7 @@ export const TextAreaInput = ({
       id={inputId}
       name={inputId}
       className={cn(
-        'plasmo-antialiased plasmo-text-gray plasmo-border plasmo-border-solid plasmo-border-gray plasmo-rounded-md plasmo-w-full plasmo-p-2 plasmo-focus:outline-none plasmo-focus:border-cyan',
+        'plasmo-antialiased plasmo-text-gray plasmo-border plasmo-border-solid plasmo-border-gray plasmo-rounded-md plasmo-w-full plasmo-p-2 focus:plasmo-outline-none focus:plasmo-border-cyan',
         className
       )}
       placeholder={placeholder}
