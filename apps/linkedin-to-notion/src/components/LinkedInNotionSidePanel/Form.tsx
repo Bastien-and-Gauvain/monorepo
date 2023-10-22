@@ -2,6 +2,7 @@ import { ButtonPrimary, SelectEntry, TextAreaEntry, TextEntry, ToggleEntry } fro
 import { useEffect, useState } from 'react';
 
 import { type LinkedInProfileInformation } from './../../contents/linkedin-profile-scraper';
+import { NotionDatabasesSelect } from './NotionDatabasesSelect';
 
 export type NotionProfileInformation = {
   /**
@@ -101,6 +102,7 @@ export const Form = ({
 
   return (
     <div className="flex flex-col space-y-3">
+      <NotionDatabasesSelect />
       {notionValues && (
         <ToggleEntry
           options={{ unchecked: 'LinkedIn', checked: 'Notion' }}

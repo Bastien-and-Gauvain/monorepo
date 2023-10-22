@@ -1,6 +1,5 @@
-import logo from 'data-base64:~assets/icon.png';
 import cssText from 'data-text:~style.css';
-import { ButtonPrimary, Heading2, IFramedSidePanel, Spinner } from 'design-system';
+import { ButtonPrimary, IFramedSidePanel, Spinner } from 'design-system';
 import { createElement, useEffect, useState } from 'react';
 
 import './../../../style.css'; // for the font to load
@@ -93,10 +92,6 @@ export const LinkedInNotionSidePanelContent = ({
       onLogoutCallback={() => logoutCallBack()}
       id={id}
       className="top-48 space-y-4 flex flex-col">
-      <div className="flex flex-col items-center">
-        <img src={logo} className="w-12" />
-        <Heading2>LinkedIn to Notion</Heading2>
-      </div>
       {isLoggedIn ? (
         linkedInProfileInformation ? (
           <Form
