@@ -74,17 +74,17 @@ export const IFramedSidePanel = ({
   const iframeHead = contentRef?.contentWindow?.document?.head;
 
   const content = (
-    <div className={cn('p-4', className)}>
+    <div className={cn('plasmo-p-4', className)}>
       {(hasCloseButton || hasTranslateButton) && (
-        <div className="flex justify-between mb-4">
-          <div className="flex flex-row space-x-3">
+        <div className="plasmo-flex plasmo-justify-between plasmo-mb-4">
+          <div className="plasmo-flex plasmo-flex-row plasmo-space-x-3">
             {hasCloseButton && (
-              <ButtonSecondary onClick={() => onCloseCallback && onCloseCallback()} className="w-8">
+              <ButtonSecondary onClick={() => onCloseCallback && onCloseCallback()} className="plasmo-w-8">
                 ⤬
               </ButtonSecondary>
             )}
             {hasTranslateButton && (
-              <ButtonSecondary onClick={() => setIsRight(!isRight)} className="w-8">
+              <ButtonSecondary onClick={() => setIsRight(!isRight)} className="plasmo-w-8">
                 ↔
               </ButtonSecondary>
             )}
@@ -106,9 +106,9 @@ export const IFramedSidePanel = ({
       // To avoid this, we're using fixed width and height
       // However, this remains true for breakpoints or default tailwind classes
       className={cn(
-        'fixed top-0 min-h-full w-[296px] 2xl:w-[396px] bg-white z-10 shadow-2xl overflow-scroll',
-        isRight ? 'right-0 rounded-l-md' : 'left-0 rounded-r-md',
-        isOpen ? '' : 'hidden'
+        'plasmo-fixed plasmo-top-0 plasmo-min-h-full plasmo-w-[296px] plasmo-2xl:w-[396px] plasmo-bg-white plasmo-z-10 plasmo-shadow-2xl plasmo-overflow-scroll',
+        isRight ? 'plasmo-right-0 plasmo-rounded-l-md' : 'plasmo-left-0 plasmo-rounded-r-md',
+        isOpen ? '' : 'plasmo-hidden'
       )}
       ref={setContentRef}>
       {iframeHead && createPortal(head, iframeHead)}

@@ -26,13 +26,13 @@ export type LabelProps = {
 };
 
 const fontSizeMapping = {
-  sm: 'text-3.5',
-  base: 'text-4',
+  sm: 'plasmo-text-3.5',
+  base: 'plasmo-text-4',
 };
 
 const Label = ({ type = 'base', inputId, labelText, className }: LabelProps) => {
   return (
-    <label htmlFor={inputId} className={cn('antialiased', 'text-gray', fontSizeMapping[type], className)}>
+    <label htmlFor={inputId} className={cn('plasmo-antialiased', 'plasmo-text-gray', fontSizeMapping[type], className)}>
       {labelText}
     </label>
   );

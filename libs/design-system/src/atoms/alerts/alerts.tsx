@@ -21,14 +21,16 @@ type AlertsProps = {
 };
 
 const colorMapping = {
-  success: 'bg-green text-grey',
-  info: 'bg-cyan text-grey',
-  warning: 'bg-pink text-grey',
-  error: 'bg-red text-white',
+  success: 'plasmo-bg-green plasmo-text-grey',
+  info: 'plasmo-bg-cyan plasmo-text-grey',
+  warning: 'plasmo-bg-pink plasmo-text-grey',
+  error: 'plasmo-bg-red plasmo-text-white',
 };
 
 const Alert = ({ type = 'info', message, className }: AlertsProps) => {
-  return <p className={cn('antialiased p-4 rounded-md', colorMapping[type], className)}>{message}</p>;
+  return (
+    <p className={cn('plasmo-antialiased plasmo-p-4 plasmo-rounded-md', colorMapping[type], className)}>{message}</p>
+  );
 };
 
 export const InfoAlert = (p: Omit<AlertsProps, 'type'>) => <Alert type="info" {...p} />;

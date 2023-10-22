@@ -39,7 +39,7 @@ export const DefaultSidePanel: StoryFn = () => {
         isOpen={isOpen}
         onCloseCallback={() => setIsOpen(false)}
         id="default-side-panel"
-        className="space-y-4">
+        className="plasmo-space-y-4">
         <p>Hello, this is a side bar</p>
         <ButtonPrimary onClick={() => console.log('Hello Primary')}>PRIMARY BUTTON</ButtonPrimary>
       </IFramedSidePanel>

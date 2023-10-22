@@ -35,16 +35,16 @@ type TitleProps = {
 };
 
 const headingsDesktop = {
-  h1: 'text-15 leading-14 uppercase',
-  h2: 'text-8 leading-10 tracking-widish',
-  h3: 'text-6 leading-8',
+  h1: 'plasmo-text-15 plasmo-leading-14 plasmo-uppercase',
+  h2: 'plasmo-text-8 plasmo-leading-10 plasmo-tracking-widish',
+  h3: 'plasmo-text-6 plasmo-leading-8',
   h4: '',
 };
 
 export const Title = ({
   children,
   className = '',
-  color = 'text-black',
+  color = 'plasmo-text-black',
   type = 'h1',
   onClick,
   ...props
@@ -52,7 +52,7 @@ export const Title = ({
   return createElement(
     type,
     {
-      className: cn('antialiased', color, headingsDesktop[type], className),
+      className: cn('plasmo-antialiased', color, headingsDesktop[type], className),
       onClick,
       ...props,
     },

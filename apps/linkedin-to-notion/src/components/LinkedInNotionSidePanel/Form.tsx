@@ -1,7 +1,7 @@
 import { ButtonPrimary, SelectEntry, TextAreaEntry, TextEntry, ToggleEntry } from 'design-system';
 import { useEffect, useState } from 'react';
 
-import { type LinkedInProfileInformation } from './../../contents/linkedin-profile-scraper';
+import { type LinkedInProfileInformation } from './../../contents/scrapers/linkedin-profile-scraper';
 
 export type NotionProfileInformation = {
   /**
@@ -100,7 +100,7 @@ export const Form = ({
   }, [checked]);
 
   return (
-    <div className="flex flex-col space-y-3">
+    <div className="plasmo-flex plasmo-flex-col plasmo-space-y-3">
       {notionValues && (
         <ToggleEntry
           options={{ unchecked: 'LinkedIn', checked: 'Notion' }}
@@ -216,8 +216,8 @@ export const Form = ({
         value={comment}
         handleChange={(e) => setComment(e.target.value)}
       />
-      <div className="flex space-x-2">
-        <ButtonPrimary className="flex-grow">Save</ButtonPrimary>
+      <div className="plasmo-flex plasmo-space-x-2">
+        <ButtonPrimary className="plasmo-flex-grow">Save</ButtonPrimary>
         <ButtonPrimary onClick={onReload}>🔄</ButtonPrimary>
       </div>
     </div>

@@ -27,20 +27,27 @@ type ParagraphProps = {
 };
 
 const fontSizeMapping = {
-  sm: 'text-3.5',
-  base: 'text-4',
-  lg: 'text-5',
+  sm: 'plasmo-text-3.5',
+  base: 'plasmo-text-4',
+  lg: 'plasmo-text-5',
 };
 
 const alignmentMapping = {
-  left: 'text-left',
-  center: 'text-center',
-  right: 'text-right',
+  left: 'plasmo-text-left',
+  center: 'plasmo-text-center',
+  right: 'plasmo-text-right',
 };
 
 const Paragraph = ({ type = 'base', alignment = 'left', className, children }: ParagraphProps) => {
   return (
-    <p className={cn('antialiased', 'text-gray', fontSizeMapping[type], alignmentMapping[alignment], className)}>
+    <p
+      className={cn(
+        'plasmo-antialiased',
+        'plasmo-text-gray',
+        fontSizeMapping[type],
+        alignmentMapping[alignment],
+        className
+      )}>
       {children}
     </p>
   );

@@ -15,8 +15,11 @@
   ],
   "settings": {
     "cSpell.words": [
+      "autodocs",
       "plasmohq",
-      "supabase"
+      "roboto",
+      "supabase",
+      "tailwindcss"
     ]
   }
 }

@@ -7,4 +7,5 @@ module.exports = {
   theme: designSystemConfig.theme,
   content: ['./**/*.tsx'],
   plugins: [],
+  prefix: "plasmo-"
 };
