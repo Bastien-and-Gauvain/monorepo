@@ -1,6 +1,6 @@
 import type { Provider, User } from '@supabase/supabase-js';
 import cssText from 'data-text:~style.css';
-import type { PlasmoCSConfig, PlasmoGetOverlayAnchor, PlasmoGetStyle } from 'plasmo';
+import type { PlasmoCSConfig, PlasmoGetStyle } from 'plasmo';
 import { useEffect, useState } from 'react';
 
 import { sendToBackground } from '@plasmohq/messaging';
