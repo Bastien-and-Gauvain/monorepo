@@ -1,6 +1,5 @@
-import logo from 'data-base64:~assets/icon.png';
 import cssText from 'data-text:~style.css';
-import { ButtonPrimary, Heading2, IFramedSidePanel, Spinner } from 'design-system';
+import { ButtonPrimary, IFramedSidePanel, Spinner } from 'design-system';
 import { createElement, useEffect, useState } from 'react';
 
 import {
