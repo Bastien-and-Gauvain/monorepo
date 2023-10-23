@@ -10,8 +10,8 @@ type ToggleEntryProps = LabelProps & ToggleInputProps;
 
 export const ToggleEntry = ({ options, checked, inputId, handleChange, labelText, className }: ToggleEntryProps) => {
   return (
-    <div className="flex justify-between">
-      <BaseLabel inputId={inputId} labelText={labelText} className="me-2" />
+    <div className="plasmo-flex plasmo-justify-between">
+      <BaseLabel inputId={inputId} labelText={labelText} className="plasmo-me-2" />
       <ToggleInput
         options={options}
         checked={checked}

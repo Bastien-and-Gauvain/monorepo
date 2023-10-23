@@ -19,7 +19,7 @@ export const Text: StoryFn = () => (
     inputId="firstName"
     required
     handleChange={(event) => console.log(event.target.value)}
-    className="w-80"
+    className="plasmo-w-80"
     labelText="First Name"
   />
 );
@@ -29,7 +29,7 @@ export const TextArea: StoryFn = () => {
     <TextAreaEntry
       inputId="comment"
       handleChange={(event) => console.log(event.target.value)}
-      className="w-80"
+      className="plasmo-w-80"
       labelText="Comment"
       required
     />

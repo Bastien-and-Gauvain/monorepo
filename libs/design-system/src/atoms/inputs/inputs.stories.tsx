@@ -15,7 +15,12 @@ const meta = {
 export default meta;
 
 export const Text: StoryFn = () => (
-  <TextInput inputId="firstName" handleChange={(event) => console.log(event.target.value)} className="w-80" required />
+  <TextInput
+    inputId="firstName"
+    handleChange={(event) => console.log(event.target.value)}
+    className="plasmo-w-80"
+    required
+  />
 );
 
 export const SelectPrimary: StoryFn = () => {
@@ -31,7 +36,7 @@ export const SelectPrimary: StoryFn = () => {
       id="primary"
       handleChange={(event) => console.log(event.target.value)}
       options={options}
-      className="w-80"
+      className="plasmo-w-80"
       required
     />
   );
@@ -50,7 +55,7 @@ export const SelectSecondary: StoryFn = () => {
       id="secondary"
       handleChange={(event) => console.log(event.target.value)}
       options={options}
-      className="w-40"
+      className="plasmo-w-40"
       required
     />
   );
@@ -60,7 +65,7 @@ export const TextArea: StoryFn = () => (
   <TextAreaInput
     inputId="comment"
     handleChange={(event) => console.log(event.target.value)}
-    className="w-80"
+    className="plasmo-w-80"
     required
   />
 );

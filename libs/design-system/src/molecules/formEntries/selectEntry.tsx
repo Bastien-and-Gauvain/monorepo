@@ -19,7 +19,7 @@ export const SelectEntry = ({
   className,
 }: SelectEntryProps) => {
   return (
-    <div className="flex flex-col">
+    <div className="plasmo-flex plasmo-flex-col">
       <BaseLabel inputId={id} labelText={labelText} />
       <SelectInput
         id={id}

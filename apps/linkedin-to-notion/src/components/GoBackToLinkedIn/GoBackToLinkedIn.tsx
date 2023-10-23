@@ -3,8 +3,6 @@ import cssText from 'data-text:~style.css';
 import { ButtonPrimary, IFramedSidePanel } from 'design-system';
 import { createElement } from 'react';
 
-import './../../../style.css'; // for the font to load
-
 export const getIFrameStyle = () => {
   return createElement('style', {}, cssText);
 };
@@ -31,9 +29,9 @@ export const GoBackToLinkedInContent = ({
       isOpen={isOpen}
       onCloseCallback={onCloseCallback}
       id={id}
-      className="top-48 space-y-4 flex flex-col">
-      <div className="flex flex-col items-center">
-        <img src={logo} className="w-12 mb-4" />
+      className="plasmo-top-48 plasmo-space-y-4 plasmo-flex plasmo-flex-col">
+      <div className="plasmo-flex plasmo-flex-col plasmo-items-center">
+        <img src={logo} className="plasmo-w-12 plasmo-mb-4" />
         <ButtonPrimary onClick={askToOpenLinkedInTab}>Go Back To Linkedin</ButtonPrimary>
       </div>
     </IFramedSidePanel>

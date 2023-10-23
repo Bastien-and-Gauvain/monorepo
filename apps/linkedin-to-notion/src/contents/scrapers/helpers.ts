@@ -1,4 +1,4 @@
-import type { LinkedInProfileInformation } from '~src/contents/linkedin-profile-scraper';
+import type { LinkedInProfileInformation } from './linkedin-profile-scraper';
 
 export const isScrapingComplete = (values: LinkedInProfileInformation): boolean => {
   if (!values) {
