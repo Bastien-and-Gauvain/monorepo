@@ -90,10 +90,6 @@ export const LinkedInNotionSidePanelContent = ({
       onLogoutCallback={() => logoutCallBack()}
       id={id}
       className="plasmo-top-48 plasmo-space-y-4 plasmo-flex plasmo-flex-col">
-      <div className="plasmo-flex plasmo-flex-col plasmo-items-center">
-        <img src={logo} className="plasmo-w-12" />
-        <Heading2>LinkedIn to Notion</Heading2>
-      </div>
       {isLoggedIn ? (
         linkedInProfileInformation ? (
           <Form
