@@ -1,6 +1,9 @@
 import { ButtonPrimary, SelectEntry, TextAreaEntry, TextEntry, ToggleEntry } from 'design-system';
 import { useEffect, useState } from 'react';
 
+import { sendToBackground } from '@plasmohq/messaging';
+import { useStorage } from '@plasmohq/storage/hook';
+
 import { type LinkedInProfileInformation } from './../../contents/linkedin-profile-scraper';
 import { NotionDatabasesSelect } from './NotionDatabasesSelect';
 
@@ -58,6 +61,11 @@ export const Form = ({
   notionValues?: NotionProfileInformation;
   onReload: () => void;
 }) => {
+  // We need to have the selected database stored somewhere
+  const [selectedNotionDatabase] = useStorage<string>('selectedNotionDatabase');
+  // We need the notion Token to make API calls
+  const [notionToken] = useStorage('notionToken');
+  // We need to store the data from scraped profiles in the state
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [jobTitle, setJobTitle] = useState<string>('');
@@ -92,6 +100,37 @@ export const Form = ({
     setStatus(status);
     setGender(gender);
     setComment(comment);
+  };
+
+  const saveLinkedInProfile = async (): Promise<void> => {
+    const linkedInURL = window.location.href.match(/https:\/\/[a-z]{2,4}\.linkedin\.com\/in\/[^/]+\//gim)[0];
+    const linkedinProfileInformation = {
+      name: {
+        firstName,
+        lastName,
+      },
+      jobTitle,
+      company: currentCompany,
+      location,
+      status,
+      comment,
+      linkedInURL,
+    };
+
+    if (gender !== '') {
+      linkedinProfileInformation['gender'] = gender;
+    }
+
+    const res = await sendToBackground({
+      name: 'notion/resolvers/createProfileInDatabase',
+      body: {
+        notionToken: notionToken.accessToken,
+        databaseId: selectedNotionDatabase,
+        linkedinProfileInformation,
+      },
+    });
+
+    console.log(res);
   };
 
   const onSwitch = async (event: React.ChangeEvent<HTMLInputElement>) => setChecked(event.target.checked);
@@ -219,7 +258,9 @@ export const Form = ({
         handleChange={(e) => setComment(e.target.value)}
       />
       <div className="flex space-x-2">
-        <ButtonPrimary className="flex-grow">Save</ButtonPrimary>
+        <ButtonPrimary className="flex-grow" onClick={saveLinkedInProfile}>
+          Save
+        </ButtonPrimary>
         <ButtonPrimary onClick={onReload}>🔄</ButtonPrimary>
       </div>
     </div>
