@@ -1,4 +1,13 @@
-import { ButtonPrimary, SelectEntry, TextAreaEntry, TextEntry, ToggleEntry } from 'design-system';
+import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
+import {
+  ButtonPrimary,
+  ErrorAlert,
+  InfoAlert,
+  SelectEntry,
+  TextAreaEntry,
+  TextEntry,
+  ToggleEntry,
+} from 'design-system';
 import { useEffect, useState } from 'react';
 
 import { sendToBackground } from '@plasmohq/messaging';
@@ -24,7 +33,7 @@ export type NotionProfileInformation = {
   /**
    * The current company of the profile stored in Notion
    */
-  currentCompany: string;
+  company: string;
 
   /**
    * The location of the profile stored in Notion
@@ -34,7 +43,12 @@ export type NotionProfileInformation = {
   /**
    * The LinkedIn URL of the profile stored in Notion
    */
-  linkedInURL: string;
+  linkedinUrl: string;
+
+  /**
+   * The url of the profile in Notion
+   */
+  notionUrl: string;
 
   /**
    * The status of the profile that's stored in Notion
@@ -63,8 +77,6 @@ export const Form = ({
 }) => {
   // We need to have the selected database stored somewhere
   const [selectedNotionDatabase] = useStorage<string>('selectedNotionDatabase');
-  // We need the notion Token to make API calls
-  const [notionToken] = useStorage('notionToken');
   // We need to store the data from scraped profiles in the state
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
@@ -75,31 +87,46 @@ export const Form = ({
   const [gender, setGender] = useState<string>('');
   const [comment, setComment] = useState<string>('');
   const [checked, setChecked] = useState<boolean>(false);
+  // To handle the interactions with Notion
+  const [notionToken] = useStorage('notionToken');
+  const [alertState, setAlertState] = useState<'error' | 'in-notion' | null>(null);
+  const [currentNotionValues, setCurrentNotionValues] = useState<NotionProfileInformation | null>(notionValues);
 
-  const setLinkedInValues = async () => {
-    const { name, jobTitle, currentCompany, location } = linkedinValues;
+  const setFormValues = async (values) => {
+    const { name, jobTitle, currentCompany, location, status, gender, comment } = values;
     const { firstName, lastName } = name;
     setFirstName(firstName);
     setLastName(lastName);
     setJobTitle(jobTitle);
     setCurrentCompany(currentCompany);
     setLocation(location);
-    setStatus('Not Contacted');
-    setGender('');
-    setComment('');
+    setStatus(status || 'Not Contacted');
+    setGender(gender || '');
+    setComment(comment || '');
   };
 
-  const setNotionValues = async () => {
-    const { name, jobTitle, currentCompany, location, status, gender, comment } = notionValues;
-    const { firstName, lastName } = name;
-    setFirstName(firstName);
-    setLastName(lastName);
-    setJobTitle(jobTitle);
-    setCurrentCompany(currentCompany);
-    setLocation(location);
-    setStatus(status);
-    setGender(gender);
-    setComment(comment);
+  const onSwitch = async (event: React.ChangeEvent<HTMLInputElement>) => setChecked(event.target.checked);
+
+  const handleNotionResponse = (response: PageObjectResponse) => {
+    console.log(response);
+    const { properties, url } = response;
+    const { firstName, lastName, jobTitle, company, location, linkedinUrl, status, gender, comment } = properties;
+
+    setCurrentNotionValues({
+      name: {
+        firstName: firstName['rich_text'][0]['plain_text'],
+        lastName: lastName['rich_text'][0]['plain_text'],
+      },
+      jobTitle: jobTitle['rich_text'][0]['plain_text'],
+      company: company['rich_text'][0]['plain_text'],
+      location: location['rich_text'][0]['plain_text'],
+      linkedinUrl: linkedinUrl['url'],
+      notionUrl: url,
+      status: status['select']['name'],
+      gender: gender['select']['name'],
+      comment: comment['rich_text'][0]['plain_text'],
+    });
+    setAlertState('in-notion');
   };
 
   const saveLinkedInProfile = async (): Promise<void> => {
@@ -130,19 +157,26 @@ export const Form = ({
       },
     });
 
-    console.log(res);
+    if (res.error) {
+      console.log(res.error);
+      setAlertState('error');
+    } else {
+      handleNotionResponse(res.creationResponse);
+    }
   };
 
-  const onSwitch = async (event: React.ChangeEvent<HTMLInputElement>) => setChecked(event.target.checked);
-
   useEffect(() => {
-    checked ? setNotionValues() : setLinkedInValues();
+    checked ? setFormValues(currentNotionValues) : setFormValues(linkedinValues);
   }, [checked]);
 
   return (
     <div className="flex flex-col space-y-3">
+      {alertState === 'error' && <ErrorAlert message="Something went wrong. Open developer console to know more." />}
+      {alertState === 'in-notion' && (
+        <InfoAlert message="Click to open profile in Notion" link={currentNotionValues.notionUrl} />
+      )}
       <NotionDatabasesSelect />
-      {notionValues && (
+      {currentNotionValues && (
         <ToggleEntry
           options={{ unchecked: 'LinkedIn', checked: 'Notion' }}
           inputId="linkedInOrNotion"
