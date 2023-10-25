@@ -211,7 +211,6 @@ export default class NotionProvider {
     }
 
     const response = await this.notion.pages.create(pageParameters);
-    console.log(response);
     return response;
   }
 }
