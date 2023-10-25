@@ -71,7 +71,7 @@ export const Form = ({
   const [jobTitle, setJobTitle] = useState<string>('');
   const [currentCompany, setCurrentCompany] = useState<string>('');
   const [location, setLocation] = useState<string>('');
-  const [status, setStatus] = useState<string>('notContacted');
+  const [status, setStatus] = useState<string>('Not Contacted');
   const [gender, setGender] = useState<string>('');
   const [comment, setComment] = useState<string>('');
   const [checked, setChecked] = useState<boolean>(false);
@@ -84,7 +84,7 @@ export const Form = ({
     setJobTitle(jobTitle);
     setCurrentCompany(currentCompany);
     setLocation(location);
-    setStatus('notContacted');
+    setStatus('Not Contacted');
     setGender('');
     setComment('');
   };
@@ -155,38 +155,38 @@ export const Form = ({
         labelText="Status"
         id="status"
         handleChange={(e) => setStatus(e.target.value)}
-        initialValue={'notContacted'}
+        initialValue={'Not Contacted'}
         value={status}
         options={[
           {
             id: 'not-contacted',
-            label: 'Not contacted',
-            value: 'notContacted',
+            label: 'Not Contacted',
+            value: 'Not Contacted',
           },
           {
             id: 'contacted',
             label: 'Contacted',
-            value: 'contacted',
+            value: 'Contacted',
           },
           {
             id: 'in-process',
-            label: 'In process',
-            value: 'inProcess',
+            label: 'In Process',
+            value: 'In Process',
           },
           {
             id: 'no-match',
-            label: 'No match',
-            value: 'noMatch',
+            label: 'No Match',
+            value: 'No Match',
           },
           {
             id: 'not-interested',
-            label: 'Not interested',
-            value: 'notInterested',
+            label: 'Not Interested',
+            value: 'Not Interested',
           },
           {
             id: 'hired',
             label: 'Hired',
-            value: 'hired',
+            value: 'Hired',
           },
         ]}
       />
@@ -242,12 +242,12 @@ export const Form = ({
           {
             id: 'female',
             label: 'Female',
-            value: 'female',
+            value: 'F',
           },
           {
             id: 'male',
             label: 'Male',
-            value: 'male',
+            value: 'M',
           },
         ]}
       />

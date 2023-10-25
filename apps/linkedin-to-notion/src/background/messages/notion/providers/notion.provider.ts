@@ -203,7 +203,7 @@ export default class NotionProvider {
     };
 
     if (linkedInProfileInformation.gender) {
-      pageParameters['gender'] = {
+      pageParameters.properties['gender'] = {
         select: {
           name: linkedInProfileInformation.gender,
         },
