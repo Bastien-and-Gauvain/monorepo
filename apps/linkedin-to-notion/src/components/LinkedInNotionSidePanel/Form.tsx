@@ -81,7 +81,7 @@ export const Form = ({
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [jobTitle, setJobTitle] = useState<string>('');
-  const [currentCompany, setCurrentCompany] = useState<string>('');
+  const [company, setCompany] = useState<string>('');
   const [location, setLocation] = useState<string>('');
   const [status, setStatus] = useState<string>('Not Contacted');
   const [gender, setGender] = useState<string>('');
@@ -93,12 +93,12 @@ export const Form = ({
   const [currentNotionValues, setCurrentNotionValues] = useState<NotionProfileInformation | null>(notionValues);
 
   const setFormValues = async (values) => {
-    const { name, jobTitle, currentCompany, location, status, gender, comment } = values;
+    const { name, jobTitle, company, location, status, gender, comment } = values;
     const { firstName, lastName } = name;
     setFirstName(firstName);
     setLastName(lastName);
     setJobTitle(jobTitle);
-    setCurrentCompany(currentCompany);
+    setCompany(company);
     setLocation(location);
     setStatus(status || 'Not Contacted');
     setGender(gender || '');
@@ -137,7 +137,7 @@ export const Form = ({
         lastName,
       },
       jobTitle,
-      company: currentCompany,
+      company,
       location,
       status,
       comment,
@@ -248,10 +248,10 @@ export const Form = ({
         labelText="Job title"
       />
       <TextEntry
-        initialValue={currentCompany}
+        initialValue={company}
         placeholder="Rock Band"
         inputId="linkedin-current-company"
-        handleChange={(e) => setCurrentCompany(e.target.value)}
+        handleChange={(e) => setCompany(e.target.value)}
         labelText="Current company"
       />
       <TextEntry

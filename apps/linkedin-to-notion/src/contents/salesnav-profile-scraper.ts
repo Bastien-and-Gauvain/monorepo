@@ -13,7 +13,7 @@ type SalesNavProfileInformation = {
     lastName: string;
   };
   jobTitle: string;
-  currentCompany: string;
+  company: string;
   location: string;
   salesNavURL: string;
 };
@@ -60,7 +60,7 @@ const getJobTitle = (): string => {
   return cleanJobTitle(jobTitle.textContent);
 };
 
-const getCurrentCompany = (): string => {
+const getCompany = (): string => {
   const hasJobAnchor = document.querySelector('button span.artdeco-button__text');
   if (!hasJobAnchor) {
     return '';
@@ -91,7 +91,7 @@ const getLocation = (): string => {
 export const getSalesNavProfileInformation = (): SalesNavProfileInformation => {
   const { firstName, lastName, fullName } = getName();
   const jobTitle = getJobTitle();
-  const currentCompany = getCurrentCompany();
+  const company = getCompany();
   const location = getLocation();
   const salesNavURL = window.location.href;
 
@@ -101,7 +101,7 @@ export const getSalesNavProfileInformation = (): SalesNavProfileInformation => {
       lastName: lastName,
     },
     jobTitle,
-    currentCompany,
+    company,
     location,
     salesNavURL,
   };

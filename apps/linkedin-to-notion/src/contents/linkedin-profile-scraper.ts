@@ -14,7 +14,7 @@ export type LinkedInProfileInformation = {
     lastName: string;
   };
   jobTitle: string;
-  currentCompany: string;
+  company: string;
   location: string;
   linkedInURL: string;
 };
@@ -71,14 +71,14 @@ const getJobTitle = (): string => {
   }
 
   // This covers the case of a person with several experiences in a same company
-  if (jobTitle.textContent === getCurrentCompany()) {
+  if (jobTitle.textContent === getCompany()) {
     return fallbackCurrentJob;
   }
 
   return cleanJobTitle(jobTitle.textContent);
 };
 
-const getCurrentCompany = (): string => {
+const getCompany = (): string => {
   const detailsContainer = document.querySelector('.pv-text-details__right-panel');
   if (!detailsContainer) {
     return '';
@@ -119,7 +119,7 @@ export const getLinkedInProfileInformation = async (
 
   const { firstName, lastName, fullName } = getName();
   const jobTitle = getJobTitle();
-  const currentCompany = getCurrentCompany();
+  const company = getCompany();
   const location = getLocation();
   const linkedInURL = window.location.href;
 
@@ -129,7 +129,7 @@ export const getLinkedInProfileInformation = async (
       lastName: lastName,
     },
     jobTitle,
-    currentCompany,
+    company,
     location,
     linkedInURL,
   };
