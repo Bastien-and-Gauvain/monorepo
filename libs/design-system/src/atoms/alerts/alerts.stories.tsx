@@ -12,10 +12,14 @@ const meta = {
 
 export default meta;
 
-export const Success: StoryFn = () => <SuccessAlert message="A success alert!" className="w-80" />;
+export const Success: StoryFn = () => (
+  <SuccessAlert className="w-80" link="https://bvelitchkine.notion.site" message="A success alert!" />
+);
 
-export const Info: StoryFn = () => <InfoAlert message="An info alert!" className="w-80" />;
+export const Info: StoryFn = () => (
+  <InfoAlert className="w-80" link="https://bvelitchkine.notion.site" message="An info alert!" />
+);
 
-export const Warning: StoryFn = () => <WarningAlert message="A warning alert!" className="w-80" />;
+export const Warning: StoryFn = () => <WarningAlert className="w-80" message="A warning alert!" />;
 
-export const Error: StoryFn = () => <ErrorAlert message="An error alert!" className="w-80" />;
+export const Error: StoryFn = () => <ErrorAlert className="w-80" message="An error alert!" />;

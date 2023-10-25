@@ -15,6 +15,11 @@ type AlertsProps = {
   message: string;
 
   /**
+   * A link if we want the alert to be clickable
+   */
+  link?: string;
+
+  /**
    * Some additional class names
    */
   className?: string;
@@ -27,8 +32,16 @@ const colorMapping = {
   error: 'bg-red text-white',
 };
 
-const Alert = ({ type = 'info', message, className }: AlertsProps) => {
-  return <p className={cn('antialiased p-4 rounded-md', colorMapping[type], className)}>{message}</p>;
+const Alert = ({ type = 'info', className, link, message }: AlertsProps) => {
+  if (link) {
+    return (
+      <a className={cn('antialiased p-4 rounded-md', colorMapping[type], className)} href={link}>
+        {message}
+      </a>
+    );
+  } else {
+    return <p className={cn('antialiased p-4 rounded-md', colorMapping[type], className)}>{message}</p>;
+  }
 };
 
 export const InfoAlert = (p: Omit<AlertsProps, 'type'>) => <Alert type="info" {...p} />;
