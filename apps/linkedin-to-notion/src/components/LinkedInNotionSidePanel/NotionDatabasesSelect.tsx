@@ -22,6 +22,7 @@ export const NotionDatabasesSelect = () => {
         },
       });
       setNotionDatabases(databases);
+      setSelectedNotionDatabase(databases.databases[0].id);
       setIsLoading(false);
     };
 
