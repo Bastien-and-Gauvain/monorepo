@@ -73,13 +73,15 @@ const LinkedinNotionSidePanel = () => {
   };
 
   // Listen the icon onClick message from the background script
-  chrome.runtime.onMessage.addListener((msg) => {
+  chrome.runtime.onMessage.addListener(async (msg) => {
     if (msg === 'toggleLinkedInNotionSidePanel') {
-      return setIsOpen(!isOpen);
+      setIsOpen(!isOpen);
+      await chrome.runtime.sendMessage({ name: 'linkedInNotionSidePanelStatus', body: { isOpen: !isOpen } });
     }
 
     if (msg === 'closeSidePanels') {
-      return setIsOpen(false);
+      setIsOpen(false);
+      await chrome.runtime.sendMessage({ name: 'linkedInNotionSidePanelStatus', body: { isOpen: !isOpen } });
     }
   });
 
