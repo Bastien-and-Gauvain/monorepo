@@ -35,7 +35,11 @@ const colorMapping = {
 const Alert = ({ type = 'info', className, link, message }: AlertsProps) => {
   if (link) {
     return (
-      <a className={cn('plasmo-antialiased plasmo-p-4 plasmo-rounded-md', colorMapping[type], className)} href={link}>
+      <a
+        className={cn('plasmo-antialiased plasmo-p-4 plasmo-rounded-md', colorMapping[type], className)}
+        href={link}
+        target="_blank"
+        rel="noreferrer">
         {message}
       </a>
     );

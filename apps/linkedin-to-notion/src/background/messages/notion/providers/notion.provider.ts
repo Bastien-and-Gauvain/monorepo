@@ -1,57 +1,14 @@
 import { Client } from '@notionhq/client';
 import type {
-  CreatePageParameters,
   CreatePageResponse,
   DatabaseObjectResponse,
   SearchResponse,
 } from '@notionhq/client/build/src/api-endpoints';
 
-type LinkedInProfileInformation = {
-  /**
-   * The name of the profile to store in Notion
-   */
-  name: {
-    firstName: string;
-    lastName: string;
-  };
+import type { ErrorResponse, NotionProfileInformation } from '../notion.type';
+import { notionProfileInformationToNotionPage } from '../notionProfileInformationToNotionPage';
 
-  /**
-   * The job title of the profile to store in Notion
-   */
-  jobTitle: string;
-
-  /**
-   * The current company of the profile to store in Notion
-   */
-  company: string;
-
-  /**
-   * The location of the profile to store in Notion
-   */
-  location: string;
-
-  /**
-   * The LinkedIn URL of the profile to store in Notion
-   */
-  linkedInURL: string;
-
-  /**
-   * The status of the profile to store in Notion
-   */
-  status: 'notContacted' | 'contacted' | 'inProcess' | 'noMatch' | 'notInterested' | 'hired';
-
-  /**
-   * The gender of the profile to store in Notion
-   */
-  gender?: 'M' | 'F';
-
-  /**
-   * Comments on the profile to store in Notion
-   */
-  comment: string;
-};
-
-export default class NotionProvider {
+export class NotionProvider {
   private readonly notion: Client;
 
   constructor(private readonly NOTION_TOKEN: string) {
@@ -60,7 +17,11 @@ export default class NotionProvider {
     });
   }
 
-  async getDatabases(): Promise<DatabaseObjectResponse[]> {
+  /**
+   * Get the databases that are eligible for the creation of a new profile page ie. have the right fields
+   * @returns a list of databases
+   */
+  async getDatabases(): Promise<DatabaseObjectResponse[] | ErrorResponse> {
     let searchResults: SearchResponse;
     try {
       searchResults = await this.notion.search({
@@ -75,7 +36,7 @@ export default class NotionProvider {
       });
     } catch (error) {
       console.error("NotionProvider, getDatabases, couldn't get databases:", error);
-      return [];
+      return { error: "NotionProvider, getDatabases, couldn't get databases", message: JSON.stringify(error) };
     }
 
     const mandatoryProperties = [
@@ -105,112 +66,28 @@ export default class NotionProvider {
     return filteredEligibleDatabases;
   }
 
+  /**
+   * Create a new profile page in the database with the given id
+   * @param databaseId The id of the database in which the page will be created
+   * @param linkedInProfileInformation The information to be added to the page
+   * @returns the response from the Notion API
+   */
   async createPageInDatabase(
     databaseId: string,
-    linkedInProfileInformation: LinkedInProfileInformation
-  ): Promise<CreatePageResponse> {
-    const firstName = linkedInProfileInformation.name.firstName;
-    const lastName = linkedInProfileInformation.name.lastName;
-    const fullName = `${firstName} ${lastName}`;
-    const pageParameters: CreatePageParameters = {
-      icon: {
-        type: 'emoji',
-        emoji: '✨',
-      },
-      parent: {
-        type: 'database_id',
-        database_id: databaseId,
-      },
-      properties: {
-        title: {
-          title: [
-            {
-              text: {
-                content: fullName,
-              },
-            },
-          ],
-        },
-        firstName: {
-          rich_text: [
-            {
-              type: 'text',
-              text: {
-                content: firstName,
-              },
-            },
-          ],
-        },
-        lastName: {
-          rich_text: [
-            {
-              type: 'text',
-              text: {
-                content: lastName,
-              },
-            },
-          ],
-        },
-        jobTitle: {
-          rich_text: [
-            {
-              type: 'text',
-              text: {
-                content: linkedInProfileInformation.jobTitle,
-              },
-            },
-          ],
-        },
-        company: {
-          rich_text: [
-            {
-              type: 'text',
-              text: {
-                content: linkedInProfileInformation.company,
-              },
-            },
-          ],
-        },
-        location: {
-          rich_text: [
-            {
-              type: 'text',
-              text: {
-                content: linkedInProfileInformation.location,
-              },
-            },
-          ],
-        },
-        linkedinUrl: {
-          url: linkedInProfileInformation.linkedInURL,
-        },
-        comment: {
-          rich_text: [
-            {
-              type: 'text',
-              text: {
-                content: linkedInProfileInformation.comment,
-              },
-            },
-          ],
-        },
-        status: {
-          select: {
-            name: linkedInProfileInformation.status,
-          },
-        },
-      },
-    };
+    linkedInProfileInformation: NotionProfileInformation
+  ): Promise<CreatePageResponse | ErrorResponse> {
+    const pageParameters = notionProfileInformationToNotionPage(linkedInProfileInformation, databaseId);
 
-    if (linkedInProfileInformation.gender) {
-      pageParameters.properties['gender'] = {
-        select: {
-          name: linkedInProfileInformation.gender,
-        },
-      };
+    let response: CreatePageResponse;
+    try {
+      response = await this.notion.pages.create(pageParameters);
+    } catch (error) {
+      console.error("NotionProvider, createPageInDatabase, couldn't create page:", error);
+      return { error: "NotionProvider, createPageInDatabase, couldn't create page", message: JSON.stringify(error) };
     }
 
-    const response = await this.notion.pages.create(pageParameters);
     return response;
   }
 }
+
+export default {};

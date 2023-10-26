@@ -1,17 +1,23 @@
+import type { CreatePageResponse } from '@notionhq/client/build/src/api-endpoints';
+
 import type { PlasmoMessaging } from '@plasmohq/messaging';
 
-import NotionProvider from '../providers/notion.provider';
+import type { ErrorResponse, NotionProfileInformation } from '../notion.type';
+import { NotionProvider } from '../providers/notion.provider';
 
-const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
-  const { notionToken, databaseId, linkedinProfileInformation } = req.body;
+const handler: PlasmoMessaging.MessageHandler<
+  {
+    notionToken: string;
+    databaseId: string;
+    linkedInProfileInformation: NotionProfileInformation;
+  },
+  CreatePageResponse | ErrorResponse
+> = async (req, res) => {
+  const { notionToken, databaseId, linkedInProfileInformation } = req.body;
   const notionService = new NotionProvider(notionToken);
+  const response = await notionService.createPageInDatabase(databaseId, linkedInProfileInformation);
 
-  try {
-    const creationResponse = await notionService.createPageInDatabase(databaseId, linkedinProfileInformation);
-    res.send({ creationResponse });
-  } catch (e) {
-    res.send({ error: e });
-  }
+  res.send(response);
 };
 
 export default handler;
