@@ -45,7 +45,7 @@ export const LinkedInNotionSidePanelContent = ({
   //   const firstName = 'Will';
   //   const lastName = 'Ramos';
   //   const jobTitle = 'Vocalist';
-  //   const currentCompany = 'Lorna Shore';
+  //   const company = 'Lorna Shore';
   //   const location = 'Los Angeles';
   //   const status = 'hired';
   //   const linkedInURL = 'https://www.linkedin.com/in/will-ramos';
@@ -54,7 +54,7 @@ export const LinkedInNotionSidePanelContent = ({
   //   setNotionProfileInformation({
   //     name: { firstName, lastName },
   //     jobTitle,
-  //     currentCompany,
+  //     company,
   //     location,
   //     linkedInURL,
   //     status,

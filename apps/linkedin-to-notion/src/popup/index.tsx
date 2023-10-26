@@ -1,4 +1,4 @@
-import { BaseParagraph } from 'design-system';
+import { BaseParagraph, cn } from 'design-system';
 import { useEffect, useState } from 'react';
 
 import { linkedInURLRegex } from '~src/background';
@@ -28,9 +28,10 @@ export default function Popup() {
 
   return (
     <div
-      className={`plasmo-p-2 plasmo-w-${!isLinkedIn ? 52 : 40} plasmo-h-${
-        !isLinkedIn ? 32 : 20
-      } plasmo-flex plasmo-justify-center plasmo-items-center`}>
+      className={cn(
+        'plasmo-p-2 plasmo-flex plasmo-justify-center plasmo-items-center',
+        !isLinkedIn ? 'plasmo-w-52 plasmo-h-32' : 'plasmo-w-28 plasmo-h-10'
+      )}>
       {!isLinkedIn ? (
         <GoBackToLinkedInContent />
       ) : (

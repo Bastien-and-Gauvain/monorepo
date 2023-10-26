@@ -1,53 +1,22 @@
+import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import { ButtonPrimary, SelectEntry, TextAreaEntry, TextEntry, ToggleEntry } from 'design-system';
 import { useEffect, useState } from 'react';
 
+import { sendToBackground } from '@plasmohq/messaging';
+import { useStorage } from '@plasmohq/storage/hook';
+
+import type {
+  ErrorResponse,
+  NotionProfileGender,
+  NotionProfileInformation,
+  NotionProfileStatus,
+} from '~src/background/messages/notion/notion.type';
+
 import { type LinkedInProfileInformation } from './../../contents/scrapers/linkedin-profile-scraper';
+import { Alert, type AlertState } from './Alert';
 import { NotionDatabasesSelect } from './NotionDatabasesSelect';
-
-export type NotionProfileInformation = {
-  /**
-   * The name of the profile stored in Notion
-   */
-  name: {
-    firstName: string;
-    lastName: string;
-  };
-
-  /**
-   * The job title of the profile stored in Notion
-   */
-  jobTitle: string;
-
-  /**
-   * The current company of the profile stored in Notion
-   */
-  currentCompany: string;
-
-  /**
-   * The location of the profile stored in Notion
-   */
-  location: string;
-
-  /**
-   * The LinkedIn URL of the profile stored in Notion
-   */
-  linkedInURL: string;
-
-  /**
-   * The status of the profile that's stored in Notion
-   */
-  status: 'notContacted' | 'contacted' | 'inProcess' | 'noMatch' | 'notInterested' | 'hired';
-
-  /**
-   * The gender of the profile stored in Notion
-   */
-  gender: '' | 'M' | 'F';
-
-  /**
-   * Any comments on the profile, stored in Notion
-   */
-  comment: string;
-};
+import { genderOptions, statusOptions } from './utils/formOptions';
+import { getPropertyValue } from './utils/notionFormat.util';
 
 export const Form = ({
   linkedinValues,
@@ -58,100 +27,147 @@ export const Form = ({
   notionValues?: NotionProfileInformation;
   onReload: () => void;
 }) => {
+  // We need to have the selected database stored somewhere
+  const [selectedNotionDatabase] = useStorage<string>('selectedNotionDatabase');
+
+  // We need to store the data from scraped profiles in the state
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [jobTitle, setJobTitle] = useState<string>('');
-  const [currentCompany, setCurrentCompany] = useState<string>('');
+  const [company, setCompany] = useState<string>('');
   const [location, setLocation] = useState<string>('');
-  const [status, setStatus] = useState<string>('notContacted');
-  const [gender, setGender] = useState<string>('');
+  const [status, setStatus] = useState<NotionProfileStatus>('NOT_CONTACTED');
+  const [gender, setGender] = useState<NotionProfileGender>('');
   const [comment, setComment] = useState<string>('');
-  const [checked, setChecked] = useState<boolean>(false);
+  const [linkedinUrl, setLinkedinUrl] = useState<string>('');
 
-  const setLinkedInValues = async () => {
-    const { name, jobTitle, currentCompany, location } = linkedinValues;
-    const { firstName, lastName } = name;
-    setFirstName(firstName);
-    setLastName(lastName);
-    setJobTitle(jobTitle);
-    setCurrentCompany(currentCompany);
-    setLocation(location);
-    setStatus('notContacted');
-    setGender('');
-    setComment('');
-  };
+  // To handle the toggle switch
+  const [displayNotionValues, setDisplayNotionValues] = useState<boolean>(false);
 
-  const setNotionValues = async () => {
-    const { name, jobTitle, currentCompany, location, status, gender, comment } = notionValues;
-    const { firstName, lastName } = name;
-    setFirstName(firstName);
-    setLastName(lastName);
-    setJobTitle(jobTitle);
-    setCurrentCompany(currentCompany);
-    setLocation(location);
-    setStatus(status);
-    setGender(gender);
-    setComment(comment);
-  };
+  // To handle the interactions with Notion
+  const [notionToken] = useStorage('notionToken');
+  const [alertState, setAlertState] = useState<AlertState>(null);
 
-  const onSwitch = async (event: React.ChangeEvent<HTMLInputElement>) => setChecked(event.target.checked);
+  // Values of the profile in the selected DB in Notion
+  const [currentNotionValues, setCurrentNotionValues] = useState<NotionProfileInformation | null>(notionValues);
 
   useEffect(() => {
-    checked ? setNotionValues() : setLinkedInValues();
-  }, [checked]);
+    const setFormValues = () => {
+      if (displayNotionValues) {
+        const { name, jobTitle, company, location, status, gender, comment } = currentNotionValues;
+        const { firstName, lastName } = name;
+        setFirstName(firstName);
+        setLastName(lastName);
+        setJobTitle(jobTitle);
+        setCompany(company);
+        setLocation(location);
+        setStatus(status || 'NOT_CONTACTED');
+        setGender(gender || '');
+        setComment(comment || '');
+      }
+
+      if (!displayNotionValues) {
+        const { name, jobTitle, company, location } = linkedinValues;
+        const { firstName, lastName } = name;
+        setFirstName(firstName);
+        setLastName(lastName);
+        setJobTitle(jobTitle);
+        setCompany(company);
+        setLocation(location);
+      }
+    };
+
+    setLinkedinUrl(window.location.href.match(/https:\/\/[a-z]{2,4}\.linkedin\.com\/in\/[^/]+\//gim)[0]);
+
+    setFormValues();
+  }, [displayNotionValues, linkedinValues]);
+
+  const handleNotionResponse = (response: PageObjectResponse) => {
+    if (!response.properties) {
+      setAlertState('error');
+      console.log('No properties in the response', response);
+      return;
+    }
+
+    const { properties, url } = response;
+    const { firstName, lastName, jobTitle, company, location, linkedinUrl, status, gender, comment } = properties;
+
+    setCurrentNotionValues({
+      name: {
+        firstName: getPropertyValue(firstName),
+        lastName: getPropertyValue(lastName),
+      },
+      jobTitle: getPropertyValue(jobTitle),
+      company: getPropertyValue(company),
+      location: getPropertyValue(location),
+      linkedinUrl: getPropertyValue(linkedinUrl),
+      notionUrl: url,
+      status: getPropertyValue(status) as NotionProfileStatus,
+      gender: getPropertyValue(gender) as NotionProfileGender,
+      comment: getPropertyValue(comment),
+    });
+    setAlertState('in-notion');
+  };
+
+  const saveLinkedInProfile = async (): Promise<void> => {
+    const linkedInProfileInformation: NotionProfileInformation = {
+      name: {
+        firstName,
+        lastName,
+      },
+      jobTitle,
+      company,
+      location,
+      status,
+      comment,
+      linkedinUrl,
+      gender,
+      notionUrl: '',
+    };
+
+    const res = await sendToBackground<
+      { notionToken: string; databaseId: string; linkedInProfileInformation: NotionProfileInformation },
+      PageObjectResponse
+    >({
+      name: 'notion/resolvers/createProfileInDatabase',
+      body: {
+        notionToken: notionToken.accessToken,
+        databaseId: selectedNotionDatabase,
+        linkedInProfileInformation,
+      },
+    });
+
+    if ((res as unknown as ErrorResponse).error) {
+      console.log("Couldn't save the profile", res);
+      setAlertState('error');
+      return;
+    }
+
+    handleNotionResponse(res);
+  };
 
   return (
     <div className="plasmo-flex plasmo-flex-col plasmo-space-y-3">
+      <Alert state={alertState} notionUrl={currentNotionValues?.notionUrl} />
       <NotionDatabasesSelect />
-      {notionValues && (
+      {currentNotionValues && (
         <ToggleEntry
           options={{ unchecked: 'LinkedIn', checked: 'Notion' }}
           inputId="linkedInOrNotion"
-          handleChange={onSwitch}
-          checked={checked}
+          handleChange={() => setDisplayNotionValues(!displayNotionValues)}
+          checked={displayNotionValues}
           labelText="Data from:"
         />
       )}
       <SelectEntry
         labelText="Status"
         id="status"
-        handleChange={(e) => setStatus(e.target.value)}
-        initialValue={'notContacted'}
+        handleChange={(e) => setStatus(e.target.value as NotionProfileStatus)}
+        initialValue={'Not Contacted'}
         value={status}
-        options={[
-          {
-            id: 'not-contacted',
-            label: 'Not contacted',
-            value: 'notContacted',
-          },
-          {
-            id: 'contacted',
-            label: 'Contacted',
-            value: 'contacted',
-          },
-          {
-            id: 'in-process',
-            label: 'In process',
-            value: 'inProcess',
-          },
-          {
-            id: 'no-match',
-            label: 'No match',
-            value: 'noMatch',
-          },
-          {
-            id: 'not-interested',
-            label: 'Not interested',
-            value: 'notInterested',
-          },
-          {
-            id: 'hired',
-            label: 'Hired',
-            value: 'hired',
-          },
-        ]}
+        options={statusOptions}
       />
-      <div className="flex space-x-4">
+      <div className="plasmo-flex plasmo-space-x-4">
         <TextEntry
           initialValue={firstName}
           placeholder="Guy"
@@ -175,10 +191,10 @@ export const Form = ({
         labelText="Job title"
       />
       <TextEntry
-        initialValue={currentCompany}
+        initialValue={company}
         placeholder="Rock Band"
         inputId="linkedin-current-company"
-        handleChange={(e) => setCurrentCompany(e.target.value)}
+        handleChange={(e) => setCompany(e.target.value)}
         labelText="Current company"
       />
       <TextEntry
@@ -191,26 +207,10 @@ export const Form = ({
       <SelectEntry
         labelText="Gender"
         id="gender"
-        handleChange={(e) => setGender(e.target.value)}
+        handleChange={(e) => setGender(e.target.value as NotionProfileGender)}
         initialValue={''}
         value={gender}
-        options={[
-          {
-            id: 'empty-gender',
-            label: '',
-            value: '',
-          },
-          {
-            id: 'female',
-            label: 'Female',
-            value: 'female',
-          },
-          {
-            id: 'male',
-            label: 'Male',
-            value: 'male',
-          },
-        ]}
+        options={genderOptions}
       />
       <TextAreaEntry
         inputId="comment"
@@ -219,7 +219,9 @@ export const Form = ({
         handleChange={(e) => setComment(e.target.value)}
       />
       <div className="plasmo-flex plasmo-space-x-2">
-        <ButtonPrimary className="plasmo-flex-grow">Save</ButtonPrimary>
+        <ButtonPrimary className="plasmo-flex-grow" onClick={saveLinkedInProfile}>
+          Save
+        </ButtonPrimary>
         <ButtonPrimary onClick={onReload}>🔄</ButtonPrimary>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import type { PlasmoMessaging } from '@plasmohq/messaging';
 
-import SessionService from '../services/session.service';
+import { SessionService } from '../services/session.service';
 
 const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
   const sessionService = new SessionService();

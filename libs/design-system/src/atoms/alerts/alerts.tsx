@@ -15,6 +15,11 @@ type AlertsProps = {
   message: string;
 
   /**
+   * A link if we want the alert to be clickable
+   */
+  link?: string;
+
+  /**
    * Some additional class names
    */
   className?: string;
@@ -27,10 +32,22 @@ const colorMapping = {
   error: 'plasmo-bg-red plasmo-text-white',
 };
 
-const Alert = ({ type = 'info', message, className }: AlertsProps) => {
-  return (
-    <p className={cn('plasmo-antialiased plasmo-p-4 plasmo-rounded-md', colorMapping[type], className)}>{message}</p>
-  );
+const Alert = ({ type = 'info', className, link, message }: AlertsProps) => {
+  if (link) {
+    return (
+      <a
+        className={cn('plasmo-antialiased plasmo-p-4 plasmo-rounded-md', colorMapping[type], className)}
+        href={link}
+        target="_blank"
+        rel="noreferrer">
+        {message}
+      </a>
+    );
+  } else {
+    return (
+      <p className={cn('plasmo-antialiased plasmo-p-4 plasmo-rounded-md', colorMapping[type], className)}>{message}</p>
+    );
+  }
 };
 
 export const InfoAlert = (p: Omit<AlertsProps, 'type'>) => <Alert type="info" {...p} />;

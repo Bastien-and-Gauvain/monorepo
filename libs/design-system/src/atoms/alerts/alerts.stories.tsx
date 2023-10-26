@@ -12,10 +12,14 @@ const meta = {
 
 export default meta;
 
-export const Success: StoryFn = () => <SuccessAlert message="A success alert!" className="plasmo-w-80" />;
+export const Success: StoryFn = () => (
+  <SuccessAlert className="plasmo-w-80" link="https://bvelitchkine.notion.site" message="A success alert!" />
+);
 
-export const Info: StoryFn = () => <InfoAlert message="An info alert!" className="plasmo-w-80" />;
+export const Info: StoryFn = () => (
+  <InfoAlert className="plasmo-w-80" link="https://bvelitchkine.notion.site" message="An info alert!" />
+);
 
-export const Warning: StoryFn = () => <WarningAlert message="A warning alert!" className="plasmo-w-80" />;
+export const Warning: StoryFn = () => <WarningAlert className="plasmo-w-80" message="A warning alert!" />;
 
-export const Error: StoryFn = () => <ErrorAlert message="An error alert!" className="plasmo-w-80" />;
+export const Error: StoryFn = () => <ErrorAlert className="plasmo-w-80" message="An error alert!" />;

@@ -1,7 +1,14 @@
 import { Client } from '@notionhq/client';
-import type { DatabaseObjectResponse, SearchResponse } from '@notionhq/client/build/src/api-endpoints';
+import type {
+  CreatePageResponse,
+  DatabaseObjectResponse,
+  SearchResponse,
+} from '@notionhq/client/build/src/api-endpoints';
 
-export default class NotionProvider {
+import type { ErrorResponse, NotionProfileInformation } from '../notion.type';
+import { notionProfileInformationToNotionPage } from '../notionProfileInformationToNotionPage';
+
+export class NotionProvider {
   private readonly notion: Client;
 
   constructor(private readonly NOTION_TOKEN: string) {
@@ -10,7 +17,11 @@ export default class NotionProvider {
     });
   }
 
-  async getDatabases(): Promise<DatabaseObjectResponse[]> {
+  /**
+   * Get the databases that are eligible for the creation of a new profile page ie. have the right fields
+   * @returns a list of databases
+   */
+  async getDatabases(): Promise<DatabaseObjectResponse[] | ErrorResponse> {
     let searchResults: SearchResponse;
     try {
       searchResults = await this.notion.search({
@@ -25,7 +36,7 @@ export default class NotionProvider {
       });
     } catch (error) {
       console.error("NotionProvider, getDatabases, couldn't get databases:", error);
-      return [];
+      return { error: "NotionProvider, getDatabases, couldn't get databases", message: JSON.stringify(error) };
     }
 
     const mandatoryProperties = [
@@ -54,4 +65,29 @@ export default class NotionProvider {
 
     return filteredEligibleDatabases;
   }
+
+  /**
+   * Create a new profile page in the database with the given id
+   * @param databaseId The id of the database in which the page will be created
+   * @param linkedInProfileInformation The information to be added to the page
+   * @returns the response from the Notion API
+   */
+  async createPageInDatabase(
+    databaseId: string,
+    linkedInProfileInformation: NotionProfileInformation
+  ): Promise<CreatePageResponse | ErrorResponse> {
+    const pageParameters = notionProfileInformationToNotionPage(linkedInProfileInformation, databaseId);
+
+    let response: CreatePageResponse;
+    try {
+      response = await this.notion.pages.create(pageParameters);
+    } catch (error) {
+      console.error("NotionProvider, createPageInDatabase, couldn't create page:", error);
+      return { error: "NotionProvider, createPageInDatabase, couldn't create page", message: JSON.stringify(error) };
+    }
+
+    return response;
+  }
 }
+
+export default {};

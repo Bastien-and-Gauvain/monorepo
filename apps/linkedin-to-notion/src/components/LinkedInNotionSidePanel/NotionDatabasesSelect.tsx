@@ -5,23 +5,24 @@ import { useEffect, useState } from 'react';
 import { sendToBackground } from '@plasmohq/messaging';
 import { useStorage } from '@plasmohq/storage/hook';
 
-import { getDatabaseTitle } from './notionFormat.util';
+import { getDatabaseTitle } from './utils/notionFormat.util';
 
 export const NotionDatabasesSelect = () => {
-  const [notionDatabases, setNotionDatabases] = useState<{ databases: DatabaseObjectResponse[] } | null>(null);
+  const [notionDatabases, setNotionDatabases] = useState<DatabaseObjectResponse[] | null>(null);
   const [selectedNotionDatabase, setSelectedNotionDatabase] = useStorage<string>('selectedNotionDatabase');
   const [notionToken] = useStorage('notionToken');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const notionDatabasesSetter = async () => {
-      const databases = await sendToBackground({
+      const databases = await sendToBackground<{ notionToken: string }, DatabaseObjectResponse[]>({
         name: 'notion/resolvers/getEligibleDatabases',
         body: {
           notionToken: notionToken.accessToken,
         },
       });
       setNotionDatabases(databases);
+      setSelectedNotionDatabase(databases[0].id);
       setIsLoading(false);
     };
 
@@ -34,7 +35,7 @@ export const NotionDatabasesSelect = () => {
     return <Spinner />;
   }
 
-  if (!notionDatabases?.databases?.length) {
+  if (!notionDatabases?.length) {
     return <></>;
   }
 
@@ -44,7 +45,7 @@ export const NotionDatabasesSelect = () => {
       id="notion-databases"
       handleChange={(e) => setSelectedNotionDatabase(e.target.value)}
       initialValue={selectedNotionDatabase}
-      options={notionDatabases.databases.map((database: DatabaseObjectResponse) => ({
+      options={notionDatabases.map((database: DatabaseObjectResponse) => ({
         id: database.id,
         label: getDatabaseTitle(database),
         value: database.id,
