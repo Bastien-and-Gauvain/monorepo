@@ -2,12 +2,10 @@ import cssText from 'data-text:~style.css';
 import { ButtonPrimary, IFramedSidePanel, Spinner } from 'design-system';
 import { createElement, useEffect, useState } from 'react';
 
-import './../../../style.css'; // for the font to load
-
 import {
   getLinkedInProfileInformation,
   type LinkedInProfileInformation,
-} from './../../contents/linkedin-profile-scraper';
+} from './../../contents/scrapers/linkedin-profile-scraper';
 // TODO Uncomment the line below when you want the toggle switch to work
 // import { Form, type NotionProfileInformation } from './Form';
 
@@ -91,7 +89,7 @@ export const LinkedInNotionSidePanelContent = ({
       onCloseCallback={() => onCloseCallback()}
       onLogoutCallback={() => logoutCallBack()}
       id={id}
-      className="top-48 space-y-4 flex flex-col">
+      className="plasmo-top-48 plasmo-space-y-4 plasmo-flex plasmo-flex-col">
       {isLoggedIn ? (
         linkedInProfileInformation ? (
           <Form

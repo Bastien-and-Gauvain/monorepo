@@ -30,15 +30,15 @@ type ButtonProps = {
 };
 
 const typeSpecificClasses = {
-  primary: 'px-4 py-2 rounded-md text-5',
-  secondary: 'px-2 py-1 rounded text-3',
+  primary: 'plasmo-px-4 plasmo-py-2 plasmo-rounded-md plasmo-text-5',
+  secondary: 'plasmo-px-2 plasmo-py-1 plasmo-rounded plasmo-text-3',
 };
 
 const Button = ({ children, type = 'primary', className, onClick }: ButtonProps) => {
   return (
     <button
       className={cn(
-        'text-white bg-ocean-blue shadow-lg shadow-grey-light hover:bg-green transition-colors duration-300 ease-in-out',
+        'plasmo-text-white plasmo-bg-ocean-blue plasmo-shadow-lg plasmo-shadow-grey-light hover:plasmo-bg-green plasmo-transition-colors plasmo-duration-300 plasmo-ease-in-out',
         typeSpecificClasses[type],
         className
       )}

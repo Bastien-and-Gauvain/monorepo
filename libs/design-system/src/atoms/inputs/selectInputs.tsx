@@ -64,8 +64,9 @@ export type SelectInputProps = {
 };
 
 const variations = {
-  primary: 'text-gray border-gray focus:border-cyan focus:ring-cyan w-full',
-  secondary: 'text-3.5 text-white bg-ocean-blue border-ocean-blue focus:border-green focus:ring-green w-2/5',
+  primary: 'plasmo-text-gray plasmo-border-gray focus:plasmo-border-cyan focus:plasmo-ring-cyan plasmo-w-full',
+  secondary:
+    'plasmo-text-3.5 plasmo-text-white plasmo-bg-ocean-blue plasmo-border-ocean-blue focus:plasmo-border-green focus:plasmo-ring-green plasmo-w-2/5',
 };
 
 export const SelectInput = ({
@@ -83,7 +84,11 @@ export const SelectInput = ({
       required={required}
       id={id}
       name={id}
-      className={cn('antialiased border border-solid rounded-md p-2 focus:outline-none', variations[type], className)}
+      className={cn(
+        'plasmo-antialiased plasmo-border plasmo-border-solid plasmo-rounded-md plasmo-p-2 focus:plasmo-outline-none',
+        variations[type],
+        className
+      )}
       onChange={handleChange}
       defaultValue={initialValue || options[0].value}
       value={value}>

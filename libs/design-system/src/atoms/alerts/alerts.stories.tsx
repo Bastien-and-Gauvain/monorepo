@@ -13,13 +13,13 @@ const meta = {
 export default meta;
 
 export const Success: StoryFn = () => (
-  <SuccessAlert className="w-80" link="https://bvelitchkine.notion.site" message="A success alert!" />
+  <SuccessAlert className="plasmo-w-80" link="https://bvelitchkine.notion.site" message="A success alert!" />
 );
 
 export const Info: StoryFn = () => (
-  <InfoAlert className="w-80" link="https://bvelitchkine.notion.site" message="An info alert!" />
+  <InfoAlert className="plasmo-w-80" link="https://bvelitchkine.notion.site" message="An info alert!" />
 );
 
-export const Warning: StoryFn = () => <WarningAlert className="w-80" message="A warning alert!" />;
+export const Warning: StoryFn = () => <WarningAlert className="plasmo-w-80" message="A warning alert!" />;
 
-export const Error: StoryFn = () => <ErrorAlert className="w-80" message="An error alert!" />;
+export const Error: StoryFn = () => <ErrorAlert className="plasmo-w-80" message="An error alert!" />;

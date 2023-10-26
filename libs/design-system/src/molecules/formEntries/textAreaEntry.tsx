@@ -19,7 +19,7 @@ export const TextAreaEntry = ({
   value,
 }: TextEntryProps) => {
   return (
-    <div className="flex flex-col">
+    <div className="plasmo-flex plasmo-flex-col">
       <BaseLabel inputId={inputId} labelText={labelText} />
       <TextAreaInput
         inputId={inputId}
