@@ -43,11 +43,6 @@ export type SelectInputProps = {
   initialValue?: string;
 
   /**
-   * The value of the input (to be controlled from outside the component)
-   */
-  value?: string;
-
-  /**
    * Some additional class name.
    */
   className?: string;
@@ -74,7 +69,6 @@ export const SelectInput = ({
   id,
   required,
   initialValue,
-  value,
   className,
   handleChange,
   options,
@@ -89,9 +83,8 @@ export const SelectInput = ({
         variations[type],
         className
       )}
-      onChange={handleChange}
-      defaultValue={initialValue || options[0].value}
-      value={value}>
+      defaultValue={initialValue}
+      onChange={handleChange}>
       {options.map(({ id, value, label }) => (
         <option key={id} id={id} value={value}>
           {label}
