@@ -20,11 +20,9 @@ import { getPropertyValue } from './utils/notionFormat.util';
 
 export const Form = ({
   linkedinValues,
-  notionValues,
   onReload,
 }: {
   linkedinValues: LinkedInProfileInformation;
-  notionValues?: NotionProfileInformation;
   onReload: () => void;
 }) => {
   // We need to have the selected database stored somewhere
@@ -50,7 +48,7 @@ export const Form = ({
   const [alertState, setAlertState] = useState<AlertState>(null);
 
   // Values of the profile in the selected DB in Notion
-  const [currentNotionValues, setCurrentNotionValues] = useState<NotionProfileInformation | null>(notionValues);
+  const [currentNotionValues, setCurrentNotionValues] = useState<NotionProfileInformation | null>(null);
 
   useEffect(() => {
     const setFormValues = () => {
