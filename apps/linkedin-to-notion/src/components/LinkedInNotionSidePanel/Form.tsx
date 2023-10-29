@@ -215,6 +215,7 @@ export const Form = ({
     } else {
       console.log('Profile updated in Notion', res);
       handleNotionResponse(res);
+      setAlertState('profile-updated');
       return;
     }
   };
