@@ -56,15 +56,13 @@ export const databaseSearchResultsToNotionProfileInformation = (
 };
 
 /**
- * Convert a NotionProfileInformation to a Notion page
+ * A function that creates page properties for a Notion page
  * @param profileInformation The profile information to convert to a Notion page
- * @param databaseId The database id to create the page in
  * @returns
  */
-export const notionProfileInformationToNotionPage = (
-  profileInformation: NotionProfileInformation,
-  databaseId: string
-): CreatePageParameters => {
+export const notionProfileInformationToPageProperties = (
+  profileInformation: NotionProfileInformation
+): CreatePageParameters['properties'] => {
   const { firstName, lastName } = profileInformation.name;
   const fullName = getFullName(firstName, lastName);
 
@@ -77,7 +75,109 @@ export const notionProfileInformationToNotionPage = (
     HIRED: 'Hired',
   };
 
-  const pageParameters: CreatePageParameters = {
+  const pageProperties: CreatePageParameters['properties'] = {
+    title: {
+      title: [
+        {
+          text: {
+            content: fullName,
+          },
+        },
+      ],
+    },
+    firstName: {
+      rich_text: [
+        {
+          type: 'text',
+          text: {
+            content: firstName,
+          },
+        },
+      ],
+    },
+    lastName: {
+      rich_text: [
+        {
+          type: 'text',
+          text: {
+            content: lastName,
+          },
+        },
+      ],
+    },
+    jobTitle: {
+      rich_text: [
+        {
+          type: 'text',
+          text: {
+            content: profileInformation.jobTitle,
+          },
+        },
+      ],
+    },
+    company: {
+      rich_text: [
+        {
+          type: 'text',
+          text: {
+            content: profileInformation.company,
+          },
+        },
+      ],
+    },
+    location: {
+      rich_text: [
+        {
+          type: 'text',
+          text: {
+            content: profileInformation.location,
+          },
+        },
+      ],
+    },
+    linkedinUrl: {
+      url: profileInformation.linkedinUrl,
+    },
+    comment: {
+      rich_text: [
+        {
+          type: 'text',
+          text: {
+            content: profileInformation.comment,
+          },
+        },
+      ],
+    },
+    status: {
+      select: {
+        name: profileStatusMap[profileInformation.status],
+      },
+    },
+  };
+
+  if (profileInformation.gender) {
+    pageProperties['gender'] = {
+      select: {
+        name: profileInformation.gender,
+      },
+    };
+  }
+
+  return pageProperties;
+};
+
+/**
+ * Convert a NotionProfileInformation to a Notion page
+ * @param profileInformation The profile information to convert to a Notion page
+ * @param databaseId The database id to create the page in
+ * @returns
+ */
+export const notionProfileInformationToNotionPage = (
+  profileInformation: NotionProfileInformation,
+  databaseId: string
+): CreatePageParameters => {
+  const properties = notionProfileInformationToPageProperties(profileInformation);
+  return {
     icon: {
       type: 'emoji',
       emoji: '✨',
@@ -86,96 +186,8 @@ export const notionProfileInformationToNotionPage = (
       type: 'database_id',
       database_id: databaseId,
     },
-    properties: {
-      title: {
-        title: [
-          {
-            text: {
-              content: fullName,
-            },
-          },
-        ],
-      },
-      firstName: {
-        rich_text: [
-          {
-            type: 'text',
-            text: {
-              content: firstName,
-            },
-          },
-        ],
-      },
-      lastName: {
-        rich_text: [
-          {
-            type: 'text',
-            text: {
-              content: lastName,
-            },
-          },
-        ],
-      },
-      jobTitle: {
-        rich_text: [
-          {
-            type: 'text',
-            text: {
-              content: profileInformation.jobTitle,
-            },
-          },
-        ],
-      },
-      company: {
-        rich_text: [
-          {
-            type: 'text',
-            text: {
-              content: profileInformation.company,
-            },
-          },
-        ],
-      },
-      location: {
-        rich_text: [
-          {
-            type: 'text',
-            text: {
-              content: profileInformation.location,
-            },
-          },
-        ],
-      },
-      linkedinUrl: {
-        url: profileInformation.linkedinUrl,
-      },
-      comment: {
-        rich_text: [
-          {
-            type: 'text',
-            text: {
-              content: profileInformation.comment,
-            },
-          },
-        ],
-      },
-      status: {
-        select: {
-          name: profileStatusMap[profileInformation.status],
-        },
-      },
-    },
+    properties,
   };
-
-  if (profileInformation.gender) {
-    pageParameters.properties['gender'] = {
-      select: {
-        name: profileInformation.gender,
-      },
-    };
-  }
-
-  return pageParameters;
 };
 
 export default {};

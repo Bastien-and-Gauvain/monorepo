@@ -180,6 +180,45 @@ export const Form = ({
     handleNotionResponse(res);
   };
 
+  const updateLinkedInProfile = async (): Promise<void> => {
+    const linkedInProfileInformation: NotionProfileInformation = {
+      name: {
+        firstName,
+        lastName,
+      },
+      jobTitle,
+      company,
+      location,
+      status,
+      comment,
+      linkedinUrl: currentNotionValues.linkedinUrl,
+      gender,
+      notionUrl: currentNotionValues.notionUrl,
+    };
+
+    const res = await sendToBackground<
+      { notionToken: string; pageId: string; linkedInProfileInformation: NotionProfileInformation },
+      PageObjectResponse
+    >({
+      name: 'notion/resolvers/updateProfileInDatabase',
+      body: {
+        notionToken: notionToken.accessToken,
+        pageId: notionId,
+        linkedInProfileInformation,
+      },
+    });
+
+    if ((res as unknown as ErrorResponse).error) {
+      console.log("Couldn't update the profile", res);
+      setAlertState('error');
+      return;
+    } else {
+      console.log('Profile updated in Notion', res);
+      handleNotionResponse(res);
+      return;
+    }
+  };
+
   return (
     <div className="plasmo-flex plasmo-flex-col plasmo-space-y-3">
       <Alert state={alertState} notionUrl={currentNotionValues?.notionUrl} />
@@ -256,7 +295,7 @@ export const Form = ({
       />
       <div className="plasmo-flex plasmo-space-x-2">
         {currentNotionValues ? (
-          <ButtonPrimary className="plasmo-flex-grow" onClick={() => console.log('update')}>
+          <ButtonPrimary className="plasmo-flex-grow" onClick={updateLinkedInProfile}>
             Update
           </ButtonPrimary>
         ) : (

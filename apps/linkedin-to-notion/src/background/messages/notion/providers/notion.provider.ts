@@ -3,6 +3,7 @@ import type {
   CreatePageResponse,
   DatabaseObjectResponse,
   SearchResponse,
+  UpdatePageResponse,
 } from '@notionhq/client/build/src/api-endpoints';
 
 import { getLinkedinSlug } from '~src/background/shared.utils';
@@ -10,6 +11,7 @@ import { getLinkedinSlug } from '~src/background/shared.utils';
 import {
   databaseSearchResultsToNotionProfileInformation,
   notionProfileInformationToNotionPage,
+  notionProfileInformationToPageProperties,
 } from '../notion.transformers';
 import type { ErrorResponse, NotionProfileInformation } from '../notion.type';
 
@@ -128,6 +130,30 @@ export class NotionProvider {
         return null;
       }
     }
+  }
+
+  /**
+   * Updates a profile page with the given id
+   * @param pageId The id of the page to update
+   * @param linkedInProfileInformation The information to be added to the page
+   * @returns the response from the Notion API
+   */
+  async updatePageInDatabase(
+    pageId: string,
+    linkedInProfileInformation: NotionProfileInformation
+  ): Promise<CreatePageResponse | ErrorResponse> {
+    const properties = notionProfileInformationToPageProperties(linkedInProfileInformation);
+    const pageParameters = { page_id: pageId, properties };
+
+    let response: UpdatePageResponse;
+    try {
+      response = await this.notion.pages.update(pageParameters);
+    } catch (error) {
+      console.error("NotionProvider, updatePageInDatabase, couldn't update page:", error);
+      return { error: "NotionProvider, updatePageInDatabase, couldn't update page", message: JSON.stringify(error) };
+    }
+
+    return response;
   }
 }
 
