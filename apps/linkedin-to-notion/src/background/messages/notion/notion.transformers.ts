@@ -38,7 +38,7 @@ export const databaseSearchResultsToNotionProfileInformation = (
   const location = properties.location['rich_text'][0].text.content;
   const linkedinUrl = properties.linkedinUrl['url'];
   const status = profileStatusMap[properties.status['select'].name];
-  const gender = properties?.gender ? properties.gender['select'].name : '';
+  const gender = properties.gender['select'] ? properties.gender['select'].name : '';
   const comment = properties.comment['rich_text'][0].text.content;
 
   return {
