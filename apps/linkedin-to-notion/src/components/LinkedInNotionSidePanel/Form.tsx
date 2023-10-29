@@ -39,13 +39,14 @@ export const Form = ({
   const [status, setStatus] = useState<NotionProfileStatus>('NOT_CONTACTED');
   const [gender, setGender] = useState<NotionProfileGender>('');
   const [comment, setComment] = useState<string>('');
-  const [linkedinUrl, setLinkedinUrl] = useState<string>('');
+  const linkedinUrl = window.location.href.match(/https:\/\/[a-z]{2,4}\.linkedin\.com\/in\/[^/]+\//gim)[0];
 
   // To handle the toggle switch
   const [displayNotionValues, setDisplayNotionValues] = useState<boolean>(false);
 
   // To handle the interactions with Notion
   const [notionToken] = useStorage('notionToken');
+  const [notionId, setNotionId] = useState<string>('');
   const [alertState, setAlertState] = useState<AlertState>(null);
 
   // Values of the profile in the selected DB in Notion
@@ -77,10 +78,41 @@ export const Form = ({
       }
     };
 
-    setLinkedinUrl(window.location.href.match(/https:\/\/[a-z]{2,4}\.linkedin\.com\/in\/[^/]+\//gim)[0]);
-
     setFormValues();
   }, [displayNotionValues, linkedinValues]);
+
+  const findProfileInNotionDatabase = async (databaseId: string, linkedinUrl: string): Promise<void> => {
+    const res = await sendToBackground<
+      { notionToken: string; databaseId: string; linkedinUrl: string },
+      NotionProfileInformation
+    >({
+      name: 'notion/resolvers/findProfileInDatabase',
+      body: {
+        notionToken: notionToken.accessToken,
+        databaseId,
+        linkedinUrl,
+      },
+    });
+
+    if (res) {
+      if ((res as unknown as ErrorResponse).error) {
+        console.log("The profile query didn't work", res);
+        setAlertState('error');
+        return;
+      } else {
+        // If we did find a profile
+        console.log('Profile found in Notion', res);
+        setCurrentNotionValues(res);
+        setNotionId(res.notionId);
+        setAlertState('in-notion');
+        return;
+      }
+    } else {
+      console.log('No profile found in Notion');
+      // The search worked but no profile in selected db
+      return;
+    }
+  };
 
   const handleNotionResponse = (response: PageObjectResponse) => {
     if (!response.properties) {
@@ -89,7 +121,7 @@ export const Form = ({
       return;
     }
 
-    const { properties, url } = response;
+    const { properties, url, id } = response;
     const { firstName, lastName, jobTitle, company, location, linkedinUrl, status, gender, comment } = properties;
 
     setCurrentNotionValues({
@@ -106,6 +138,8 @@ export const Form = ({
       gender: getPropertyValue(gender) as NotionProfileGender,
       comment: getPropertyValue(comment),
     });
+    console.log(id);
+    setNotionId(id);
     setAlertState('in-notion');
   };
 
@@ -149,7 +183,9 @@ export const Form = ({
   return (
     <div className="plasmo-flex plasmo-flex-col plasmo-space-y-3">
       <Alert state={alertState} notionUrl={currentNotionValues?.notionUrl} />
-      <NotionDatabasesSelect />
+      <NotionDatabasesSelect
+        valueChangeHandler={(databaseId: string) => findProfileInNotionDatabase(databaseId, linkedinUrl)}
+      />
       {currentNotionValues && (
         <ToggleEntry
           options={{ unchecked: 'LinkedIn', checked: 'Notion' }}

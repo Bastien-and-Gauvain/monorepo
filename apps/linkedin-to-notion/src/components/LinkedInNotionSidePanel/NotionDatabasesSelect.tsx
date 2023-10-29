@@ -7,7 +7,11 @@ import { useStorage } from '@plasmohq/storage/hook';
 
 import { getDatabaseTitle } from './utils/notionFormat.util';
 
-export const NotionDatabasesSelect = () => {
+type NotionDatabasesSelectProps = {
+  valueChangeHandler: (value: string) => void;
+};
+
+export const NotionDatabasesSelect = ({ valueChangeHandler }: NotionDatabasesSelectProps) => {
   const [notionDatabases, setNotionDatabases] = useState<DatabaseObjectResponse[] | null>(null);
   const [selectedNotionDatabase, setSelectedNotionDatabase] = useStorage<string>('selectedNotionDatabase');
   const [notionToken] = useStorage('notionToken');
@@ -23,6 +27,7 @@ export const NotionDatabasesSelect = () => {
       });
       setNotionDatabases(databases);
       setSelectedNotionDatabase(databases[0].id);
+      valueChangeHandler(databases[0].id);
       setIsLoading(false);
     };
 
@@ -43,7 +48,10 @@ export const NotionDatabasesSelect = () => {
     <SelectEntry
       labelText="Notion databases"
       id="notion-databases"
-      handleChange={(e) => setSelectedNotionDatabase(e.target.value)}
+      handleChange={(e) => {
+        setSelectedNotionDatabase(e.target.value);
+        valueChangeHandler(e.target.value);
+      }}
       initialValue={selectedNotionDatabase}
       options={notionDatabases.map((database: DatabaseObjectResponse) => ({
         id: database.id,

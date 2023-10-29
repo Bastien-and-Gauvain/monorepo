@@ -45,6 +45,11 @@ export type NotionProfileInformation = {
   notionUrl: string;
 
   /**
+   * The optional id of the page in Notion
+   */
+  notionId?: string;
+
+  /**
    * The status of the profile that's stored in Notion
    */
   status: NotionProfileStatus;

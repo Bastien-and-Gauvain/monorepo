@@ -2,12 +2,12 @@ import { Client } from '@notionhq/client';
 import type {
   CreatePageResponse,
   DatabaseObjectResponse,
-  PageObjectResponse,
   SearchResponse,
 } from '@notionhq/client/build/src/api-endpoints';
 
 import { getLinkedinSlug } from '~src/background/shared.utils';
 
+import { databaseSearchResultsToNotionProfileInformation } from '../dataTransformers';
 import type { ErrorResponse, NotionProfileInformation } from '../notion.type';
 import { notionProfileInformationToNotionPage } from '../notionProfileInformationToNotionPage';
 
@@ -95,7 +95,7 @@ export class NotionProvider {
   async findProfileInDatabase(
     databaseId: string,
     linkedInUrl: string
-  ): Promise<null | PageObjectResponse | ErrorResponse> {
+  ): Promise<null | NotionProfileInformation | ErrorResponse> {
     const slug = getLinkedinSlug(linkedInUrl);
     if (!slug) {
       return null;
@@ -118,9 +118,11 @@ export class NotionProvider {
 
       // The search returned a result (might be empty though)
       if (searchResults.results.length > 0) {
+        console.log('Found smthg');
         // We just need the first result
-        return searchResults['results'][0] as PageObjectResponse;
+        return databaseSearchResultsToNotionProfileInformation(searchResults);
       } else {
+        console.log('Found nothing');
         return null;
       }
     }
