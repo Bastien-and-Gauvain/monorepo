@@ -98,6 +98,7 @@ export const Form = ({
       if ((res as unknown as ErrorResponse).error) {
         console.log("The profile query didn't work", res);
         setAlertState('error');
+        setCurrentNotionValues(null);
         return;
       } else {
         // If we did find a profile
@@ -108,8 +109,9 @@ export const Form = ({
         return;
       }
     } else {
-      console.log('No profile found in Notion');
       // The search worked but no profile in selected db
+      console.log('No profile found in Notion');
+      setCurrentNotionValues(null);
       setAlertState('new-profile');
       return;
     }
@@ -139,7 +141,6 @@ export const Form = ({
       gender: getPropertyValue(gender) as NotionProfileGender,
       comment: getPropertyValue(comment),
     });
-    console.log(id);
     setNotionId(id);
     setAlertState('in-notion');
   };
