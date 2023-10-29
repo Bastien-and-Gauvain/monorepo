@@ -13,7 +13,7 @@ export const getFullName = (firstName: string, lastName: string): string => {
  * @param linkedinUrl The linkedin url
  * @returns The unique id slug
  */
-export const getLinkedinSlug = (linkedinUrl: string): string => {
+export const getLinkedinSlug = (linkedinUrl: string): string | null => {
   // Regular expression to extract the unique id slug from a linkedin url
   // Example: https://www.linkedin.com/in/jean-michel-boudart-123456789/
   // Result: jean-michel-boudart-123456789
