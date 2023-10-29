@@ -256,9 +256,15 @@ export const Form = ({
         handleChange={(e) => setComment(e.target.value)}
       />
       <div className="plasmo-flex plasmo-space-x-2">
-        <ButtonPrimary className="plasmo-flex-grow" onClick={saveLinkedInProfile}>
-          Save
-        </ButtonPrimary>
+        {currentNotionValues ? (
+          <ButtonPrimary className="plasmo-flex-grow" onClick={() => console.log('update')}>
+            Update
+          </ButtonPrimary>
+        ) : (
+          <ButtonPrimary className="plasmo-flex-grow" onClick={saveLinkedInProfile}>
+            Save
+          </ButtonPrimary>
+        )}
         <ButtonPrimary onClick={onReload}>🔄</ButtonPrimary>
       </div>
     </div>
