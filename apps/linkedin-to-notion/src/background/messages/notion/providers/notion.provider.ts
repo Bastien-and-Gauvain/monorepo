@@ -7,9 +7,11 @@ import type {
 
 import { getLinkedinSlug } from '~src/background/shared.utils';
 
-import { databaseSearchResultsToNotionProfileInformation } from '../dataTransformers';
+import {
+  databaseSearchResultsToNotionProfileInformation,
+  notionProfileInformationToNotionPage,
+} from '../notion.transformers';
 import type { ErrorResponse, NotionProfileInformation } from '../notion.type';
-import { notionProfileInformationToNotionPage } from '../notionProfileInformationToNotionPage';
 
 export class NotionProvider {
   private readonly notion: Client;
