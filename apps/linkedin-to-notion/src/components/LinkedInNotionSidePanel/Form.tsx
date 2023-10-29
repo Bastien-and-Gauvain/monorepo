@@ -110,6 +110,7 @@ export const Form = ({
     } else {
       console.log('No profile found in Notion');
       // The search worked but no profile in selected db
+      setAlertState('new-profile');
       return;
     }
   };
