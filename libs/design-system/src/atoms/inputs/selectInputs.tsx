@@ -40,7 +40,7 @@ export type SelectInputProps = {
    * The initial value.
    * It's the first option by default.
    */
-  initialValue?: string;
+  value?: string;
 
   /**
    * Some additional class name.
@@ -68,7 +68,7 @@ export const SelectInput = ({
   type = 'primary',
   id,
   required,
-  initialValue,
+  value,
   className,
   handleChange,
   options,
@@ -83,7 +83,7 @@ export const SelectInput = ({
         variations[type],
         className
       )}
-      defaultValue={initialValue}
+      value={value}
       onChange={handleChange}>
       {options.map(({ id, value, label }) => (
         <option key={id} id={id} value={value}>

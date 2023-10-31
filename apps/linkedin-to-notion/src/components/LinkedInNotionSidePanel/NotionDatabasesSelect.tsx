@@ -44,7 +44,7 @@ export const NotionDatabasesSelect = () => {
       labelText="Notion databases"
       id="notion-databases"
       handleChange={(e) => setSelectedNotionDatabase(e.target.value)}
-      initialValue={selectedNotionDatabase}
+      value={selectedNotionDatabase}
       options={notionDatabases.map((database: DatabaseObjectResponse) => ({
         id: database.id,
         label: getDatabaseTitle(database),

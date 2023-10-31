@@ -163,7 +163,7 @@ export const Form = ({
         labelText="Status"
         id="status"
         handleChange={(e) => setStatus(e.target.value as NotionProfileStatus)}
-        initialValue={'Not Contacted'}
+        value={status}
         options={statusOptions}
       />
       <div className="plasmo-flex plasmo-space-x-4">
@@ -207,7 +207,7 @@ export const Form = ({
         labelText="Gender"
         id="gender"
         handleChange={(e) => setGender(e.target.value as NotionProfileGender)}
-        initialValue={''}
+        value={gender}
         options={genderOptions}
       />
       <TextAreaEntry
