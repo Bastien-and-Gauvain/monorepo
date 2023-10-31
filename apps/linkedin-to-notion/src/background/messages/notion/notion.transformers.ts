@@ -5,8 +5,9 @@ import type {
 } from '@notionhq/client/build/src/api-endpoints';
 
 import { getFullName } from '~src/background/shared.utils';
+import { getPropertyValue } from '~src/components/LinkedInNotionSidePanel/utils/notionFormat.util';
 
-import type { NotionProfileInformation } from './notion.type';
+import type { NotionProfileGender, NotionProfileInformation } from './notion.type';
 
 /**
  * Convert Notion page properties to NotionProfileInformation
@@ -29,17 +30,17 @@ export const databaseSearchResultsToNotionProfileInformation = (
   const { properties, url, id } = databaseSearchResults.results[0] as PageObjectResponse;
 
   const name = {
-    firstName: properties.firstName['rich_text'][0].text.content,
-    lastName: properties.lastName['rich_text'][0].text.content,
+    firstName: getPropertyValue(properties.firstName),
+    lastName: getPropertyValue(properties.lastName),
   };
 
-  const jobTitle = properties.jobTitle['rich_text'][0].text.content;
-  const company = properties.company['rich_text'][0].text.content;
-  const location = properties.location['rich_text'][0].text.content;
-  const linkedinUrl = properties.linkedinUrl['url'];
-  const status = profileStatusMap[properties.status['select'].name];
-  const gender = properties.gender['select'] ? properties.gender['select'].name : '';
-  const comment = properties.comment['rich_text'][0].text.content;
+  const jobTitle = getPropertyValue(properties.jobTitle);
+  const company = getPropertyValue(properties.company);
+  const location = getPropertyValue(properties.location);
+  const linkedinUrl = getPropertyValue(properties.linkedinUrl);
+  const status = profileStatusMap[getPropertyValue(properties.status)];
+  const gender = getPropertyValue(properties.gender) as NotionProfileGender;
+  const comment = getPropertyValue(properties.comment);
 
   return {
     name,
