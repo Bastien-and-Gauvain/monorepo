@@ -102,6 +102,7 @@ export class NotionProvider {
   ): Promise<null | NotionProfileInformation | ErrorResponse> {
     const slug = getLinkedinSlug(linkedInUrl);
     if (!slug) {
+      console.log(`We couldn't find a slug for ${linkedInUrl}`);
       return null;
     }
 
@@ -119,11 +120,11 @@ export class NotionProvider {
 
       // No searchResults at all
       if (searchResults.results.length <= 0) {
-        console.log('Found nothing');
+        console.log(`No page was found in the DB ${databaseId} matching the slug ${slug}`);
         return null;
       }
 
-      console.log('Found smthg');
+      console.log(`A page was found in the DB ${databaseId} matching the slug ${slug}`);
       return databaseSearchResultsToNotionProfileInformation(searchResults);
     } catch (error) {
       console.error("NotionProvider, findProfileInDatabase, couldn't complete:", error);
