@@ -3,10 +3,17 @@ import type {
   CreatePageResponse,
   DatabaseObjectResponse,
   SearchResponse,
+  UpdatePageResponse,
 } from '@notionhq/client/build/src/api-endpoints';
 
+import { getLinkedinSlug } from '~src/background/shared.utils';
+
+import {
+  databaseSearchResultsToNotionProfileInformation,
+  notionProfileInformationToNotionPage,
+  notionProfileInformationToPageProperties,
+} from '../notion.transformers';
 import type { ErrorResponse, NotionProfileInformation } from '../notion.type';
-import { notionProfileInformationToNotionPage } from '../notionProfileInformationToNotionPage';
 
 export class NotionProvider {
   private readonly notion: Client;
@@ -84,6 +91,72 @@ export class NotionProvider {
     } catch (error) {
       console.error("NotionProvider, createPageInDatabase, couldn't create page:", error);
       return { error: "NotionProvider, createPageInDatabase, couldn't create page", message: JSON.stringify(error) };
+    }
+
+    return response;
+  }
+
+  /**
+   * Find a profile page in the database with a given id using its LinkedIn url
+   * @param databaseId The id of the database where the page is located
+   * @param linkedInUrl The LinkedIn url of the profile to find
+   * @returns the response from the Notion API
+   */
+  async findProfileInDatabase(
+    databaseId: string,
+    linkedInUrl: string
+  ): Promise<null | NotionProfileInformation | ErrorResponse> {
+    const slug = getLinkedinSlug(linkedInUrl);
+    if (!slug) {
+      console.log(`We couldn't find a slug for ${linkedInUrl}`);
+      return null;
+    }
+
+    let searchResults: SearchResponse;
+    try {
+      searchResults = await this.notion.databases.query({
+        database_id: databaseId,
+        filter: {
+          property: 'linkedinUrl',
+          url: {
+            contains: slug,
+          },
+        },
+      });
+
+      // No searchResults at all
+      if (searchResults.results.length <= 0) {
+        console.log(`No page was found in the DB ${databaseId} matching the slug ${slug}`);
+        return null;
+      }
+
+      console.log(`A page was found in the DB ${databaseId} matching the slug ${slug}`);
+      return databaseSearchResultsToNotionProfileInformation(searchResults);
+    } catch (error) {
+      console.error("NotionProvider, findProfileInDatabase, couldn't complete:", error);
+      return { error: "NotionProvider, findProfileInDatabase, couldn't complete:", message: JSON.stringify(error) };
+    }
+  }
+
+  /**
+   * Updates a profile page with the given id
+   * @param pageId The id of the page to update
+   * @param linkedInProfileInformation The information to be added to the page
+   * @returns the response from the Notion API
+   */
+  async updatePageInDatabase(
+    pageId: string,
+    linkedInProfileInformation: NotionProfileInformation
+  ): Promise<CreatePageResponse | ErrorResponse> {
+    const properties = notionProfileInformationToPageProperties(linkedInProfileInformation);
+    const pageParameters = { page_id: pageId, properties };
+
+    let response: UpdatePageResponse;
+    try {
+      response = await this.notion.pages.update(pageParameters);
+    } catch (error) {
+      console.error("NotionProvider, updatePageInDatabase, couldn't update page:", error);
+      return { error: "NotionProvider, updatePageInDatabase, couldn't update page", message: JSON.stringify(error) };
     }
 
     return response;
