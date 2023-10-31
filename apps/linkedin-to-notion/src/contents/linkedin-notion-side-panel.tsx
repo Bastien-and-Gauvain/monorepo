@@ -11,7 +11,7 @@ import { supabase } from '~core/supabase';
 import { LinkedInNotionSidePanelContent } from '../components/LinkedInNotionSidePanel/LinkedInNotionSidePanelContent';
 
 export const config: PlasmoCSConfig = {
-  matches: ['https://www.linkedin.com/in/*'],
+  matches: ['https://www.linkedin.com/*'],
   all_frames: false,
 };
 
@@ -23,7 +23,7 @@ export const getStyle: PlasmoGetStyle = () => {
 };
 
 const LinkedinNotionSidePanel = () => {
-  const [isOpen, setIsOpen] = useState(true); // set-back to false before deployment
+  const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useStorage<User>('user');
   const [notionToken, setNotionToken] = useStorage<{
     refreshToken: string;
