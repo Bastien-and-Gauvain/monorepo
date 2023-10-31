@@ -245,7 +245,6 @@ export const Form = ({
             labelText="Status"
             id="status"
             handleChange={(e) => setStatus(e.target.value as NotionProfileStatus)}
-            initialValue={'Not Contacted'}
             value={status}
             options={statusOptions}
           />
@@ -290,7 +289,6 @@ export const Form = ({
             labelText="Gender"
             id="gender"
             handleChange={(e) => setGender(e.target.value as NotionProfileGender)}
-            initialValue={''}
             value={gender}
             options={genderOptions}
           />
