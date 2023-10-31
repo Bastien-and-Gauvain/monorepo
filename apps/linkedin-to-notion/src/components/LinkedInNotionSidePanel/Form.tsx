@@ -46,6 +46,7 @@ export const Form = ({
   const [notionToken] = useStorage('notionToken');
   const [notionId, setNotionId] = useState<string>('');
   const [alertState, setAlertState] = useState<AlertState>(null);
+  const [isNotionLoading, setIsNotionLoading] = useState<boolean>(false);
 
   // Values of the profile in the selected DB in Notion
   const [currentNotionValues, setCurrentNotionValues] = useState<NotionProfileInformation | null>(null);
@@ -80,6 +81,8 @@ export const Form = ({
   }, [displayNotionValues, linkedinValues]);
 
   const findProfileInNotionDatabase = async (databaseId: string, linkedinUrl: string): Promise<void> => {
+    setIsNotionLoading(true);
+
     const res = await sendToBackground<
       { notionToken: string; databaseId: string; linkedinUrl: string },
       NotionProfileInformation
@@ -96,6 +99,7 @@ export const Form = ({
       console.log('No profile found in Notion');
       setCurrentNotionValues(null);
       setAlertState('new-profile');
+      setIsNotionLoading(false);
       return;
     }
 
@@ -103,6 +107,7 @@ export const Form = ({
       console.log("The profile query didn't work", res);
       setAlertState('error');
       setCurrentNotionValues(null);
+      setIsNotionLoading(false);
       return;
     }
 
@@ -110,6 +115,7 @@ export const Form = ({
     setCurrentNotionValues(res);
     setNotionId(res.notionId);
     setAlertState('in-notion');
+    setIsNotionLoading(false);
     return;
   };
 
@@ -233,77 +239,81 @@ export const Form = ({
           labelText="Data from:"
         />
       )}
-      <SelectEntry
-        labelText="Status"
-        id="status"
-        handleChange={(e) => setStatus(e.target.value as NotionProfileStatus)}
-        initialValue={'Not Contacted'}
-        value={status}
-        options={statusOptions}
-      />
-      <div className="plasmo-flex plasmo-space-x-4">
-        <TextEntry
-          initialValue={firstName}
-          placeholder="Guy"
-          inputId="linkedin-first-name"
-          handleChange={(e) => setFirstName(e.target.value)}
-          labelText="First Name"
-        />
-        <TextEntry
-          initialValue={lastName}
-          placeholder="Tarenbois"
-          inputId="linkedin-last-name"
-          handleChange={(e) => setLastName(e.target.value)}
-          labelText="Last Name"
-        />
-      </div>
-      <TextEntry
-        initialValue={jobTitle}
-        placeholder="Musicien"
-        inputId="linkedin-job-title"
-        handleChange={(e) => setJobTitle(e.target.value)}
-        labelText="Job title"
-      />
-      <TextEntry
-        initialValue={company}
-        placeholder="Rock Band"
-        inputId="linkedin-current-company"
-        handleChange={(e) => setCompany(e.target.value)}
-        labelText="Current company"
-      />
-      <TextEntry
-        initialValue={location}
-        placeholder="Paris"
-        inputId="linkedin-location"
-        handleChange={(e) => setLocation(e.target.value)}
-        labelText="Location"
-      />
-      <SelectEntry
-        labelText="Gender"
-        id="gender"
-        handleChange={(e) => setGender(e.target.value as NotionProfileGender)}
-        initialValue={''}
-        value={gender}
-        options={genderOptions}
-      />
-      <TextAreaEntry
-        inputId="comment"
-        labelText="Comment"
-        value={comment}
-        handleChange={(e) => setComment(e.target.value)}
-      />
-      <div className="plasmo-flex plasmo-space-x-2">
-        {currentNotionValues ? (
-          <ButtonPrimary className="plasmo-flex-grow" onClick={updateLinkedInProfile}>
-            Update
-          </ButtonPrimary>
-        ) : (
-          <ButtonPrimary className="plasmo-flex-grow" onClick={saveLinkedInProfile}>
-            Save
-          </ButtonPrimary>
-        )}
-        <ButtonPrimary onClick={onReload}>🔄</ButtonPrimary>
-      </div>
+      {!isNotionLoading && (
+        <>
+          <SelectEntry
+            labelText="Status"
+            id="status"
+            handleChange={(e) => setStatus(e.target.value as NotionProfileStatus)}
+            initialValue={'Not Contacted'}
+            value={status}
+            options={statusOptions}
+          />
+          <div className="plasmo-flex plasmo-space-x-4">
+            <TextEntry
+              initialValue={firstName}
+              placeholder="Guy"
+              inputId="linkedin-first-name"
+              handleChange={(e) => setFirstName(e.target.value)}
+              labelText="First Name"
+            />
+            <TextEntry
+              initialValue={lastName}
+              placeholder="Tarenbois"
+              inputId="linkedin-last-name"
+              handleChange={(e) => setLastName(e.target.value)}
+              labelText="Last Name"
+            />
+          </div>
+          <TextEntry
+            initialValue={jobTitle}
+            placeholder="Musicien"
+            inputId="linkedin-job-title"
+            handleChange={(e) => setJobTitle(e.target.value)}
+            labelText="Job title"
+          />
+          <TextEntry
+            initialValue={company}
+            placeholder="Rock Band"
+            inputId="linkedin-current-company"
+            handleChange={(e) => setCompany(e.target.value)}
+            labelText="Current company"
+          />
+          <TextEntry
+            initialValue={location}
+            placeholder="Paris"
+            inputId="linkedin-location"
+            handleChange={(e) => setLocation(e.target.value)}
+            labelText="Location"
+          />
+          <SelectEntry
+            labelText="Gender"
+            id="gender"
+            handleChange={(e) => setGender(e.target.value as NotionProfileGender)}
+            initialValue={''}
+            value={gender}
+            options={genderOptions}
+          />
+          <TextAreaEntry
+            inputId="comment"
+            labelText="Comment"
+            value={comment}
+            handleChange={(e) => setComment(e.target.value)}
+          />
+          <div className="plasmo-flex plasmo-space-x-2">
+            {currentNotionValues ? (
+              <ButtonPrimary className="plasmo-flex-grow" onClick={updateLinkedInProfile}>
+                Update
+              </ButtonPrimary>
+            ) : (
+              <ButtonPrimary className="plasmo-flex-grow" onClick={saveLinkedInProfile}>
+                Save
+              </ButtonPrimary>
+            )}
+            <ButtonPrimary onClick={onReload}>🔄</ButtonPrimary>
+          </div>
+        </>
+      )}
     </div>
   );
 };
