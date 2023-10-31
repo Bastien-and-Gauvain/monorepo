@@ -96,6 +96,12 @@ export class NotionProvider {
     return response;
   }
 
+  /**
+   * Find a profile page in the database with a given id using its LinkedIn url
+   * @param databaseId The id of the database where the page is located
+   * @param linkedInUrl The LinkedIn url of the profile to find
+   * @returns the response from the Notion API
+   */
   async findProfileInDatabase(
     databaseId: string,
     linkedInUrl: string
