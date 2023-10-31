@@ -92,27 +92,25 @@ export const Form = ({
       },
     });
 
-    if (res) {
-      if ((res as unknown as ErrorResponse).error) {
-        console.log("The profile query didn't work", res);
-        setAlertState('error');
-        setCurrentNotionValues(null);
-        return;
-      } else {
-        // If we did find a profile
-        console.log('Profile found in Notion', res);
-        setCurrentNotionValues(res);
-        setNotionId(res.notionId);
-        setAlertState('in-notion');
-        return;
-      }
-    } else {
-      // The search worked but no profile in selected db
+    if (!res) {
       console.log('No profile found in Notion');
       setCurrentNotionValues(null);
       setAlertState('new-profile');
       return;
     }
+
+    if ((res as unknown as ErrorResponse).error) {
+      console.log("The profile query didn't work", res);
+      setAlertState('error');
+      setCurrentNotionValues(null);
+      return;
+    }
+
+    console.log('Profile found in Notion', res);
+    setCurrentNotionValues(res);
+    setNotionId(res.notionId);
+    setAlertState('in-notion');
+    return;
   };
 
   const handleNotionResponse = (response: PageObjectResponse) => {
@@ -212,12 +210,12 @@ export const Form = ({
       console.log("Couldn't update the profile", res);
       setAlertState('error');
       return;
-    } else {
-      console.log('Profile updated in Notion', res);
-      handleNotionResponse(res);
-      setAlertState('profile-updated');
-      return;
     }
+
+    console.log('Profile updated in Notion', res);
+    handleNotionResponse(res);
+    setAlertState('profile-updated');
+    return;
   };
 
   return (

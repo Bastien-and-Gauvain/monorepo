@@ -103,32 +103,31 @@ export class NotionProvider {
     const slug = getLinkedinSlug(linkedInUrl);
     if (!slug) {
       return null;
-    } else {
-      let searchResults: SearchResponse;
-      try {
-        searchResults = await this.notion.databases.query({
-          database_id: databaseId,
-          filter: {
-            property: 'linkedinUrl',
-            url: {
-              contains: slug,
-            },
-          },
-        });
-      } catch (error) {
-        console.error("NotionProvider, findProfileInDatabase, couldn't complete:", error);
-        return { error: "NotionProvider, findProfileInDatabase, couldn't complete:", message: JSON.stringify(error) };
-      }
+    }
 
-      // The search returned a result (might be empty though)
-      if (searchResults.results.length > 0) {
-        console.log('Found smthg');
-        // We just need the first result
-        return databaseSearchResultsToNotionProfileInformation(searchResults);
-      } else {
+    let searchResults: SearchResponse;
+    try {
+      searchResults = await this.notion.databases.query({
+        database_id: databaseId,
+        filter: {
+          property: 'linkedinUrl',
+          url: {
+            contains: slug,
+          },
+        },
+      });
+
+      // No searchResults at all
+      if (searchResults.results.length <= 0) {
         console.log('Found nothing');
         return null;
       }
+
+      console.log('Found smthg');
+      return databaseSearchResultsToNotionProfileInformation(searchResults);
+    } catch (error) {
+      console.error("NotionProvider, findProfileInDatabase, couldn't complete:", error);
+      return { error: "NotionProvider, findProfileInDatabase, couldn't complete:", message: JSON.stringify(error) };
     }
   }
 
