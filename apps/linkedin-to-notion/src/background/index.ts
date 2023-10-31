@@ -4,16 +4,15 @@ export {};
 
 // You can test the regex here: https://regex101.com/r/RJgYar/1
 // Don't forget to update the comment when you update the regex on regex101.com
-export const linkedInURLRegex = /linkedin\.com\/in\/[^/]+\/#?/;
+export const linkedInURLRegex = /linkedin\.com\/in\/[^/]+\/#?$/;
 
 chrome.tabs.onUpdated.addListener(async (tabId, { status }, tab) => {
-  if (!tab?.url?.match(linkedInURLRegex)) {
+  if (tab.url && tab.url.match(linkedInURLRegex)) {
+    if (status === 'complete') {
+      return await chrome.tabs.sendMessage(tabId, 'updateLinkedInNotionSidePanel');
+    }
+  } else {
     return await chrome.tabs.sendMessage(tabId, 'closeSidePanels');
-  }
-
-  await chrome.tabs.sendMessage(tabId, 'openLinkedInNotionSidePanel');
-  if (status === 'complete') {
-    return await chrome.tabs.sendMessage(tabId, 'updateLinkedInNotionSidePanel');
   }
 });
 
