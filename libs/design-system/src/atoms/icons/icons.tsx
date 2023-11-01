@@ -11,21 +11,9 @@ type IconProps = {
    * Whether the icon is spinning (default: false)
    */
   isSpinning?: boolean;
-
-  /**
-   * The rotation of the icon (default: 0)
-   */
-  rotation?: 0 | 45 | 90 | 180;
 } & SVGIconProps;
 
-export const Icon = ({ type, className, color, size = 22, isSpinning = false, rotation = 0 }: IconProps) => {
+export const Icon = ({ type, className, size = 22, isSpinning = false }: IconProps) => {
   const SvgIconComponent = icons[type];
-
-  return (
-    <SvgIconComponent
-      size={size}
-      color={color}
-      className={cn(className, isSpinning && 'plasmo-animate-spin', rotation && `plasmo-rotate-${rotation}`)}
-    />
-  );
+  return <SvgIconComponent size={size} className={cn(className, isSpinning && 'plasmo-animate-spin')} />;
 };

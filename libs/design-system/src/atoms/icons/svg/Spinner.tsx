@@ -1,12 +1,11 @@
 import { SVGIconProps } from '.';
 
-export const Spinner = ({ className, color, size }: SVGIconProps) => (
+export const Spinner = ({ className, size }: SVGIconProps) => (
   <svg
     className={className}
     height={size}
     width={size}
-    fill={color}
-    strokeWidth={1.5}
+    strokeWidth={2}
     viewBox="0 0 1024 1024"
     version="1.1"
     xmlns="http://www.w3.org/2000/svg">

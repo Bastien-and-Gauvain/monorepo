@@ -13,18 +13,18 @@ const meta = {
 
 export default meta;
 
-export const Spinner: StoryFn = () => <Icon isSpinning={true} type="Spinner" color="black" />;
+export const Spinner: StoryFn = () => <Icon isSpinning={true} type="Spinner" className="plasmo-fill-black" />;
 
-export const ArrowUpTray: StoryFn = () => <Icon type="ArrowUpTray" color="black" rotation={90} />;
+export const ArrowRightTray: StoryFn = () => <Icon type="ArrowRightTray" className="plasmo-stroke-black" />;
 
-export const ChevronUpDown: StoryFn = () => <Icon type="ChevronUpDown" color="black" rotation={90} />;
+export const ChevronLeftRight: StoryFn = () => <Icon type="ChevronLeftRight" className="plasmo-stroke-black" />;
 
-export const XMark: StoryFn = () => <Icon type="XMark" color="black" />;
+export const XMark: StoryFn = () => <Icon type="XMark" className="plasmo-stroke-black" />;
 
-export const CheckCircle: StoryFn = () => <Icon type="CheckCircle" color="black" />;
+export const CheckCircle: StoryFn = () => <Icon type="CheckCircle" className="plasmo-stroke-black" />;
 
-export const InformationCircle: StoryFn = () => <Icon type="InformationCircle" color="black" />;
+export const InformationCircle: StoryFn = () => <Icon type="InformationCircle" className="plasmo-stroke-black" />;
 
-export const ExclamationCircle: StoryFn = () => <Icon type="ExclamationCircle" color="black" />;
+export const ExclamationCircle: StoryFn = () => <Icon type="ExclamationCircle" className="plasmo-stroke-black" />;
 
-export const ArrowPath: StoryFn = () => <Icon type="ArrowPath" color="black" />;
+export const ArrowPath: StoryFn = () => <Icon type="ArrowPath" className="plasmo-stroke-black" />;

@@ -1,15 +1,15 @@
 import { SVGIconProps } from '.';
+import { cn } from '../../..';
 
-export const ArrowUpTray = ({ className, color, size }: SVGIconProps) => (
+export const ArrowRightTray = ({ className, size }: SVGIconProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     height={size}
     width={size}
-    color={color}
-    strokeWidth={1.5}
+    strokeWidth={2}
     stroke="currentColor"
-    className={className}>
+    className={cn(className, 'plasmo-rotate-90')}>
     <path
       strokeLinecap="round"
       strokeLinejoin="round"

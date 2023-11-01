@@ -1,14 +1,13 @@
 import { SVGIconProps } from '.';
 
-export const ExclamationCircle = ({ className, color, size }: SVGIconProps) => (
+export const ExclamationCircle = ({ className, size }: SVGIconProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
     height={size}
     className={className}
-    color={color}
     fill="none"
-    strokeWidth={1.5}
+    strokeWidth={2}
     stroke="currentColor">
     <path
       strokeLinecap="round"
