@@ -1,6 +1,8 @@
 import type { Meta, StoryFn } from '@storybook/react';
+import { useState } from 'react';
 
-import { ButtonPrimary, ButtonSecondary } from '.';
+import { ButtonIcon, ButtonPrimary, ButtonSecondary } from '.';
+import { Icon } from '..';
 
 const meta = {
   title: 'Atoms/Buttons',
@@ -13,10 +15,34 @@ const meta = {
 
 export default meta;
 
-export const FirstButton: StoryFn = () => (
-  <ButtonPrimary onClick={() => console.log('Hello Primary')}>PRIMARY BUTTON</ButtonPrimary>
+export const PrimaryButton: StoryFn = () => (
+  <div className="plasmo-w-72 plasmo-flex plasmo-flex-col plasmo-justify-center plasmo-items-center">
+    <ButtonPrimary onClick={() => console.log('Hello Primary')}>Update</ButtonPrimary>
+  </div>
 );
 
-export const SecondButton: StoryFn = () => (
+export const PrimaryButtonLoading: StoryFn = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  return (
+    <div className="plasmo-w-72 plasmo-flex plasmo-flex-col plasmo-justify-center plasmo-items-center">
+      <ButtonPrimary
+        onClick={() => [console.log('Hello Primary'), setIsLoading(true), setTimeout(() => setIsLoading(false), 2000)]}
+        isLoading={isLoading}>
+        Update
+      </ButtonPrimary>
+    </div>
+  );
+};
+
+export const IconButton: StoryFn = () => (
+  <div className="plasmo-w-72 plasmo-flex plasmo-flex-col plasmo-justify-center plasmo-items-center">
+    <ButtonIcon onClick={() => console.log('Hello Primary')}>
+      <Icon type="ArrowPath" />
+    </ButtonIcon>
+  </div>
+);
+
+export const SecondaryButton: StoryFn = () => (
   <ButtonSecondary onClick={() => console.log('Hello secondary')}>Secondary Button</ButtonSecondary>
 );

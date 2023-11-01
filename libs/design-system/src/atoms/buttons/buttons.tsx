@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 
 import './../../index.css';
 
+import { Icon } from '..';
 import { cn } from '../../shared/classnames';
 
 type ButtonProps = {
@@ -21,7 +22,7 @@ type ButtonProps = {
   /**
    * The button type to use (default: `primary`)
    */
-  type?: 'primary' | 'secondary';
+  type?: 'primary' | 'secondary' | 'icon';
 
   /**
    * A callback to detect clicks on the text (default: undefined)
@@ -35,23 +36,31 @@ type ButtonProps = {
 };
 
 const typeSpecificClasses = {
-  primary: 'plasmo-px-4 plasmo-py-2 plasmo-rounded-md plasmo-text-5',
-  secondary: 'plasmo-px-2 plasmo-py-1 plasmo-rounded plasmo-text-3',
+  primary:
+    'plasmo-w-full plasmo-bg-main plasmo-text-lg plasmo-leading-5 plasmo-font-semibold plasmo-antialiased hover:plasmo-bg-main-600 active:plasmo-bg-main-700',
+  icon: 'plasmo-bg-grey-light hover:plasmo-bg-grey-medium active:plasmo-bg-grey-dark',
+  secondary:
+    'plasmo-bg-main plasmo-px-2 plasmo-py-1 plasmo-rounded plasmo-text-3 hover:plasmo-bg-main-600 active:plasmo-bg-main-700',
 };
 
-const Button = ({ children, type = 'primary', className, onClick }: ButtonProps) => {
+const Button = ({ children, type = 'primary', className, onClick, isLoading = false }: ButtonProps) => {
   return (
     <button
       className={cn(
-        'plasmo-text-white plasmo-bg-ocean-blue plasmo-shadow-lg plasmo-shadow-grey-light hover:plasmo-bg-green plasmo-transition-colors plasmo-duration-300 plasmo-ease-in-out',
         typeSpecificClasses[type],
+        'plasmo-text-white-transparent90 plasmo-px-8 plasmo-py-4 plasmo-rounded-md plasmo-flex plasmo-justify-center plasmo-items-center',
         className
       )}
       onClick={onClick}>
-      {children}
+      {isLoading ? (
+        <Icon type="Spinner" isSpinning={true} size={20} className="plasmo-fill-white-transparent90" />
+      ) : (
+        children
+      )}
     </button>
   );
 };
 
 export const ButtonPrimary = (p: ButtonProps) => <Button {...p} />;
+export const ButtonIcon = (p: Omit<ButtonProps, 'type'>) => <Button type="icon" {...p} />;
 export const ButtonSecondary = (p: Omit<ButtonProps, 'type'>) => <Button type="secondary" {...p} />;
