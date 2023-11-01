@@ -1,0 +1,33 @@
+import { ArrowPath } from './ArrowPath';
+import { ArrowRightTray } from './ArrowRightTray';
+import { CheckCircle } from './CheckCircle';
+import { ChevronLeftRight } from './ChevronLeftRight';
+import { ExclamationCircle } from './ExclamationCircle';
+import { InformationCircle } from './InformationCircle';
+import { Spinner } from './Spinner';
+import { XMark } from './XMark';
+
+export const icons = {
+  Spinner,
+  ArrowRightTray,
+  InformationCircle,
+  CheckCircle,
+  ArrowPath,
+  ChevronLeftRight,
+  XMark,
+  ExclamationCircle,
+};
+
+export type IconType = keyof typeof icons;
+
+export type SVGIconProps = {
+  /**
+   * Size in pixels of the square icon
+   */
+  size?: number;
+
+  /**
+   * Some additional class names to apply to the icon
+   */
+  className?: string;
+};

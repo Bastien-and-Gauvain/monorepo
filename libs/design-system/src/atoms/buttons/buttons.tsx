@@ -27,6 +27,11 @@ type ButtonProps = {
    * A callback to detect clicks on the text (default: undefined)
    */
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
+
+  /**
+   * Whether the button is loading (default: false)
+   */
+  isLoading?: boolean;
 };
 
 const typeSpecificClasses = {
