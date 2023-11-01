@@ -39,7 +39,7 @@ const typeSpecificClasses = {
   secondary: 'plasmo-px-2 plasmo-py-1 plasmo-rounded plasmo-text-3',
 };
 
-const Button = ({ children, type = 'primary', className, onClick, isLoading = false }: ButtonProps) => {
+const Button = ({ children, type = 'primary', className, onClick }: ButtonProps) => {
   return (
     <button
       className={cn(
