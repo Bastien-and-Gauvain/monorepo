@@ -2,7 +2,7 @@ import { SecureStorage } from '@plasmohq/storage/secure';
 
 export {};
 
-// You can test the regex here: https://regex101.com/r/RJgYar/1
+// You can test the regex here: https://regex101.com/r/RJgYar/2
 // Don't forget to update the comment when you update the regex on regex101.com
 export const linkedInURLRegex = /linkedin\.com\/in\/[^/]+\/#?/;
 
