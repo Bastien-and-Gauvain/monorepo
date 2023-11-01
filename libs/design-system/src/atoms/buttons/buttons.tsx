@@ -27,6 +27,11 @@ type ButtonProps = {
    * A callback to detect clicks on the text (default: undefined)
    */
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
+
+  /**
+   * Whether the button is loading (default: false)
+   */
+  isLoading?: boolean;
 };
 
 const typeSpecificClasses = {
@@ -34,7 +39,7 @@ const typeSpecificClasses = {
   secondary: 'plasmo-px-2 plasmo-py-1 plasmo-rounded plasmo-text-3',
 };
 
-const Button = ({ children, type = 'primary', className, onClick }: ButtonProps) => {
+const Button = ({ children, type = 'primary', className, onClick, isLoading = false }: ButtonProps) => {
   return (
     <button
       className={cn(

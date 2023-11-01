@@ -5,3 +5,4 @@ export * from './typography';
 export * from './buttons';
 export * from './spinner';
 export * from './alerts';
+export * from './icons';
