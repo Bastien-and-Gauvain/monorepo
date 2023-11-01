@@ -10,6 +10,7 @@ export default {
       3: '0.7rem',
       3.5: '0.875rem', // 14px
       4: '1rem', // 16px
+      lg: '1.125rem', // 18px
       5: '1.25rem', // 20px
       6: '1.5rem', // 24px
       8: '2rem', // 32px
