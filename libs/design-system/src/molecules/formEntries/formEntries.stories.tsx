@@ -24,6 +24,25 @@ export const Text: StoryFn = () => (
   />
 );
 
+export const Select: StoryFn = () => {
+  const options = [
+    { id: '1', label: 'Option 1', value: 'Option 1' },
+    { id: '2', label: 'Option 2', value: 'Option 2' },
+    { id: '3', label: 'Option 3', value: 'Option 3' },
+  ];
+
+  return (
+    <SelectEntry
+      id="primary"
+      handleChange={(value) => console.log(value)}
+      options={options}
+      value={options[0].value}
+      className="plasmo-w-56"
+      labelText="Select an option"
+    />
+  );
+};
+
 export const TextArea: StoryFn = () => {
   return (
     <TextAreaEntry

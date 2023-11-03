@@ -8,18 +8,11 @@ import { BaseLabel, LabelProps } from '../../atoms/labels/labels';
  */
 type SelectEntryProps = LabelProps & SelectInputProps;
 
-export const SelectEntry = ({ id, required, handleChange, options, labelText, value, className }: SelectEntryProps) => {
+export const SelectEntry = ({ id, handleChange, options, labelText, value, className }: SelectEntryProps) => {
   return (
     <div className="plasmo-flex plasmo-flex-col">
       <BaseLabel inputId={id} labelText={labelText} />
-      <SelectInput
-        id={id}
-        options={options}
-        handleChange={handleChange}
-        required={required}
-        className={className}
-        value={value}
-      />
+      <SelectInput id={id} options={options} handleChange={handleChange} className={className} value={value} />
     </div>
   );
 };
