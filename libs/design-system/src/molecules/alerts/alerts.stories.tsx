@@ -3,7 +3,7 @@ import type { Meta, StoryFn } from '@storybook/react';
 import { ErrorAlert, InfoAlert, SuccessAlert, WarningAlert } from '.';
 
 const meta = {
-  title: 'Atoms/Alerts',
+  title: 'Molecules/Alerts',
   parameters: {
     layout: 'centered',
   },
