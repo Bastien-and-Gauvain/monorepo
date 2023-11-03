@@ -28,10 +28,10 @@ type AlertsProps = {
 };
 
 const colorMapping = {
-  success: 'plasmo-bg-green plasmo-text-grey',
-  info: 'plasmo-bg-cyan plasmo-text-grey',
-  warning: 'plasmo-bg-pink plasmo-text-grey',
-  error: 'plasmo-bg-red plasmo-text-white',
+  success: 'plasmo-bg-success plasmo-text-white-transparent90',
+  info: 'plasmo-bg-info plasmo-text-white-transparent90',
+  warning: 'plasmo-bg-pink plasmo-text-white-transparent90',
+  error: 'plasmo-bg-error plasmo-text-white-transparent90',
 };
 
 const iconsMapping = {
@@ -48,22 +48,22 @@ const Alert = ({ type = 'info', className, link, message }: AlertsProps) => {
       target="_blank"
       rel="noreferrer"
       className={cn(
-        'plasmo-antialiased plasmo-p-3 plasmo-rounded-md plasmo-flex plasmo-flex-row plasmo-items-center',
+        'plasmo-antialiased plasmo-w-80 plasmo-h-20 plasmo-p-3 plasmo-rounded-md plasmo-flex plasmo-flex-row plasmo-items-center',
         colorMapping[type],
         className
       )}>
       <Icon type={iconsMapping[type]} className="plasmo-m-3" />
-      <p>{message}</p>
+      <p className="plasmo-m-3 plasmo-pt-[1px]">{message}</p>
     </a>
   ) : (
     <span
       className={cn(
-        'plasmo-antialiased plasmo-p-3 plasmo-rounded-md plasmo-flex plasmo-flex-row plasmo-items-center',
+        'plasmo-antialiased plasmo-w-80 plasmo-h-20 plasmo-p-3 plasmo-rounded-md plasmo-flex plasmo-flex-row plasmo-items-center',
         colorMapping[type],
         className
       )}>
       <Icon type={iconsMapping[type]} className="plasmo-m-3" />
-      <p>{message}</p>
+      <p className="plasmo-m-3 plasmo-pt-[1px]">{message}</p>
     </span>
   );
 };
