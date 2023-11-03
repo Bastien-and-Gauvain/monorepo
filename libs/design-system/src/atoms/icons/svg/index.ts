@@ -1,6 +1,7 @@
 import { ArrowPath } from './ArrowPath';
 import { ArrowRightTray } from './ArrowRightTray';
 import { CheckCircle } from './CheckCircle';
+import { ChevronDown } from './ChevronDown';
 import { ChevronLeftRight } from './ChevronLeftRight';
 import { ExclamationCircle } from './ExclamationCircle';
 import { InformationCircle } from './InformationCircle';
@@ -14,6 +15,7 @@ export const icons = {
   CheckCircle,
   ArrowPath,
   ChevronLeftRight,
+  ChevronDown,
   XMark,
   ExclamationCircle,
 };
