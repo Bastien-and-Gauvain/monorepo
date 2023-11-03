@@ -1,3 +1,6 @@
+import { ChevronDownIcon } from '@heroicons/react/24/solid';
+import { useState } from 'react';
+
 import { cn } from '../../shared/classnames';
 
 type SelectOptionsProps = {
@@ -19,22 +22,11 @@ type SelectOptionsProps = {
 
 export type SelectInputProps = {
   /**
-   * The type of the input.
-   * It's 'primary' by default (big and white). "Secondary" is small and blue.
-   */
-  type?: 'primary' | 'secondary';
-
-  /**
    * The id of the input.
    * It's also used as the name of the input.
    * It's also used as the label of the input.
    */
   id: string;
-
-  /**
-   * Whether the input is required or not.
-   */
-  required?: boolean;
 
   /**
    * The initial value.
@@ -50,7 +42,7 @@ export type SelectInputProps = {
   /**
    * The function that handles the change of the input.
    */
-  handleChange: React.ChangeEventHandler<HTMLSelectElement>;
+  handleChange: (value: string) => void;
 
   /**
    * The options of the input. It's an array of options to put in the dropdown select of type OptionProps.
@@ -58,38 +50,41 @@ export type SelectInputProps = {
   options: SelectOptionsProps[];
 };
 
-const variations = {
-  primary: 'plasmo-text-gray plasmo-border-gray focus:plasmo-border-cyan focus:plasmo-ring-cyan plasmo-w-full',
-  secondary:
-    'plasmo-text-3.5 plasmo-text-white plasmo-bg-ocean-blue plasmo-border-ocean-blue focus:plasmo-border-green focus:plasmo-ring-green plasmo-w-2/5',
-};
+export const SelectInput = ({ id, value, className, handleChange, options }: SelectInputProps) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState<string | undefined>(value);
 
-export const SelectInput = ({
-  type = 'primary',
-  id,
-  required,
-  value,
-  className,
-  handleChange,
-  options,
-}: SelectInputProps) => {
+  const toggleDropdown = () => setIsOpen(!isOpen);
+
+  const handleOptionClick = (value: string) => {
+    setSelectedOption(value);
+    handleChange(value);
+    setIsOpen(false);
+  };
+
   return (
-    <select
-      required={required}
-      id={id}
-      name={id}
-      className={cn(
-        'plasmo-antialiased plasmo-border plasmo-border-solid plasmo-rounded-md plasmo-p-2 focus:plasmo-outline-none',
-        variations[type],
-        className
+    <div className={cn('plasmo-relative', className)} id={id}>
+      <div
+        className={cn(
+          'plasmo-antialiased plasmo-inline-flex plasmo-items-center plasmo-justify-between plasmo-text-grey-light plasmo-bg-grey-transparent plasmo-border plasmo-border-solid plasmo-border-grey-transparent plasmo-w-full plasmo-p-2 focus:plasmo-outline-none focus:plasmo-border-main plasmo-rounded-md plasmo-shadow-sm plasmo-cursor-pointer',
+          isOpen && 'plasmo-border-main plasmo-shadow-lg'
+        )}
+        onClick={toggleDropdown}>
+        <span>{selectedOption}</span>
+        <ChevronDownIcon className="plasmo-h-4 plasmo-w-4" />
+      </div>
+      {isOpen && (
+        <ul className="plasmo-absolute plasmo-left-0 plasmo-w-full plasmo-mt-1 plasmo-overflow-auto plasmo-bg-white plasmo-border plasmo-border-grey-transparent plasmo-rounded-md plasmo-shadow-lg plasmo-max-h-60 plasmo-focus:outline-none plasmo-z-50">
+          {options.map(({ id, value, label }) => (
+            <li
+              key={id}
+              className="plasmo-text-grey-medium plasmo-p-2 plasmo-cursor-pointer hover:plasmo-bg-grey-transparent"
+              onClick={() => handleOptionClick(value)}>
+              {label}
+            </li>
+          ))}
+        </ul>
       )}
-      value={value}
-      onChange={handleChange}>
-      {options.map(({ id, value, label }) => (
-        <option key={id} id={id} value={value}>
-          {label}
-        </option>
-      ))}
-    </select>
+    </div>
   );
 };

@@ -15,15 +15,10 @@ const meta = {
 export default meta;
 
 export const Text: StoryFn = () => (
-  <TextInput
-    inputId="firstName"
-    handleChange={(event) => console.log(event.target.value)}
-    className="plasmo-w-80"
-    required
-  />
+  <TextInput inputId="firstName" handleChange={(event) => console.log(event.target.value)} required />
 );
 
-export const SelectPrimary: StoryFn = () => {
+export const Select: StoryFn = () => {
   const options = [
     { id: '1', label: 'Option 1', value: 'Option 1' },
     { id: '2', label: 'Option 2', value: 'Option 2' },
@@ -32,42 +27,17 @@ export const SelectPrimary: StoryFn = () => {
 
   return (
     <SelectInput
-      type="primary"
       id="primary"
-      handleChange={(event) => console.log(event.target.value)}
+      handleChange={(value) => console.log(value)}
       options={options}
-      className="plasmo-w-80"
-      required
-    />
-  );
-};
-
-export const SelectSecondary: StoryFn = () => {
-  const options = [
-    { id: '1', label: 'Option 1', value: 'Option 1' },
-    { id: '2', label: 'Option 2', value: 'Option 2' },
-    { id: '3', label: 'Option 3', value: 'Option 3' },
-  ];
-
-  return (
-    <SelectInput
-      type="secondary"
-      id="secondary"
-      handleChange={(event) => console.log(event.target.value)}
-      options={options}
-      className="plasmo-w-40"
-      required
+      value={options[0].value}
+      className="plasmo-w-56"
     />
   );
 };
 
 export const TextArea: StoryFn = () => (
-  <TextAreaInput
-    inputId="comment"
-    handleChange={(event) => console.log(event.target.value)}
-    className="plasmo-w-80"
-    required
-  />
+  <TextAreaInput inputId="comment" handleChange={(event) => console.log(event.target.value)} required />
 );
 
 export const Toggle: StoryFn = () => {
