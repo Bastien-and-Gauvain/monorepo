@@ -47,9 +47,9 @@ const Button = ({ children, type = 'primary', className, onClick, isLoading = fa
   return (
     <button
       className={cn(
+        className,
         typeSpecificClasses[type],
-        'plasmo-text-white-transparent90 plasmo-px-8 plasmo-py-4 plasmo-rounded-md plasmo-flex plasmo-justify-center plasmo-items-center',
-        className
+        'plasmo-text-white-transparent90 plasmo-px-8 plasmo-py-4 plasmo-rounded-md plasmo-flex plasmo-justify-center plasmo-items-center'
       )}
       onClick={onClick}>
       {isLoading ? (
