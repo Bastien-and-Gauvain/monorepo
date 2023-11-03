@@ -29,13 +29,13 @@ export default function Popup() {
   return (
     <div
       className={cn(
-        'plasmo-p-2 plasmo-flex plasmo-justify-center plasmo-items-center',
-        !isLinkedIn ? 'plasmo-w-52 plasmo-h-32' : 'plasmo-w-28 plasmo-h-10'
+        'plasmo-flex plasmo-justify-center plasmo-items-top plasmo-bg-background-light plasmo-p-0 plasmo-text-lg',
+        !isLinkedIn ? 'plasmo-w-96 plasmo-h-48' : 'plasmo-w-24 plasmo-h-6'
       )}>
       {!isLinkedIn ? (
         <GoBackToLinkedInContent />
       ) : (
-        <BaseParagraph className="plasmo-font-bold">
+        <BaseParagraph className="plasmo-bg-background-light plasmo-font-semibold">
           {linkedInNotionSidePanelStatus ? 'Enjoy 🎉' : 'Goodbye 👋'}
         </BaseParagraph>
       )}
