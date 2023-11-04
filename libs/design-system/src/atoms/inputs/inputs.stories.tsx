@@ -39,13 +39,15 @@ export const TextArea: StoryFn = () => (
   <TextAreaInput inputId="comment" handleChange={(event) => console.log(event.target.value)} required />
 );
 
-export const NewToggle: StoryFn = () => {
+export const Toggle: StoryFn = () => {
   const changeHandler = (checkedStatus: boolean) => console.log(checkedStatus);
   return (
-    <ToggleInput
-      options={{ checked: 'Notion', unchecked: 'LinkedIn' }}
-      inputId="linkedinNotionSwitch"
-      handleChange={changeHandler}
-    />
+    <div className="plasmo-w-60">
+      <ToggleInput
+        options={{ checked: 'Notion', unchecked: 'LinkedIn' }}
+        inputId="linkedinNotionSwitch"
+        handleChange={changeHandler}
+      />
+    </div>
   );
 };
