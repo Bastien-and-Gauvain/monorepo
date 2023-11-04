@@ -28,3 +28,5 @@ export const InformationCircle: StoryFn = () => <Icon type="InformationCircle" c
 export const ExclamationCircle: StoryFn = () => <Icon type="ExclamationCircle" className="plasmo-stroke-black" />;
 
 export const ArrowPath: StoryFn = () => <Icon type="ArrowPath" className="plasmo-stroke-black" />;
+
+export const SixDots: StoryFn = () => <Icon type="SixDots" className="plasmo-stroke-black" />;

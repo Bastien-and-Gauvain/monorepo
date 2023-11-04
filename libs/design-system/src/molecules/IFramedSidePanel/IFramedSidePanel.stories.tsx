@@ -33,7 +33,7 @@ export const DefaultSidePanel: StoryFn = () => {
       <ButtonPrimary onClick={() => setIsOpen(!isOpen)}>Toggle Side Panel</ButtonPrimary>
       <IFramedSidePanel
         hasCloseButton={true}
-        hasTranslateButton={true}
+        hasDragButton={true}
         hasLogoutButton={true}
         head={styleNode}
         isOpen={isOpen}

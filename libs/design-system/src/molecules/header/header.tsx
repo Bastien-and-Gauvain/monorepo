@@ -22,14 +22,19 @@ type HeaderProps = {
   closeHandler?: () => void;
 
   /**
-   * Display or not the translate button
+   * Display or not the drag button
    */
-  hasTranslateButton?: boolean;
+  hasDragButton?: boolean;
 
   /**
-   * Function to call when clicking on the translate button
+   * Function to call when pressing the drag button
    */
-  translateHandler?: () => void;
+  dragMouseDownHandler?: () => void;
+
+  /**
+   * Function to call when releasing the drag button
+   */
+  dragMouseUpHandler?: () => void;
 
   /**
    * Children of the header
@@ -40,35 +45,41 @@ type HeaderProps = {
 export const Header = ({
   hasLogoutButton = false,
   hasCloseButton = false,
-  hasTranslateButton = false,
+  hasDragButton = false,
   logoutHandler,
   closeHandler,
-  translateHandler,
+  dragMouseDownHandler,
+  dragMouseUpHandler,
   children,
 }: HeaderProps) => {
-  const iconClass = 'plasmo-stroke-white plasmo-cursor-pointer hover:plasmo-stroke-white-transparent90';
+  const iconClass = 'plasmo-stroke-white hover:plasmo-stroke-white-transparent90';
 
   return (
-    <div className="plasmo-relative plasmo-flex plasmo-flex-row plasmo-justify-center plasmo-items-center plasmo-bg-background-dark plasmo-w-full plasmo-h-14 plasmo-shadow-lg">
-      <div className="plasmo-absolute plasmo-top-4 plasmo-left-4 plasmo-flex plasmo-justify-between plasmo-items-center plasmo-w-12">
-        {hasCloseButton && (
-          <button onClick={closeHandler}>
-            <Icon type="XMark" className={iconClass} />
-          </button>
-        )}
-        {hasTranslateButton && (
-          <button onClick={translateHandler}>
-            <Icon type="ChevronLeftRight" className={iconClass} />
-          </button>
-        )}
-      </div>
-      {children}
-      <div className="plasmo-absolute plasmo-top-4 plasmo-right-4">
-        {hasLogoutButton && (
-          <button onClick={logoutHandler}>
-            <Icon type="ArrowRightTray" className={iconClass} />
-          </button>
-        )}
+    <div className="plasmo-sticky plasmo-top-0 plasmo-z-50">
+      <div className="plasmo-relative plasmo-flex plasmo-flex-row plasmo-justify-center plasmo-items-center plasmo-bg-background-dark plasmo-w-full plasmo-h-14 plasmo-shadow-lg">
+        <div className="plasmo-absolute plasmo-top-4 plasmo-left-4 plasmo-flex plasmo-justify-between plasmo-items-center plasmo-w-12">
+          {hasCloseButton && (
+            <button onClick={closeHandler}>
+              <Icon type="XMark" className={iconClass} />
+            </button>
+          )}
+          {hasDragButton && (
+            <button
+              onMouseDown={dragMouseDownHandler}
+              onMouseUp={dragMouseUpHandler}
+              className="plasmo-cursor-grab active:plasmo-cursor-grabbing">
+              <Icon type="SixDots" className={iconClass} />
+            </button>
+          )}
+        </div>
+        {children}
+        <div className="plasmo-absolute plasmo-top-4 plasmo-right-4">
+          {hasLogoutButton && (
+            <button onClick={logoutHandler}>
+              <Icon type="ArrowRightTray" className={iconClass} />
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
