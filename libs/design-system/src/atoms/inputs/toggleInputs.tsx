@@ -39,12 +39,12 @@ export const ToggleInput = ({ options, inputId, className, handleChange }: Toggl
     <div
       className={cn(
         className,
-        'plasmo-flex plasmo-rounded-md plasmo-flex-row plasmo-justify-between plasmo-items-center plasmo-w-full plasmo-bg-grey-transparent'
+        'plasmo-flex plasmo-rounded-md plasmo-flex-row plasmo-justify-around plasmo-space-x-1 plasmo-p-1 plasmo-items-center plasmo-w-full plasmo-bg-grey-transparent plasmo-border plasmo-border-solid plasmo-border-grey-transparent'
       )}
       id={inputId}>
       <button
         className={cn(
-          'plasmo-m-1 plasmo-p-2 plasmo-rounded-md plasmo-w-1/2',
+          'plasmo-p-2 plasmo-rounded-md plasmo-w-1/2',
           !checkedState && 'plasmo-bg-main plasmo-text-white-transparent90'
         )}
         onClick={() => clickHandler(false)}>
@@ -52,7 +52,7 @@ export const ToggleInput = ({ options, inputId, className, handleChange }: Toggl
       </button>
       <button
         className={cn(
-          'plasmo-m-1 plasmo-p-2 plasmo-rounded-md plasmo-w-1/2',
+          'plasmo-p-2 plasmo-rounded-md plasmo-w-1/2',
           checkedState && 'plasmo-bg-main plasmo-text-white-transparent90'
         )}
         onClick={() => clickHandler(true)}>
