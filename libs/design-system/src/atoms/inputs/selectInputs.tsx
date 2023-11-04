@@ -29,6 +29,12 @@ export type SelectInputProps = {
   id: string;
 
   /**
+   * Whether the input is required or not.
+   * @default false
+   */
+  required?: boolean;
+
+  /**
    * The initial value.
    * It's the first option by default.
    */
@@ -50,7 +56,7 @@ export type SelectInputProps = {
   options: SelectOptionsProps[];
 };
 
-export const SelectInput = ({ id, value, className, handleChange, options }: SelectInputProps) => {
+export const SelectInput = ({ id, required = false, value, className, handleChange, options }: SelectInputProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<string | undefined>(value);
 
@@ -60,6 +66,9 @@ export const SelectInput = ({ id, value, className, handleChange, options }: Sel
     setSelectedOption(value);
     handleChange(value);
     setIsOpen(false);
+    if (required && value === '') {
+      console.log('A value is required though');
+    }
   };
 
   return (
