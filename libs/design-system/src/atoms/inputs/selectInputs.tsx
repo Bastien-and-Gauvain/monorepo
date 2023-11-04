@@ -62,8 +62,8 @@ export const SelectInput = ({ id, required = false, value, className, handleChan
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
-  const handleOptionClick = (value: string) => {
-    setSelectedOption(value);
+  const handleOptionClick = (value: string, label: string) => {
+    setSelectedOption(label);
     handleChange(value);
     setIsOpen(false);
     if (required && value === '') {
@@ -88,7 +88,7 @@ export const SelectInput = ({ id, required = false, value, className, handleChan
             <li
               key={id}
               className="plasmo-text-grey-medium plasmo-p-2 plasmo-cursor-pointer hover:plasmo-bg-grey-transparent"
-              onClick={() => handleOptionClick(value)}>
+              onClick={() => handleOptionClick(value, label)}>
               {label}
             </li>
           ))}
