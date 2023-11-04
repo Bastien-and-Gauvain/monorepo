@@ -308,7 +308,7 @@ export const Form = ({
                 Save
               </ButtonPrimary>
             )}
-            <ButtonPrimary onClick={onReload}>🔄</ButtonPrimary>
+            {!displayNotionValues && <ButtonPrimary onClick={onReload}>🔄</ButtonPrimary>}
           </div>
         </>
       )}
