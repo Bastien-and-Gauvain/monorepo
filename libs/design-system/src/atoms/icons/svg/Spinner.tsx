@@ -1,5 +1,4 @@
 import { SVGIconProps } from '.';
-import { cn } from '../../..';
 
 export const Spinner = ({ className, size }: SVGIconProps) => (
   <svg

@@ -1,5 +1,4 @@
 import { SVGIconProps } from '.';
-import { cn } from '../../..';
 
 export const XMark = ({ className, size }: SVGIconProps) => (
   <svg

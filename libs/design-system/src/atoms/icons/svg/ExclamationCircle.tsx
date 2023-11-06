@@ -1,5 +1,4 @@
 import { SVGIconProps } from '.';
-import { cn } from '../../..';
 
 export const ExclamationCircle = ({ className, size }: SVGIconProps) => (
   <svg
