@@ -19,6 +19,8 @@ export const ArrowRightTray: StoryFn = () => <Icon type="ArrowRightTray" classNa
 
 export const ChevronLeftRight: StoryFn = () => <Icon type="ChevronLeftRight" className="plasmo-stroke-black" />;
 
+export const ChevronDown: StoryFn = () => <Icon type="ChevronDown" className="plasmo-stroke-black" />;
+
 export const XMark: StoryFn = () => <Icon type="XMark" className="plasmo-stroke-black" />;
 
 export const CheckCircle: StoryFn = () => <Icon type="CheckCircle" className="plasmo-stroke-black" />;

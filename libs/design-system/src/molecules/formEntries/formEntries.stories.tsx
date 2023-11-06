@@ -1,5 +1,4 @@
 import type { Meta, StoryFn } from '@storybook/react';
-import { useState } from 'react';
 
 import { SelectEntry, TextAreaEntry, TextEntry } from '.';
 import { ToggleEntry } from './toggleEntry';
@@ -24,6 +23,25 @@ export const Text: StoryFn = () => (
   />
 );
 
+export const Select: StoryFn = () => {
+  const options = [
+    { id: '1', label: 'Option 1', value: 'Option 1' },
+    { id: '2', label: 'Option 2', value: 'Option 2' },
+    { id: '3', label: 'Option 3', value: 'Option 3' },
+  ];
+
+  return (
+    <SelectEntry
+      id="primary"
+      handleChange={(value) => console.log(value)}
+      options={options}
+      value={options[0].value}
+      className="plasmo-w-56"
+      labelText="Select an option"
+    />
+  );
+};
+
 export const TextArea: StoryFn = () => {
   return (
     <TextAreaEntry
@@ -37,9 +55,8 @@ export const TextArea: StoryFn = () => {
 };
 
 export const Toggle: StoryFn = () => {
-  const [checked, setChecked] = useState<boolean>(false);
-  const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked);
+  const changeHandler = (checked: boolean) => {
+    console.log(checked);
   };
 
   return (
@@ -47,7 +64,6 @@ export const Toggle: StoryFn = () => {
       inputId="toggle"
       handleChange={changeHandler}
       labelText="Display data stored in:"
-      checked={checked}
       options={{ unchecked: 'LinkedIn', checked: 'Notion' }}
     />
   );

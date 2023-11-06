@@ -1,5 +1,4 @@
 import type { Meta, StoryFn } from '@storybook/react';
-import { useState } from 'react';
 
 import { SelectInput, TextAreaInput, TextInput } from '.';
 import { ToggleInput } from './toggleInputs';
@@ -15,73 +14,42 @@ const meta = {
 export default meta;
 
 export const Text: StoryFn = () => (
-  <TextInput
-    inputId="firstName"
-    handleChange={(event) => console.log(event.target.value)}
-    className="plasmo-w-80"
-    required
-  />
+  <TextInput inputId="firstName" handleChange={(event) => console.log(event.target.value)} required />
 );
 
-export const SelectPrimary: StoryFn = () => {
+export const Select: StoryFn = () => {
   const options = [
     { id: '1', label: 'Option 1', value: 'Option 1' },
     { id: '2', label: 'Option 2', value: 'Option 2' },
     { id: '3', label: 'Option 3', value: 'Option 3' },
+    { id: '4', label: 'An empty one', value: '' },
   ];
 
   return (
     <SelectInput
-      type="primary"
       id="primary"
-      handleChange={(event) => console.log(event.target.value)}
+      handleChange={(value) => console.log(value)}
       options={options}
-      className="plasmo-w-80"
-      required
-    />
-  );
-};
-
-export const SelectSecondary: StoryFn = () => {
-  const options = [
-    { id: '1', label: 'Option 1', value: 'Option 1' },
-    { id: '2', label: 'Option 2', value: 'Option 2' },
-    { id: '3', label: 'Option 3', value: 'Option 3' },
-  ];
-
-  return (
-    <SelectInput
-      type="secondary"
-      id="secondary"
-      handleChange={(event) => console.log(event.target.value)}
-      options={options}
-      className="plasmo-w-40"
+      value={options[0].value}
+      className="plasmo-w-56"
       required
     />
   );
 };
 
 export const TextArea: StoryFn = () => (
-  <TextAreaInput
-    inputId="comment"
-    handleChange={(event) => console.log(event.target.value)}
-    className="plasmo-w-80"
-    required
-  />
+  <TextAreaInput inputId="comment" handleChange={(event) => console.log(event.target.value)} required />
 );
 
 export const Toggle: StoryFn = () => {
-  const [checked, setChecked] = useState<boolean>(false);
-  const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked);
-    console.log(event.target.checked);
-  };
+  const changeHandler = (checkedStatus: boolean) => console.log(checkedStatus);
   return (
-    <ToggleInput
-      options={{ checked: 'Notion', unchecked: 'LinkedIn' }}
-      checked={checked}
-      inputId="linkedinNotionSwitch"
-      handleChange={changeHandler}
-    />
+    <div className="plasmo-w-60">
+      <ToggleInput
+        options={{ checked: 'Notion', unchecked: 'LinkedIn' }}
+        inputId="linkedinNotionSwitch"
+        handleChange={changeHandler}
+      />
+    </div>
   );
 };

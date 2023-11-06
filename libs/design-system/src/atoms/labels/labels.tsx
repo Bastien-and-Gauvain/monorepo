@@ -32,7 +32,13 @@ const fontSizeMapping = {
 
 const Label = ({ type = 'base', inputId, labelText, className }: LabelProps) => {
   return (
-    <label htmlFor={inputId} className={cn('plasmo-antialiased', 'plasmo-text-gray', fontSizeMapping[type], className)}>
+    <label
+      htmlFor={inputId}
+      className={cn(
+        'plasmo-antialiased plasmo-text-grey-medium plasmo-font-semibold',
+        fontSizeMapping[type],
+        className
+      )}>
       {labelText}
     </label>
   );

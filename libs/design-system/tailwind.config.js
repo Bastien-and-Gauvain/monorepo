@@ -76,7 +76,7 @@ export default {
         dark: '#22242A',
         medium: '#2E3038',
         light: '#5C5F70',
-        transparent: 'rgba(115, 119, 140, 0.5)',
+        transparent: 'rgba(115, 119, 140, 0.2)',
       },
       success: '#478E56',
       error: '#8D484F',

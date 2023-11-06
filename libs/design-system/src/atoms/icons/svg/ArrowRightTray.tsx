@@ -9,7 +9,7 @@ export const ArrowRightTray = ({ className, size }: SVGIconProps) => (
     width={size}
     strokeWidth={2}
     stroke="currentColor"
-    className={cn(className, 'plasmo-rotate-90 plasmo-shrink-0')}>
+    className={cn(className, 'plasmo-rotate-90')}>
     <path
       strokeLinecap="round"
       strokeLinejoin="round"

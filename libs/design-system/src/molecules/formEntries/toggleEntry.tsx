@@ -8,17 +8,11 @@ import { BaseLabel, LabelProps } from '../../atoms/labels/labels';
  */
 type ToggleEntryProps = LabelProps & ToggleInputProps;
 
-export const ToggleEntry = ({ options, checked, inputId, handleChange, labelText, className }: ToggleEntryProps) => {
+export const ToggleEntry = ({ options, inputId, handleChange, labelText, className }: ToggleEntryProps) => {
   return (
-    <div className="plasmo-flex plasmo-justify-between">
+    <div className="plasmo-flex plasmo-flex-col">
       <BaseLabel inputId={inputId} labelText={labelText} className="plasmo-me-2" />
-      <ToggleInput
-        options={options}
-        checked={checked}
-        inputId={inputId}
-        handleChange={handleChange}
-        className={className}
-      />
+      <ToggleInput options={options} inputId={inputId} handleChange={handleChange} className={className} />
     </div>
   );
 };
