@@ -1,5 +1,4 @@
 import { SVGIconProps } from '.';
-import { cn } from '../../..';
 
 export const ChevronDown = ({ className, size }: SVGIconProps) => (
   <svg
@@ -9,7 +8,7 @@ export const ChevronDown = ({ className, size }: SVGIconProps) => (
     width={size}
     strokeWidth={2}
     stroke="currentColor"
-    className={cn(className, 'plasmo-shrink-0')}>
+    className={className}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
   </svg>
 );
