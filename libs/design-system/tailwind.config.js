@@ -4,13 +4,13 @@ export default {
   prefix: 'plasmo-',
   theme: {
     fontFamily: {
-      roboto: ['Roboto', 'sans-serif'],
-      sans: ['Roboto', 'sans-serif'],
+      'sf-pro': ['SF Pro Display', 'sans-serif'],
     },
     fontSize: {
       3: '0.7rem',
       3.5: '0.875rem', // 14px
       4: '1rem', // 16px
+      lg: '1.125rem', // 18px
       5: '1.25rem', // 20px
       6: '1.5rem', // 24px
       8: '2rem', // 32px
@@ -53,7 +53,18 @@ export default {
         light: '#798186',
         DEFAULT: '#212529',
       },
-      main: '#738AFF',
+      main: {
+        DEFAULT: '#738AFF',
+        100: '#E6E9FF',
+        200: '#CDD4FF',
+        300: '#B4BEFF',
+        400: '#9BA9FF',
+        500: '#738AFF',
+        600: '#4F5CFF',
+        700: '#2B3AFF',
+        800: '#0719FF',
+        900: '#0000E6',
+      },
       secondary: '#232536',
       white: {
         DEFAULT: '#ffffff',

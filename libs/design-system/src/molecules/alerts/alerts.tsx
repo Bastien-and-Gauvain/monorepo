@@ -34,37 +34,33 @@ const colorMapping = {
   error: 'plasmo-bg-error plasmo-text-white-transparent90',
 };
 
-const iconsMapping = {
-  success: 'CheckCircle' as IconType,
-  info: 'InformationCircle' as IconType,
-  warning: 'ExclamationCircle' as IconType,
-  error: 'ExclamationCircle' as IconType,
+const iconsMapping: Record<string, IconType> = {
+  success: 'CheckCircle',
+  info: 'InformationCircle',
+  warning: 'ExclamationCircle',
+  error: 'ExclamationCircle',
 };
 
 const Alert = ({ type = 'info', className, link, message }: AlertsProps) => {
-  return link ? (
-    <a
-      href={link}
-      target="_blank"
-      rel="noreferrer"
+  const alert = (
+    <div
       className={cn(
-        'plasmo-antialiased plasmo-w-80 plasmo-h-20 plasmo-p-3 plasmo-rounded-md plasmo-flex plasmo-flex-row plasmo-items-center',
+        'plasmo-antialiased plasmo-space-x-3 plasmo-font-semibold plasmo-w-full plasmo-p-6 plasmo-leading-5 plasmo-rounded-md plasmo-flex plasmo-flex-row plasmo-items-center',
         colorMapping[type],
         className
       )}>
-      <Icon type={iconsMapping[type]} className="plasmo-m-3" />
-      <p className="plasmo-m-3 plasmo-pt-[1px]">{message}</p>
+      <div>
+        <Icon type={iconsMapping[type]} />
+      </div>
+      <p>{message}</p>
+    </div>
+  );
+  return link ? (
+    <a href={link} target="_blank" rel="noreferrer">
+      {alert}
     </a>
   ) : (
-    <span
-      className={cn(
-        'plasmo-antialiased plasmo-w-80 plasmo-h-20 plasmo-p-3 plasmo-rounded-md plasmo-flex plasmo-flex-row plasmo-items-center',
-        colorMapping[type],
-        className
-      )}>
-      <Icon type={iconsMapping[type]} className="plasmo-m-3" />
-      <p className="plasmo-m-3 plasmo-pt-[1px]">{message}</p>
-    </span>
+    alert
   );
 };
 
