@@ -4,7 +4,7 @@ export type AlertState = 'error' | 'in-notion' | 'new-profile' | 'profile-update
 
 export const Alert = ({ state, notionUrl }: { state: AlertState; notionUrl?: string }) => {
   if (state === 'error') {
-    return <ErrorAlert message="Something went wrong. Open developer console to know more." />;
+    return <ErrorAlert message="Something went wrong. Click to report the bug 😉" link="https://tally.so/r/3lOxQN" />;
   }
 
   if (state === 'in-notion') {
