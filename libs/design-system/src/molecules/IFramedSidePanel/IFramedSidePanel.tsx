@@ -1,7 +1,7 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-import { ButtonSecondary, cn } from '../..';
+import { cn, Header, Logo } from '../..';
 
 type SidePanelProps = {
   /**
@@ -25,9 +25,9 @@ type SidePanelProps = {
   hasCloseButton?: boolean;
 
   /**
-   * Should the side panel have a translate button?
+   * Should the side panel have a drag button?
    */
-  hasTranslateButton?: boolean;
+  hasDragButton?: boolean;
 
   /**
    * Should the side panel have a logout button?
@@ -60,42 +60,65 @@ export const IFramedSidePanel = ({
   onCloseCallback,
   onLogoutCallback,
   hasCloseButton,
-  hasTranslateButton,
+  hasDragButton,
   hasLogoutButton,
   head,
   children,
   className,
   id,
 }: SidePanelProps) => {
-  const [isRight, setIsRight] = useState(true);
   const [contentRef, setContentRef] = useState<HTMLIFrameElement | null>(null);
+  const [sidePanelLeftPosition, setSidePanelLeftPosition] = useState(window.innerWidth - 356);
+  const [isDragMouseDown, setIsDragMouseDown] = useState(false);
 
   const iframeRoot = contentRef?.contentWindow?.document?.body;
   const iframeHead = contentRef?.contentWindow?.document?.head;
 
+  useEffect(() => {
+    const mouseMoveHandler = (e: MouseEvent) => {
+      const iFrameRect = contentRef?.getBoundingClientRect();
+      if (isDragMouseDown) {
+        setSidePanelLeftPosition(e.clientX + (iFrameRect?.left || 0) - 54);
+      }
+    };
+
+    const mouseUpHandler = () => {
+      if (isDragMouseDown) {
+        setIsDragMouseDown(false);
+      }
+    };
+
+    contentRef?.contentDocument?.addEventListener('mousemove', mouseMoveHandler);
+    contentRef?.contentDocument?.addEventListener('mouseup', mouseUpHandler);
+    window.addEventListener('mouseup', mouseUpHandler);
+
+    return () => {
+      window.removeEventListener('mouseup', mouseUpHandler);
+      contentRef?.contentDocument?.removeEventListener('mouseup', mouseUpHandler);
+      contentRef?.contentDocument?.removeEventListener('mousemove', mouseMoveHandler);
+    };
+  }, [contentRef, isDragMouseDown]);
+
   const content = (
-    <div className={cn('plasmo-p-4', className)}>
-      {(hasCloseButton || hasTranslateButton) && (
-        <div className="plasmo-flex plasmo-justify-between plasmo-mb-4">
-          <div className="plasmo-flex plasmo-flex-row plasmo-space-x-3">
-            {hasCloseButton && (
-              <ButtonSecondary onClick={() => onCloseCallback && onCloseCallback()} className="plasmo-w-8">
-                ⤬
-              </ButtonSecondary>
-            )}
-            {hasTranslateButton && (
-              <ButtonSecondary onClick={() => setIsRight(!isRight)} className="plasmo-w-8">
-                ↔
-              </ButtonSecondary>
-            )}
-          </div>
-          {hasLogoutButton && (
-            <ButtonSecondary onClick={() => onLogoutCallback && onLogoutCallback()}>Logout</ButtonSecondary>
-          )}
-        </div>
-      )}
-      {children}
-    </div>
+    <>
+      <Header
+        hasCloseButton={hasCloseButton}
+        closeHandler={onCloseCallback}
+        hasLogoutButton={hasLogoutButton}
+        logoutHandler={onLogoutCallback}
+        hasDragButton={hasDragButton}
+        dragMouseDownHandler={() => setIsDragMouseDown(true)}
+        dragMouseUpHandler={() => setIsDragMouseDown(false)}>
+        <Logo className="plasmo-fill-white" />
+      </Header>
+      <div
+        className={cn(
+          'plasmo-p-4 plasmo-min-h-[calc(100%-3.5rem)] plasmo-bg-background-light plasmo-overflow-scroll',
+          className
+        )}>
+        {children}
+      </div>
+    </>
   );
 
   return (
@@ -106,10 +129,10 @@ export const IFramedSidePanel = ({
       // To avoid this, we're using fixed width and height
       // However, this remains true for breakpoints or default tailwind classes
       className={cn(
-        'plasmo-fixed plasmo-top-0 plasmo-min-h-full plasmo-w-[296px] plasmo-2xl:w-[396px] plasmo-bg-white plasmo-z-10 plasmo-shadow-2xl plasmo-overflow-scroll',
-        isRight ? 'plasmo-right-0 plasmo-rounded-l-md' : 'plasmo-left-0 plasmo-rounded-r-md',
+        'plasmo-fixed plasmo-top-3 plasmo-h-[calc(100%-1.5rem)] plasmo-bg-transparent plasmo-w-[346px] plasmo-z-10 plasmo-drop-shadow-3xl plasmo-overflow-scroll plasmo-rounded-md',
         isOpen ? '' : 'plasmo-hidden'
       )}
+      style={{ left: `${Math.min(Math.max(10, sidePanelLeftPosition), window.innerWidth - 356)}px` }}
       ref={setContentRef}>
       {iframeHead && createPortal(head, iframeHead)}
       {iframeRoot && createPortal(content, iframeRoot)}

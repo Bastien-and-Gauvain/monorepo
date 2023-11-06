@@ -9,6 +9,6 @@ export const XMark = ({ className, size }: SVGIconProps) => (
     fill="none"
     strokeWidth={2}
     stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M5 17L17 5M5 5l12 12" />
   </svg>
 );

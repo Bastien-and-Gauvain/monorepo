@@ -51,7 +51,7 @@ export const LinkedInNotionSidePanelContent = ({
   return (
     <IFramedSidePanel
       hasCloseButton={true}
-      hasTranslateButton={true}
+      hasDragButton={true}
       hasLogoutButton={isLoggedIn}
       head={getIFrameStyle()}
       isOpen={isOpen}

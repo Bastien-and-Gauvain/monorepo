@@ -20,7 +20,7 @@ const meta = {
         type: 'boolean',
       },
     },
-    hasTranslateButton: {
+    hasDragButton: {
       control: {
         type: 'boolean',
       },
@@ -37,7 +37,8 @@ export const Default: StoryFn<typeof Header> = (args) => (
     <Header
       {...args}
       closeHandler={() => console.log('Closed 🔥')}
-      translateHandler={() => console.log('Translated 🌍')}
+      dragMouseDownHandler={() => console.log('MouseDown 🌍')}
+      dragMouseUpHandler={() => console.log('MouseUp 🌍')}
       logoutHandler={() => console.log('Logged out 🚪')}>
       <Logo className="plasmo-fill-white" />
     </Header>
@@ -47,5 +48,5 @@ export const Default: StoryFn<typeof Header> = (args) => (
 Default.args = {
   hasCloseButton: true,
   hasLogoutButton: true,
-  hasTranslateButton: true,
+  hasDragButton: true,
 };

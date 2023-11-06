@@ -5,6 +5,7 @@ import { ChevronDown } from './ChevronDown';
 import { ChevronLeftRight } from './ChevronLeftRight';
 import { ExclamationCircle } from './ExclamationCircle';
 import { InformationCircle } from './InformationCircle';
+import { SixDots } from './SixDots';
 import { Spinner } from './Spinner';
 import { XMark } from './XMark';
 
@@ -18,6 +19,7 @@ export const icons = {
   ChevronDown,
   XMark,
   ExclamationCircle,
+  SixDots,
 };
 
 export type IconType = keyof typeof icons;
