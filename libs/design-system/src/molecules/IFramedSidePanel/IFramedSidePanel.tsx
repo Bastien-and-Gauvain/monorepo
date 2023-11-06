@@ -111,7 +111,11 @@ export const IFramedSidePanel = ({
         dragMouseUpHandler={() => setIsDragMouseDown(false)}>
         <Logo className="plasmo-fill-white" />
       </Header>
-      <div className={cn('plasmo-p-4 plasmo-min-h-full plasmo-bg-background-light plasmo-overflow-scroll', className)}>
+      <div
+        className={cn(
+          'plasmo-p-4 plasmo-min-h-[calc(100%-3.5rem)] plasmo-bg-background-light plasmo-overflow-scroll',
+          className
+        )}>
         {children}
       </div>
     </>
@@ -125,10 +129,10 @@ export const IFramedSidePanel = ({
       // To avoid this, we're using fixed width and height
       // However, this remains true for breakpoints or default tailwind classes
       className={cn(
-        'plasmo-fixed plasmo-top-3 plasmo-h-[calc(100%-1.5rem)] plasmo-bg-transparent plasmo-w-[346px] plasmo-2xl:w-[396px] plasmo-z-10 plasmo-shadow-2xl plasmo-overflow-scroll plasmo-rounded-md',
+        'plasmo-fixed plasmo-top-3 plasmo-h-[calc(100%-1.5rem)] plasmo-bg-transparent plasmo-w-[346px] plasmo-z-10 plasmo-drop-shadow-3xl plasmo-overflow-scroll plasmo-rounded-md',
         isOpen ? '' : 'plasmo-hidden'
       )}
-      style={{ left: `${sidePanelLeftPosition}px` }}
+      style={{ left: `${Math.min(Math.max(10, sidePanelLeftPosition), window.innerWidth - 356)}px` }}
       ref={setContentRef}>
       {iframeHead && createPortal(head, iframeHead)}
       {iframeRoot && createPortal(content, iframeRoot)}

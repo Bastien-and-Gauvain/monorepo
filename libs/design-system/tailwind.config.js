@@ -86,7 +86,11 @@ export default {
         dark: '#1B1D2A',
       },
     },
-    extend: {},
+    extend: {
+      dropShadow: {
+        '3xl': '0 35px 35px rgba(0, 0, 0, 0.3)',
+      },
+    },
   },
   plugins: [],
 };
