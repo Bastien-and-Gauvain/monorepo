@@ -1,3 +1,5 @@
+import { Icon } from '../..';
+import { IconType } from '../../atoms/icons/svg';
 import { cn } from '../../shared/classnames';
 
 type AlertsProps = {
@@ -26,28 +28,40 @@ type AlertsProps = {
 };
 
 const colorMapping = {
-  success: 'plasmo-bg-green plasmo-text-grey',
-  info: 'plasmo-bg-cyan plasmo-text-grey',
-  warning: 'plasmo-bg-pink plasmo-text-grey',
-  error: 'plasmo-bg-red plasmo-text-white',
+  success: 'plasmo-bg-success plasmo-text-white-transparent90',
+  info: 'plasmo-bg-info plasmo-text-white-transparent90',
+  warning: 'plasmo-bg-pink plasmo-text-white-transparent90',
+  error: 'plasmo-bg-error plasmo-text-white-transparent90',
+};
+
+const iconsMapping: Record<string, IconType> = {
+  success: 'CheckCircle',
+  info: 'InformationCircle',
+  warning: 'ExclamationCircle',
+  error: 'ExclamationCircle',
 };
 
 const Alert = ({ type = 'info', className, link, message }: AlertsProps) => {
-  if (link) {
-    return (
-      <a
-        className={cn('plasmo-antialiased plasmo-p-4 plasmo-rounded-md', colorMapping[type], className)}
-        href={link}
-        target="_blank"
-        rel="noreferrer">
-        {message}
-      </a>
-    );
-  } else {
-    return (
-      <p className={cn('plasmo-antialiased plasmo-p-4 plasmo-rounded-md', colorMapping[type], className)}>{message}</p>
-    );
-  }
+  const alert = (
+    <div
+      className={cn(
+        'plasmo-antialiased plasmo-space-x-3 plasmo-font-semibold plasmo-w-full plasmo-p-6 plasmo-leading-5 plasmo-rounded-md plasmo-flex plasmo-flex-row plasmo-items-center',
+        colorMapping[type],
+        className
+      )}>
+      <div>
+        <Icon type={iconsMapping[type]} />
+      </div>
+      <p>{message}</p>
+    </div>
+  );
+  return link ? (
+    <a href={link} target="_blank" rel="noreferrer">
+      {alert}
+    </a>
+  ) : (
+    alert
+  );
 };
 
 export const InfoAlert = (p: Omit<AlertsProps, 'type'>) => <Alert type="info" {...p} />;

@@ -1,4 +1,3 @@
-export * from './alerts';
 export * from './buttons';
 export * from './icons';
 export * from './inputs';
