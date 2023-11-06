@@ -45,12 +45,14 @@ const Alert = ({ type = 'info', className, link, message }: AlertsProps) => {
   const alert = (
     <div
       className={cn(
-        'plasmo-antialiased plasmo-space-x-3 plasmo-font-semibold plasmo-w-full plasmo-p-6 plasmo-leading-4 plasmo-rounded-md plasmo-flex plasmo-flex-row plasmo-items-center',
+        'plasmo-antialiased plasmo-space-x-3 plasmo-font-semibold plasmo-w-full plasmo-p-6 plasmo-leading-5 plasmo-rounded-md plasmo-flex plasmo-flex-row plasmo-items-center',
         colorMapping[type],
         className
       )}>
-      <Icon type={iconsMapping[type]} />
-      <p className="plasmo-flex-wrap">{message}</p>
+      <div>
+        <Icon type={iconsMapping[type]} />
+      </div>
+      <p>{message}</p>
     </div>
   );
   return link ? (

@@ -1,4 +1,3 @@
-export * from './alerts';
 export * from './buttons';
 export * from './icons';
 export * from './inputs';
@@ -7,3 +6,4 @@ export * from './logos';
 export * from './spinner';
 export * from './titles';
 export * from './typography';
+

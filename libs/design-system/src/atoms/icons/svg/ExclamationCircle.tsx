@@ -1,12 +1,11 @@
 import { SVGIconProps } from '.';
-import { cn } from '../../..';
 
 export const ExclamationCircle = ({ className, size }: SVGIconProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
     height={size}
-    className={cn('plasmo-shrink-0', className)}
+    className={className}
     fill="none"
     strokeWidth={2}
     stroke="currentColor">

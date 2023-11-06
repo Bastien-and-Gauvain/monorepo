@@ -1,9 +1,8 @@
 import { SVGIconProps } from '.';
-import { cn } from '../../..';
 
 export const Spinner = ({ className, size }: SVGIconProps) => (
   <svg
-    className={cn('plasmo-shrink-0', className)}
+    className={className}
     height={size}
     width={size}
     strokeWidth={2}
