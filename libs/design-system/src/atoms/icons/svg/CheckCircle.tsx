@@ -1,5 +1,4 @@
 import { SVGIconProps } from '.';
-import { cn } from '../../../shared/classnames';
 
 export const CheckCircle = ({ className, size }: SVGIconProps) => (
   <svg
