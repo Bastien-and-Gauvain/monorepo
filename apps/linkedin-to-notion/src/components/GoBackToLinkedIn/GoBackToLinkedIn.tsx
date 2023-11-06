@@ -1,5 +1,4 @@
-import logo from 'data-base64:~assets/icon.png';
-import { ButtonPrimary } from 'design-system';
+import { ButtonPrimary, Header, Logo } from 'design-system';
 
 export const GoBackToLinkedInContent = () => {
   const askToOpenLinkedInTab = () => {
@@ -7,9 +6,13 @@ export const GoBackToLinkedInContent = () => {
   };
 
   return (
-    <div className="plasmo-flex plasmo-flex-col plasmo-items-center">
-      <img src={logo} className="plasmo-w-12 plasmo-mb-4" />
-      <ButtonPrimary onClick={askToOpenLinkedInTab}>Go to Linkedin</ButtonPrimary>
+    <div className="plasmo-flex plasmo-flex-col plasmo-justify-start plasmo-w-full">
+      <Header>
+        <Logo className="plasmo-fill-white-transparent90" />
+      </Header>
+      <div className="plasmo-px-4 plasmo-pt-8">
+        <ButtonPrimary onClick={askToOpenLinkedInTab}>Use the extension on LinkedIn</ButtonPrimary>
+      </div>
     </div>
   );
 };
