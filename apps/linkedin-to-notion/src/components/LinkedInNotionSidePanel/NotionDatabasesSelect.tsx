@@ -1,5 +1,5 @@
 import type { DatabaseObjectResponse } from '@notionhq/client/build/src/api-endpoints';
-import { SelectEntry, Spinner } from 'design-system';
+import { ButtonPrimary, ErrorAlert, Loader, SelectEntry } from 'design-system';
 import { useEffect, useState } from 'react';
 
 import { sendToBackground } from '@plasmohq/messaging';
@@ -7,57 +7,75 @@ import { useStorage } from '@plasmohq/storage/hook';
 
 import { getDatabaseTitle } from './utils/notionFormat.util';
 
-type NotionDatabasesSelectProps = {
-  valueChangeHandler: (value: string) => void;
-};
-
-export const NotionDatabasesSelect = ({ valueChangeHandler }: NotionDatabasesSelectProps) => {
-  const [notionDatabases, setNotionDatabases] = useState<DatabaseObjectResponse[] | null>(null);
+export const NotionDatabasesSelect = () => {
+  const [notionDatabases, setNotionDatabases] = useState<DatabaseObjectResponse[]>([]);
   const [selectedNotionDatabase, setSelectedNotionDatabase] = useStorage<string>('selectedNotionDatabase');
   const [notionToken] = useStorage('notionToken');
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const notionDatabasesSetter = async () => {
-      const databases = await sendToBackground<{ notionToken: string }, DatabaseObjectResponse[]>({
-        name: 'notion/resolvers/getEligibleDatabases',
-        body: {
-          notionToken: notionToken.accessToken,
-        },
-      });
-      setNotionDatabases(databases);
-      setSelectedNotionDatabase(databases[0].id);
-      valueChangeHandler(databases[0].id);
-      setIsLoading(false);
-    };
+  const notionDatabasesSetter = async () => {
+    setIsLoading(true);
+    const databases = await sendToBackground<{ notionToken: string }, DatabaseObjectResponse[]>({
+      name: 'notion/resolvers/getEligibleDatabases',
+      body: {
+        notionToken: notionToken.accessToken,
+      },
+    });
 
+    if (!databases.length) {
+      setSelectedNotionDatabase('');
+      setIsLoading(false);
+      return;
+    }
+
+    setNotionDatabases(databases);
+    setSelectedNotionDatabase(selectedNotionDatabase || databases[0].id);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
     if (notionToken?.accessToken) {
       notionDatabasesSetter();
     }
-  }, [notionToken]);
+  }, [notionToken, selectedNotionDatabase]);
 
   if (isLoading) {
-    return <Spinner />;
-  }
-
-  if (!notionDatabases?.length) {
-    return <></>;
+    return (
+      <div className="plasmo-w-full plasmo-h-32 plasmo-flex plasmo-flex-col plasmo-justify-center plasmo-items-center">
+        <Loader />
+      </div>
+    );
   }
 
   return (
-    <SelectEntry
-      labelText="Notion databases"
-      id="notion-databases"
-      handleChange={(e) => {
-        setSelectedNotionDatabase(e.target.value);
-        valueChangeHandler(e.target.value);
-      }}
-      value={selectedNotionDatabase}
-      options={notionDatabases.map((database: DatabaseObjectResponse) => ({
-        id: database.id,
-        label: getDatabaseTitle(database),
-        value: database.id,
-      }))}
-    />
+    <>
+      <SelectEntry
+        labelText="Notion databases"
+        id="notion-databases"
+        handleChange={setSelectedNotionDatabase}
+        value={selectedNotionDatabase}
+        options={
+          notionDatabases?.length
+            ? notionDatabases.map((database: DatabaseObjectResponse) => ({
+                id: database.id,
+                label: getDatabaseTitle(database),
+                value: database.id,
+              }))
+            : [
+                {
+                  id: '',
+                  label: '',
+                  value: '',
+                },
+              ]
+        }
+      />
+      {!selectedNotionDatabase && (
+        <>
+          <ButtonPrimary onClick={notionDatabasesSetter}>Refresh databases</ButtonPrimary>
+          <ErrorAlert message="No databases found. Click here to create a template." link="?" />
+        </>
+      )}
+    </>
   );
 };

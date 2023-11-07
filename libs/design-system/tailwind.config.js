@@ -78,9 +78,26 @@ export default {
         light: '#5C5F70',
         transparent: 'rgba(115, 119, 140, 0.2)',
       },
-      success: '#478E56',
-      error: '#8D484F',
-      info: '#475C94',
+      success: {
+        DEFAULT: '#478E56',
+        medium: '#2E5A38',
+        dark: '#1B3920',
+      },
+      error: {
+        DEFAULT: '#8D484F',
+        medium: '#5A2E32',
+        dark: '#391B1E',
+      },
+      info: {
+        DEFAULT: '#475C94',
+        medium: '#2E3A5A',
+        dark: '#1B2239',
+      },
+      warning: {
+        DEFAULT: '#D8A24D',
+        medium: '#5A3A2E',
+        dark: '#39231B',
+      },
       background: {
         light: '#FFFDF9',
         dark: '#1B1D2A',
@@ -89,6 +106,19 @@ export default {
     extend: {
       dropShadow: {
         '3xl': '0 35px 35px rgba(0, 0, 0, 0.3)',
+      },
+      animation: {
+        'animate-loader': 'pulse-loader 2s ease-out infinite',
+      },
+      keyframes: {
+        'pulse-loader': {
+          '0%, 100%': {
+            fill: '#0E0F16',
+          },
+          '50%': {
+            fill: '#738AFF',
+          },
+        },
       },
     },
   },

@@ -27,13 +27,6 @@ type AlertsProps = {
   className?: string;
 };
 
-const colorMapping = {
-  success: 'plasmo-bg-success plasmo-text-white-transparent90',
-  info: 'plasmo-bg-info plasmo-text-white-transparent90',
-  warning: 'plasmo-bg-pink plasmo-text-white-transparent90',
-  error: 'plasmo-bg-error plasmo-text-white-transparent90',
-};
-
 const iconsMapping: Record<string, IconType> = {
   success: 'CheckCircle',
   info: 'InformationCircle',
@@ -42,11 +35,27 @@ const iconsMapping: Record<string, IconType> = {
 };
 
 const Alert = ({ type = 'info', className, link, message }: AlertsProps) => {
+  const colorMapping = {
+    success: `plasmo-bg-success plasmo-text-white-transparent90 ${
+      link && 'hover:plasmo-bg-success-medium active:plasmo-bg-success-dark'
+    }`,
+    info: `plasmo-bg-info plasmo-text-white-transparent90 ${
+      link && 'hover:plasmo-bg-info-medium active:plasmo-bg-info-dark'
+    }`,
+    warning: `plasmo-bg-warning plasmo-text-white-transparent90 ${
+      link && 'hover:plasmo-bg-warning-medium active:plasmo-bg-warning-dark'
+    }`,
+    error: `plasmo-bg-error plasmo-text-white-transparent90 ${
+      link && 'hover:plasmo-bg-error-medium active:plasmo-bg-error-dark'
+    }`,
+  };
+
   const alert = (
     <div
       className={cn(
         'plasmo-antialiased plasmo-space-x-3 plasmo-font-semibold plasmo-w-full plasmo-p-6 plasmo-leading-5 plasmo-rounded-md plasmo-flex plasmo-flex-row plasmo-items-center',
         colorMapping[type],
+        link && '',
         className
       )}>
       <div>
@@ -56,7 +65,7 @@ const Alert = ({ type = 'info', className, link, message }: AlertsProps) => {
     </div>
   );
   return link ? (
-    <a href={link} target="_blank" rel="noreferrer">
+    <a href={link} target="_blank" rel="noreferrer" className=" ">
       {alert}
     </a>
   ) : (

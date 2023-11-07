@@ -1,5 +1,5 @@
 import cssText from 'data-text:~style.css';
-import { ButtonPrimary, IFramedSidePanel, Spinner } from 'design-system';
+import { ButtonPrimary, IFramedSidePanel, Loader } from 'design-system';
 import { createElement, useEffect, useState } from 'react';
 
 import {
@@ -28,10 +28,13 @@ export const LinkedInNotionSidePanelContent = ({
   logoutCallBack: () => void;
 }) => {
   const [linkedInProfileInformation, setLinkedInProfileInformation] = useState<LinkedInProfileInformation | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const setLinkedInValues = async () => {
+    setIsLoading(true);
     const scrapingResult = await getLinkedInProfileInformation();
     setLinkedInProfileInformation(scrapingResult);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -61,9 +64,11 @@ export const LinkedInNotionSidePanelContent = ({
       className="plasmo-top-48 plasmo-space-y-4 plasmo-flex plasmo-flex-col">
       {isLoggedIn ? (
         linkedInProfileInformation ? (
-          <Form linkedinValues={linkedInProfileInformation} onReload={setLinkedInValues} />
+          <Form linkedinValues={linkedInProfileInformation} onReload={setLinkedInValues} onReloadLoading={isLoading} />
         ) : (
-          <Spinner />
+          <div className="plasmo-w-full plasmo-h-[calc(100vh-6rem)] plasmo-flex plasmo-flex-col plasmo-justify-center plasmo-items-center">
+            <Loader />
+          </div>
         )
       ) : (
         <ButtonPrimary onClick={loginCallback}>Sign in with Notion</ButtonPrimary>

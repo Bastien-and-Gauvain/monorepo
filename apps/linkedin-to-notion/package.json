@@ -10,6 +10,7 @@
     "package": "plasmo package"
   },
   "dependencies": {
+    "@heroicons/react": "^2.0.18",
     "@notionhq/client": "^2.2.13",
     "@plasmohq/messaging": "0.5.0",
     "@plasmohq/storage": "1.7.2",
