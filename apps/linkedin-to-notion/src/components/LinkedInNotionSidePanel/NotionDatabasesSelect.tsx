@@ -1,10 +1,11 @@
 import type { DatabaseObjectResponse } from '@notionhq/client/build/src/api-endpoints';
-import { ButtonPrimary, ErrorAlert, Loader, SelectEntry } from 'design-system';
+import { ButtonPrimary, ErrorAlert, SelectEntry } from 'design-system';
 import { useEffect, useState } from 'react';
 
 import { sendToBackground } from '@plasmohq/messaging';
 import { useStorage } from '@plasmohq/storage/hook';
 
+import { FullScreenLoader } from './FullScreenLoader';
 import { getDatabaseTitle } from './utils/notionFormat.util';
 
 export const NotionDatabasesSelect = () => {
@@ -40,11 +41,7 @@ export const NotionDatabasesSelect = () => {
   }, [notionToken, selectedNotionDatabase]);
 
   if (isLoading) {
-    return (
-      <div className="plasmo-w-full plasmo-h-32 plasmo-flex plasmo-flex-col plasmo-justify-center plasmo-items-center">
-        <Loader />
-      </div>
-    );
+    return <FullScreenLoader />;
   }
 
   return (

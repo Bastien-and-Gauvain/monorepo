@@ -1,5 +1,5 @@
 import cssText from 'data-text:~style.css';
-import { ButtonPrimary, IFramedSidePanel, Loader } from 'design-system';
+import { ButtonPrimary, IFramedSidePanel } from 'design-system';
 import { createElement, useEffect, useState } from 'react';
 
 import {
@@ -7,6 +7,7 @@ import {
   type LinkedInProfileInformation,
 } from './../../contents/scrapers/linkedin-profile-scraper';
 import { Form } from './Form';
+import { FullScreenLoader } from './FullScreenLoader';
 
 export const getIFrameStyle = () => {
   return createElement('style', {}, cssText);
@@ -66,9 +67,7 @@ export const LinkedInNotionSidePanelContent = ({
         linkedInProfileInformation ? (
           <Form linkedinValues={linkedInProfileInformation} onReload={setLinkedInValues} onReloadLoading={isLoading} />
         ) : (
-          <div className="plasmo-w-full plasmo-h-[calc(100vh-6rem)] plasmo-flex plasmo-flex-col plasmo-justify-center plasmo-items-center">
-            <Loader />
-          </div>
+          <FullScreenLoader />
         )
       ) : (
         <ButtonPrimary onClick={loginCallback}>Sign in with Notion</ButtonPrimary>

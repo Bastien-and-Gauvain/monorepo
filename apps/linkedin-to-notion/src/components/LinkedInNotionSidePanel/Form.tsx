@@ -15,6 +15,7 @@ import type {
 
 import { type LinkedInProfileInformation } from './../../contents/scrapers/linkedin-profile-scraper';
 import { Alert, type AlertState } from './Alert';
+import { FullScreenLoader } from './FullScreenLoader';
 import { NotionDatabasesSelect } from './NotionDatabasesSelect';
 import { genderOptions, statusOptions } from './utils/formOptions';
 import { getPropertyValue } from './utils/notionFormat.util';
@@ -246,6 +247,10 @@ export const Form = ({
     return;
   };
 
+  if (isNotionLoading) {
+    return <FullScreenLoader />;
+  }
+
   return (
     <div className="plasmo-flex plasmo-flex-col plasmo-space-y-3">
       <NotionDatabasesSelect />
@@ -263,88 +268,86 @@ export const Form = ({
             />
           )}
 
-          {!isNotionLoading && (
-            <>
-              <div className="plasmo-flex plasmo-space-x-2 plasmo-justify-between">
-                <div className="plasmo-flex-grow">
-                  <SelectEntry
-                    labelText="Status"
-                    id="status"
-                    handleChange={setStatus as (value: string) => void}
-                    value={status}
-                    options={statusOptions}
-                  />
-                </div>
+          <>
+            <div className="plasmo-flex plasmo-space-x-2 plasmo-justify-between">
+              <div className="plasmo-flex-grow">
                 <SelectEntry
-                  labelText="Gender"
-                  id="gender"
-                  handleChange={setGender as (value: string) => void}
-                  value={gender}
-                  options={genderOptions}
+                  labelText="Status"
+                  id="status"
+                  handleChange={setStatus as (value: string) => void}
+                  value={status}
+                  options={statusOptions}
                 />
               </div>
-              <div className="plasmo-flex plasmo-space-x-2">
-                <TextEntry
-                  initialValue={firstName}
-                  placeholder="Guy"
-                  inputId="linkedin-first-name"
-                  handleChange={(e) => setFirstName(e.target.value)}
-                  labelText="First Name"
-                />
-                <TextEntry
-                  initialValue={lastName}
-                  placeholder="Tarenbois"
-                  inputId="linkedin-last-name"
-                  handleChange={(e) => setLastName(e.target.value)}
-                  labelText="Last Name"
-                />
-              </div>
+              <SelectEntry
+                labelText="Gender"
+                id="gender"
+                handleChange={setGender as (value: string) => void}
+                value={gender}
+                options={genderOptions}
+              />
+            </div>
+            <div className="plasmo-flex plasmo-space-x-2">
               <TextEntry
-                initialValue={jobTitle}
-                placeholder="Musicien"
-                inputId="linkedin-job-title"
-                handleChange={(e) => setJobTitle(e.target.value)}
-                labelText="Job title"
+                initialValue={firstName}
+                placeholder="Guy"
+                inputId="linkedin-first-name"
+                handleChange={(e) => setFirstName(e.target.value)}
+                labelText="First Name"
               />
               <TextEntry
-                initialValue={company}
-                placeholder="Rock Band"
-                inputId="linkedin-current-company"
-                handleChange={(e) => setCompany(e.target.value)}
-                labelText="Current company"
+                initialValue={lastName}
+                placeholder="Tarenbois"
+                inputId="linkedin-last-name"
+                handleChange={(e) => setLastName(e.target.value)}
+                labelText="Last Name"
               />
-              <TextEntry
-                initialValue={location}
-                placeholder="Paris"
-                inputId="linkedin-location"
-                handleChange={(e) => setLocation(e.target.value)}
-                labelText="Location"
-              />
-              <TextAreaEntry
-                inputId="comment"
-                labelText="Comment"
-                value={comment}
-                handleChange={(e) => setComment(e.target.value)}
-              />
-              <div className="plasmo-flex plasmo-space-x-2 plasmo-items-center plasmo-w-full plasmo-fixed plasmo-bottom-0 plasmo-left-0 plasmo-px-4 plasmo-pb-4 plasmo-pt-2 plasmo-bg-background-light">
-                {currentNotionValues ? (
-                  <ButtonPrimary onClick={updateLinkedInProfile} isLoading={isUpdateLoading}>
-                    Update Notion
-                  </ButtonPrimary>
-                ) : (
-                  <ButtonPrimary onClick={saveLinkedInProfile} isLoading={isSaveLoading}>
-                    Save
-                  </ButtonPrimary>
-                )}
-                {!displayNotionValues && (
-                  <ButtonIcon onClick={onReload} isLoading={onReloadLoading}>
-                    <ArrowPathIcon className="plasmo-text-white plasmo-w-5 plasmo-h-5" />
-                  </ButtonIcon>
-                )}
-              </div>
-              <div className="plasmo-h-14"></div>
-            </>
-          )}
+            </div>
+            <TextEntry
+              initialValue={jobTitle}
+              placeholder="Musicien"
+              inputId="linkedin-job-title"
+              handleChange={(e) => setJobTitle(e.target.value)}
+              labelText="Job title"
+            />
+            <TextEntry
+              initialValue={company}
+              placeholder="Rock Band"
+              inputId="linkedin-current-company"
+              handleChange={(e) => setCompany(e.target.value)}
+              labelText="Current company"
+            />
+            <TextEntry
+              initialValue={location}
+              placeholder="Paris"
+              inputId="linkedin-location"
+              handleChange={(e) => setLocation(e.target.value)}
+              labelText="Location"
+            />
+            <TextAreaEntry
+              inputId="comment"
+              labelText="Comment"
+              value={comment}
+              handleChange={(e) => setComment(e.target.value)}
+            />
+            <div className="plasmo-flex plasmo-space-x-2 plasmo-items-center plasmo-w-full plasmo-fixed plasmo-bottom-0 plasmo-left-0 plasmo-px-4 plasmo-pb-4 plasmo-pt-2 plasmo-bg-background-light">
+              {currentNotionValues ? (
+                <ButtonPrimary onClick={updateLinkedInProfile} isLoading={isUpdateLoading}>
+                  Update Notion
+                </ButtonPrimary>
+              ) : (
+                <ButtonPrimary onClick={saveLinkedInProfile} isLoading={isSaveLoading}>
+                  Save
+                </ButtonPrimary>
+              )}
+              {!displayNotionValues && (
+                <ButtonIcon onClick={onReload} isLoading={onReloadLoading}>
+                  <ArrowPathIcon className="plasmo-text-white plasmo-w-5 plasmo-h-5" />
+                </ButtonIcon>
+              )}
+            </div>
+            <div className="plasmo-h-14"></div>
+          </>
         </>
       )}
     </div>
