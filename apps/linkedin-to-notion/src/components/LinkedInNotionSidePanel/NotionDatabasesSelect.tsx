@@ -73,7 +73,10 @@ export const NotionDatabasesSelect = () => {
       {!selectedNotionDatabase && (
         <>
           <ButtonPrimary onClick={notionDatabasesSetter}>Refresh databases</ButtonPrimary>
-          <ErrorAlert message="No databases found. Click here to create a template." link="https://www.notion.so/7f997332291a4e80beebecbd489430b5?v=b993efeb1b064d6d8a261fd46a8fa07f&duplicate=true" />
+          <ErrorAlert
+            message="No databases found. Click here to create a template."
+            link="https://www.notion.so/7f997332291a4e80beebecbd489430b5?v=b993efeb1b064d6d8a261fd46a8fa07f&duplicate=true"
+          />
         </>
       )}
     </>
