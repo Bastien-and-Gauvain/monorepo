@@ -55,7 +55,6 @@ const Alert = ({ type = 'info', className, link, message }: AlertsProps) => {
       className={cn(
         'plasmo-antialiased plasmo-space-x-3 plasmo-font-semibold plasmo-w-full plasmo-p-6 plasmo-leading-5 plasmo-rounded-md plasmo-flex plasmo-flex-row plasmo-items-center',
         colorMapping[type],
-        link && '',
         className
       )}>
       <div>
@@ -65,7 +64,7 @@ const Alert = ({ type = 'info', className, link, message }: AlertsProps) => {
     </div>
   );
   return link ? (
-    <a href={link} target="_blank" rel="noreferrer" className=" ">
+    <a href={link} target="_blank" rel="noreferrer">
       {alert}
     </a>
   ) : (
