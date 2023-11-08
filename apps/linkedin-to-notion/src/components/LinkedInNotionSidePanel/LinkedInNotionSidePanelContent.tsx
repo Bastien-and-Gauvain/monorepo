@@ -1,5 +1,5 @@
 import cssText from 'data-text:~style.css';
-import { ButtonPrimary, IFramedSidePanel, Spinner } from 'design-system';
+import { ButtonPrimary, IFramedSidePanel } from 'design-system';
 import { createElement, useEffect, useState } from 'react';
 
 import {
@@ -7,6 +7,7 @@ import {
   type LinkedInProfileInformation,
 } from './../../contents/scrapers/linkedin-profile-scraper';
 import { Form } from './Form';
+import { FullScreenLoader } from './FullScreenLoader';
 
 export const getIFrameStyle = () => {
   return createElement('style', {}, cssText);
@@ -28,10 +29,13 @@ export const LinkedInNotionSidePanelContent = ({
   logoutCallBack: () => void;
 }) => {
   const [linkedInProfileInformation, setLinkedInProfileInformation] = useState<LinkedInProfileInformation | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const setLinkedInValues = async () => {
+    setIsLoading(true);
     const scrapingResult = await getLinkedInProfileInformation();
     setLinkedInProfileInformation(scrapingResult);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -61,9 +65,9 @@ export const LinkedInNotionSidePanelContent = ({
       className="plasmo-top-48 plasmo-space-y-4 plasmo-flex plasmo-flex-col">
       {isLoggedIn ? (
         linkedInProfileInformation ? (
-          <Form linkedinValues={linkedInProfileInformation} onReload={setLinkedInValues} />
+          <Form linkedinValues={linkedInProfileInformation} onReload={setLinkedInValues} onReloadLoading={isLoading} />
         ) : (
-          <Spinner />
+          <FullScreenLoader />
         )
       ) : (
         <ButtonPrimary onClick={loginCallback}>Sign in with Notion</ButtonPrimary>

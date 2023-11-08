@@ -6,12 +6,12 @@ export const genderOptions = [
   },
   {
     id: 'female',
-    label: 'Female',
+    label: 'F',
     value: 'F',
   },
   {
     id: 'male',
-    label: 'Male',
+    label: 'M',
     value: 'M',
   },
 ];

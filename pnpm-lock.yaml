@@ -39,6 +39,9 @@ importers:
 
   apps/linkedin-to-notion:
     dependencies:
+      '@heroicons/react':
+        specifier: ^2.0.18
+        version: 2.0.18(react@18.2.0)
       '@notionhq/client':
         specifier: ^2.2.13
         version: 2.2.13
