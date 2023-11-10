@@ -12,7 +12,7 @@ export const getDatabaseTitle = (database: DatabaseObjectResponse): string => {
     return database.id;
   }
 
-  return `${icon} ${database.title[0].plain_text}`.trim();
+  return `${icon} ${database.title[0]?.plain_text}`.trim();
 };
 
 /**
