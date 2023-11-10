@@ -111,11 +111,7 @@ export const IFramedSidePanel = ({
         dragMouseUpHandler={() => setIsDragMouseDown(false)}>
         <Logo className="plasmo-fill-white" />
       </Header>
-      <div
-        className={cn(
-          'plasmo-p-4 plasmo-min-h-[calc(100%-3.5rem)] plasmo-bg-background-light plasmo-overflow-scroll',
-          className
-        )}>
+      <div className={cn('plasmo-p-4 plasmo-min-h-[calc(100%-3.5rem)] plasmo-bg-background-light', className)}>
         {children}
       </div>
     </>
