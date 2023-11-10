@@ -24,14 +24,7 @@ const getName = (): {
   lastName?: string;
   fullName: string;
 } => {
-  const detailsContainer = document.querySelector('.pv-text-details__left-panel');
-  if (!detailsContainer) {
-    return {
-      fullName: '',
-    };
-  }
-
-  const name = detailsContainer.querySelector('h1.text-heading-xlarge');
+  const name = document.querySelector('h1.text-heading-xlarge');
   if (!name) {
     return {
       fullName: '',
@@ -93,12 +86,7 @@ const getCompany = (): string => {
 };
 
 const getLocation = (): string => {
-  const detailsContainer = document.querySelector('.pv-text-details__left-panel.mt2');
-  if (!detailsContainer) {
-    return '';
-  }
-
-  const location = detailsContainer.querySelector('span.text-body-small.inline.t-black--light.break-words');
+  const location = document.querySelector('span.text-body-small.inline.t-black--light.break-words');
   if (!location) {
     return '';
   }
