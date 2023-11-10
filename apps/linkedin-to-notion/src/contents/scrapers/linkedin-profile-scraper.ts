@@ -142,7 +142,7 @@ export const getLinkedInProfileInformation = async (
   return scrapingResult;
 };
 
-// Keeping these lines to test if needed
+// TODO: Keeping these lines to test if needed
 // window.addEventListener('load', () => {
 //   // Adding a timeout as I'm still having issues to detect a proper load - must be resolved when using getLinkedInProfileInformation but not here
 //   setTimeout(() => {
