@@ -62,7 +62,6 @@ export const Header = ({
         <div className="plasmo-absolute plasmo-top-4 plasmo-left-4 plasmo-flex plasmo-justify-between plasmo-items-center plasmo-w-12">
           {hasCloseButton && (
             <button onClick={closeHandler}>
-              {/* <Icon type="XMark" className={iconClass} /> */}
               <XMarkIcon className={cn('plasmo-h-5 plasmo-w-5', iconClass)} />
             </button>
           )}
@@ -79,7 +78,6 @@ export const Header = ({
         <div className="plasmo-absolute plasmo-top-4 plasmo-right-4">
           {hasLogoutButton && (
             <button onClick={logoutHandler}>
-              {/* <Icon type="ArrowRightTray" className={iconClass} /> */}
               <ArrowRightOnRectangleIcon className={cn('plasmo-h-5 plasmo-w-5', iconClass)} />
             </button>
           )}
