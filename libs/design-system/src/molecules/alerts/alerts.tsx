@@ -1,5 +1,6 @@
-import { Icon } from '../..';
-import { IconType } from '../../atoms/icons/svg';
+import { CheckCircleIcon, ExclamationCircleIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
+import { createElement } from 'react';
+
 import { cn } from '../../shared/classnames';
 
 type AlertsProps = {
@@ -27,11 +28,11 @@ type AlertsProps = {
   className?: string;
 };
 
-const iconsMapping: Record<string, IconType> = {
-  success: 'CheckCircle',
-  info: 'InformationCircle',
-  warning: 'ExclamationCircle',
-  error: 'ExclamationCircle',
+const iconsMapping: Record<string, typeof CheckCircleIcon> = {
+  success: CheckCircleIcon,
+  info: InformationCircleIcon,
+  warning: ExclamationCircleIcon,
+  error: ExclamationCircleIcon,
 };
 
 const Alert = ({ type = 'info', className, link, message }: AlertsProps) => {
@@ -57,9 +58,7 @@ const Alert = ({ type = 'info', className, link, message }: AlertsProps) => {
         colorMapping[type],
         className
       )}>
-      <div>
-        <Icon type={iconsMapping[type]} />
-      </div>
+      <div>{createElement(iconsMapping[type], { className: 'plasmo-h-6 plasmo-w-6' })}</div>
       <p>{message}</p>
     </div>
   );

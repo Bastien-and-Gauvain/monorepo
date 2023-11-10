@@ -1,8 +1,8 @@
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import type { Meta, StoryFn } from '@storybook/react';
 import { useState } from 'react';
 
 import { ButtonIcon, ButtonPrimary, ButtonSecondary } from '.';
-import { Icon } from '..';
 
 const meta = {
   title: 'Atoms/Buttons',
@@ -38,7 +38,7 @@ export const PrimaryButtonLoading: StoryFn = () => {
 export const IconButton: StoryFn = () => (
   <div className="plasmo-w-72 plasmo-flex plasmo-flex-col plasmo-justify-center plasmo-items-center">
     <ButtonIcon onClick={() => console.log('Hello Primary')}>
-      <Icon type="ArrowPath" />
+      <ArrowPathIcon className="plasmo-h-8 plasmo-w-8" />
     </ButtonIcon>
   </div>
 );
