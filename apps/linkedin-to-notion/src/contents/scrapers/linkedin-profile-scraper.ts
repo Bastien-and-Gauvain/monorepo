@@ -77,7 +77,7 @@ const getCompany = (): string => {
     return '';
   }
 
-  const company = detailsContainer.querySelector('button.pv-text-details__right-panel-item-link > span');
+  const company = detailsContainer.querySelector('ul > li div');
   if (!company) {
     return '';
   }
