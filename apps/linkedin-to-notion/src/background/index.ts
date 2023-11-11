@@ -1,5 +1,3 @@
-import { SecureStorage } from '@plasmohq/storage/secure';
-
 export {};
 
 // You can test the regex here: https://regex101.com/r/RJgYar/2
@@ -22,16 +20,3 @@ chrome.runtime.onMessage.addListener(async (msg) => {
     return await chrome.tabs.create({ url: 'https://www.linkedin.com/in/me/' });
   }
 });
-
-// TODO Should be removed, only there for temporary testing purposes
-const displayChangesInSecureStorage = async () => {
-  const storage = new SecureStorage({ area: 'local' });
-  await storage.setPassword('napoleon');
-  storage.watch({
-    notionToken: (c) => {
-      console.log('New value of notionToken: ', c.newValue);
-    },
-  });
-};
-
-displayChangesInSecureStorage();
