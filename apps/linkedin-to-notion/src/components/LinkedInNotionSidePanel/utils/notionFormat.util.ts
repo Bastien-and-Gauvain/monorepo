@@ -12,7 +12,7 @@ export const getDatabaseTitle = (database: DatabaseObjectResponse): string => {
     return database.id;
   }
 
-  return `${icon} ${database.title[0].plain_text}`.trim();
+  return `${icon} ${database.title[0]?.plain_text}`.trim();
 };
 
 /**
@@ -22,7 +22,7 @@ export const getDatabaseTitle = (database: DatabaseObjectResponse): string => {
  */
 export const getPropertyValue = (property: PageObjectResponse['properties'][0]): string => {
   if (property.type === 'rich_text') {
-    return property.rich_text[0].plain_text;
+    return property.rich_text[0]?.plain_text;
   }
 
   if (property.type === 'url') {
