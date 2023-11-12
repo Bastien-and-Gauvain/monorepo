@@ -41,7 +41,7 @@ export const Form = ({
   const [status, setStatus] = useState<NotionProfileStatus>('NOT_CONTACTED');
   const [gender, setGender] = useState<NotionProfileGender>('');
   const [comment, setComment] = useState<string>('');
-  const linkedinUrl = window.location.href.match(/https:\/\/[a-z]{2,4}\.linkedin\.com\/in\/[^/]+\//gim)[0];
+  const linkedinUrl = window.location.href.match(/https:\/\/[a-z]{2,4}\.linkedin\.com\/in\/[^/]+\//gim)?.[0];
 
   // To handle the toggle switch
   const [displayNotionValues, setDisplayNotionValues] = useState<boolean>(false);
@@ -249,6 +249,11 @@ export const Form = ({
 
   if (isNotionLoading) {
     return <FullScreenLoader />;
+  }
+
+  // If we're not on a linkedin profile, we don't bother loading the form and avoid potential errors
+  if (!linkedinUrl) {
+    return <></>;
   }
 
   return (
