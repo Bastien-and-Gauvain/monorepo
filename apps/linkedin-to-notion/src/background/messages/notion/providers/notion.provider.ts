@@ -6,7 +6,7 @@ import type {
   UpdatePageResponse,
 } from '@notionhq/client/build/src/api-endpoints';
 
-import { getLinkedinSlug } from '~src/background/shared.utils';
+import { getLinkedinSlug, retryRequest } from '~src/background/shared.utils';
 
 import {
   databaseSearchResultsToNotionProfileInformation,
@@ -31,16 +31,18 @@ export class NotionProvider {
   async getDatabases(): Promise<DatabaseObjectResponse[] | ErrorResponse> {
     let searchResults: SearchResponse;
     try {
-      searchResults = await this.notion.search({
-        filter: {
-          value: 'database',
-          property: 'object',
-        },
-        sort: {
-          direction: 'descending',
-          timestamp: 'last_edited_time',
-        },
-      });
+      searchResults = await retryRequest(() =>
+        this.notion.search({
+          filter: {
+            value: 'database',
+            property: 'object',
+          },
+          sort: {
+            direction: 'descending',
+            timestamp: 'last_edited_time',
+          },
+        })
+      );
     } catch (error) {
       console.error("NotionProvider, getDatabases, couldn't get databases:", error);
       return { error: "NotionProvider, getDatabases, couldn't get databases", message: JSON.stringify(error) };
@@ -114,15 +116,17 @@ export class NotionProvider {
 
     let searchResults: SearchResponse;
     try {
-      searchResults = await this.notion.databases.query({
-        database_id: databaseId,
-        filter: {
-          property: 'linkedinUrl',
-          url: {
-            contains: slug,
+      searchResults = await retryRequest(() =>
+        this.notion.databases.query({
+          database_id: databaseId,
+          filter: {
+            property: 'linkedinUrl',
+            url: {
+              contains: slug,
+            },
           },
-        },
-      });
+        })
+      );
 
       // No searchResults at all
       if (searchResults.results.length <= 0) {
