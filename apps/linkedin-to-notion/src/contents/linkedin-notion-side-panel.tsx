@@ -1,7 +1,7 @@
 import type { Provider, User } from '@supabase/supabase-js';
 import cssText from 'data-text:~style.css';
 import type { PlasmoCSConfig, PlasmoGetStyle } from 'plasmo';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { sendToBackground } from '@plasmohq/messaging';
 import { useStorage } from '@plasmohq/storage/hook';
@@ -23,12 +23,15 @@ export const getStyle: PlasmoGetStyle = () => {
 };
 
 const LinkedinNotionSidePanel = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useStorage('linkedInNotionSidePanelIsOpen', false);
   const [user, setUser] = useStorage<User>('user');
+  const [selectedNotionDatabase, setSelectedNotionDatabase] = useStorage<string>('selectedNotionDatabase');
   const [notionToken, setNotionToken] = useStorage<{
     refreshToken: string;
     accessToken: string;
   }>('notionToken');
+
+  selectedNotionDatabase; // to remove ts error
 
   useEffect(() => {
     async function init() {
@@ -90,7 +93,12 @@ const LinkedinNotionSidePanel = () => {
       isOpen={isOpen}
       isLoggedIn={!!user?.id}
       loginCallback={() => handleOAuthLogin('notion')}
-      logoutCallBack={() => [supabase.auth.signOut(), setUser(null)]}
+      logoutCallBack={() => [
+        supabase.auth.signOut(),
+        setUser(null),
+        setSelectedNotionDatabase(''),
+        setNotionToken(null),
+      ]}
       onCloseCallback={() => setIsOpen(false)}
       id="linkedin-to-notion-side-panel"
     />
