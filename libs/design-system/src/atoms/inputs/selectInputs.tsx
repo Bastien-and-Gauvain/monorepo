@@ -86,7 +86,7 @@ export const SelectInput = ({ id, required = false, value, className, handleChan
         <ChevronDownIcon className="plasmo-h-4 plasmo-w-4" />
       </div>
       {isOpen && (
-        <ul className="plasmo-absolute plasmo-left-0 plasmo-w-full plasmo-mt-1 plasmo-overflow-auto plasmo-bg-white plasmo-border plasmo-border-grey-transparent plasmo-rounded-md plasmo-shadow-lg plasmo-max-h-60 plasmo-focus:outline-none">
+        <ul className="plasmo-absolute plasmo-left-0 plasmo-w-full plasmo-mt-1 plasmo-overflow-auto plasmo-bg-white plasmo-border plasmo-border-grey-transparent plasmo-rounded-md plasmo-shadow-lg plasmo-max-h-60 plasmo-focus:outline-none plasmo-z-40">
           {options.map(({ id, value, label }) => (
             <li
               key={id}
