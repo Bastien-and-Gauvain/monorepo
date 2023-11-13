@@ -21,3 +21,24 @@ export const getLinkedinSlug = (linkedinUrl: string): string | null => {
   const match = linkedinUrl.match(regex);
   return match ? match[0] : null;
 };
+
+/**
+ * A function that retries a request a given number of times
+ * @param fn The function to retry
+ * @param retries The number of retries
+ * @param delay The delay between each retry
+ * @returns The result of the function
+ */
+export const retryRequest = async <T>(fn: () => Promise<T>, retries = 3, delay = 1000): Promise<T> => {
+  let delayIncrement = 1;
+  try {
+    return await fn();
+  } catch (error) {
+    if (retries === 0) {
+      throw error;
+    }
+    await new Promise((resolve) => setTimeout(resolve, delay * delayIncrement));
+    delayIncrement++;
+    return await retryRequest(fn, retries - 1, delay);
+  }
+};
