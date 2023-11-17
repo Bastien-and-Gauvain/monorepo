@@ -1,8 +1,8 @@
 {
   "name": "recruitivity",
   "displayName": "recruitivity",
-  "version": "1.0.0",
-  "description": "Save time and export data from LinkedIn to Notion in seconds.",
+  "version": "2.0.0",
+  "description": "One-click LinkedIn profile export to Notion",
   "author": "gauvain.thery92@gmail.com",
   "scripts": {
     "dev": "plasmo dev",
