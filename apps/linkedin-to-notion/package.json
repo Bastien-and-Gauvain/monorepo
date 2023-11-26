@@ -36,7 +36,8 @@
   "manifest": {
     "key": "$CRX_KEY",
     "host_permissions": [
-      "https://*/*"
+      "https://*.linkedin.com/*",
+      "https://api.notion.com/*"
     ],
     "web_accessible_resources": [
       {
