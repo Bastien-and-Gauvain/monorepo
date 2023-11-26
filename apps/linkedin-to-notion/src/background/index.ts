@@ -36,6 +36,10 @@ chrome.tabs.onUpdated.addListener(async (tabId, { status }, tab): Promise<void> 
 
 chrome.runtime.onMessage.addListener(async (msg) => {
   if (msg === 'openLinkedInTab') {
-    return await chrome.tabs.create({ url: 'https://www.linkedin.com/in/me/' });
+    try {
+      await chrome.tabs.create({ url: 'https://www.linkedin.com/in/me/' });
+    } catch (e) {
+      console.log('Error opening LinkedIn tab', e);
+    }
   }
 });
