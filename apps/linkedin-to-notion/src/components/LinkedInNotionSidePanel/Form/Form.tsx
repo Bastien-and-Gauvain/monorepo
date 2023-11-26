@@ -130,15 +130,10 @@ export const Form = ({
     setAlertState('in-notion');
 
     setFormValues({
-      firstName: formValues.firstName,
-      lastName: formValues.lastName,
-      jobTitle: formValues.jobTitle,
-      company: formValues.company,
-      location: formValues.location,
+      ...formValues,
       status: res.status,
       gender: res.gender,
       comment: res.comment,
-      linkedInUrl: formValues.linkedInUrl,
     });
 
     setIsNotionLoading(false);
