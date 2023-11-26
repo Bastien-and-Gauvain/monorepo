@@ -4,14 +4,33 @@ export {};
 // Don't forget to update the comment when you update the regex on regex101.com
 export const linkedInURLRegex = /linkedin\.com\/in\/[^/]+\/#?/;
 
-chrome.tabs.onUpdated.addListener(async (tabId, { status }, tab) => {
-  if (!tab?.url?.match(linkedInURLRegex)) {
-    return await chrome.tabs.sendMessage(tabId, 'closeSidePanels');
+chrome.tabs.onUpdated.addListener(async (tabId, { status }, tab): Promise<void> => {
+  if (status !== 'complete') {
+    return;
   }
 
-  await chrome.tabs.sendMessage(tabId, 'openLinkedInNotionSidePanel');
-  if (status === 'complete') {
-    return await chrome.tabs.sendMessage(tabId, 'updateLinkedInNotionSidePanel');
+  const isLinkedInURL = tab?.url?.match(linkedInURLRegex);
+
+  if (!isLinkedInURL) {
+    try {
+      await chrome.tabs.sendMessage(tabId, 'closeSidePanels');
+    } catch (e) {
+      console.log('Error closing side panels', e);
+    }
+  }
+
+  if (isLinkedInURL) {
+    try {
+      await chrome.tabs.sendMessage(tabId, 'openLinkedInNotionSidePanel');
+    } catch (e) {
+      console.log('Error opening side panels', e);
+    }
+
+    try {
+      await chrome.tabs.sendMessage(tabId, 'updateLinkedInNotionSidePanel');
+    } catch (e) {
+      console.log('Error updating side panels', e);
+    }
   }
 });
 
