@@ -45,7 +45,12 @@ export class NotionProvider {
       );
     } catch (error) {
       console.error("NotionProvider, getDatabases, couldn't get databases:", error);
-      return { error: "NotionProvider, getDatabases, couldn't get databases", message: JSON.stringify(error) };
+      throw new Error(
+        JSON.stringify({
+          error: "NotionProvider, getDatabases, couldn't get databases",
+          message: error,
+        })
+      );
     }
 
     const mandatoryProperties = [
@@ -92,7 +97,12 @@ export class NotionProvider {
       response = await this.notion.pages.create(pageParameters);
     } catch (error) {
       console.error("NotionProvider, createPageInDatabase, couldn't create page:", error);
-      return { error: "NotionProvider, createPageInDatabase, couldn't create page", message: JSON.stringify(error) };
+      throw new Error(
+        JSON.stringify({
+          error: "NotionProvider, createPageInDatabase, couldn't create page",
+          message: error,
+        })
+      );
     }
 
     return response;
@@ -138,7 +148,12 @@ export class NotionProvider {
       return databaseSearchResultsToNotionProfileInformation(searchResults);
     } catch (error) {
       console.error("NotionProvider, findProfileInDatabase, couldn't complete:", error);
-      return { error: "NotionProvider, findProfileInDatabase, couldn't complete:", message: JSON.stringify(error) };
+      throw new Error(
+        JSON.stringify({
+          error: "NotionProvider, findProfileInDatabase, couldn't complete:",
+          message: error,
+        })
+      );
     }
   }
 
@@ -160,7 +175,12 @@ export class NotionProvider {
       response = await this.notion.pages.update(pageParameters);
     } catch (error) {
       console.error("NotionProvider, updatePageInDatabase, couldn't update page:", error);
-      return { error: "NotionProvider, updatePageInDatabase, couldn't update page", message: JSON.stringify(error) };
+      throw new Error(
+        JSON.stringify({
+          error: "NotionProvider, updatePageInDatabase, couldn't update page",
+          message: error,
+        })
+      );
     }
 
     return response;
