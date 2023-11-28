@@ -6,7 +6,7 @@ import {
   getLinkedInProfileInformation,
   type LinkedInProfileInformation,
 } from './../../contents/scrapers/linkedin-profile-scraper';
-import { Form } from './Form';
+import { Form } from './Form/Form';
 import { FullScreenLoader } from './FullScreenLoader';
 
 export const getIFrameStyle = () => {
@@ -63,14 +63,12 @@ export const LinkedInNotionSidePanelContent = ({
       onLogoutCallback={() => logoutCallBack()}
       id={id}
       className="plasmo-top-48 plasmo-space-y-4 plasmo-flex plasmo-flex-col">
-      {isLoggedIn ? (
-        linkedInProfileInformation ? (
-          <Form linkedinValues={linkedInProfileInformation} onReload={setLinkedInValues} onReloadLoading={isLoading} />
-        ) : (
-          <FullScreenLoader />
-        )
-      ) : (
+      {!isLoggedIn ? (
         <ButtonPrimary onClick={loginCallback}>Sign in with Notion</ButtonPrimary>
+      ) : linkedInProfileInformation ? (
+        <Form linkedinValues={linkedInProfileInformation} onReload={setLinkedInValues} onReloadLoading={isLoading} />
+      ) : (
+        <FullScreenLoader />
       )}
     </IFramedSidePanel>
   );

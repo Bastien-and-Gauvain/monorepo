@@ -16,21 +16,27 @@ export const NotionDatabasesSelect = () => {
 
   const notionDatabasesSetter = async () => {
     setIsLoading(true);
-    const databases = await sendToBackground<{ notionToken: string }, DatabaseObjectResponse[]>({
-      name: 'notion/resolvers/getEligibleDatabases',
-      body: {
-        notionToken: notionToken.accessToken,
-      },
-    });
 
-    if (!databases.length) {
-      setSelectedNotionDatabase('');
-      setIsLoading(false);
-      return;
+    try {
+      const databases = await sendToBackground<{ notionToken: string }, DatabaseObjectResponse[]>({
+        name: 'notion/resolvers/getEligibleDatabases',
+        body: {
+          notionToken: notionToken.accessToken,
+        },
+      });
+
+      if (databases.length) {
+        setNotionDatabases(databases);
+        setSelectedNotionDatabase(selectedNotionDatabase || databases[0].id);
+      }
+
+      if (!databases.length) {
+        setSelectedNotionDatabase('');
+      }
+    } catch (error) {
+      console.error(error);
     }
 
-    setNotionDatabases(databases);
-    setSelectedNotionDatabase(selectedNotionDatabase || databases[0].id);
     setIsLoading(false);
   };
 
@@ -46,35 +52,26 @@ export const NotionDatabasesSelect = () => {
 
   return (
     <>
-      <SelectEntry
-        labelText="Notion databases"
-        id="notion-databases"
-        handleChange={setSelectedNotionDatabase}
-        value={selectedNotionDatabase}
-        options={
-          notionDatabases?.length
-            ? notionDatabases.map((database: DatabaseObjectResponse) => ({
-                id: database.id,
-                label: getDatabaseTitle(database),
-                value: database.id,
-              }))
-            : [
-                {
-                  id: '',
-                  label: '',
-                  value: '',
-                },
-              ]
-        }
-      />
-      {!selectedNotionDatabase && (
+      {notionDatabases.length === 0 ? (
         <>
           <ButtonPrimary onClick={notionDatabasesSetter}>Refresh databases</ButtonPrimary>
           <ErrorAlert
             message="No databases found. Click here to create a template."
-            link="https://www.notion.so/7f997332291a4e80beebecbd489430b5?v=b993efeb1b064d6d8a261fd46a8fa07f&duplicate=true"
+            link="https://www.notion.so/bvelitchkine/ATS-Template-7569a70d84834999b2528681eb7dcbed?pvs=4&duplicate=true"
           />
         </>
+      ) : (
+        <SelectEntry
+          labelText="Notion databases"
+          id="notion-databases"
+          handleChange={setSelectedNotionDatabase}
+          value={selectedNotionDatabase}
+          options={notionDatabases.map((database: DatabaseObjectResponse) => ({
+            id: database.id,
+            label: getDatabaseTitle(database),
+            value: database.id,
+          }))}
+        />
       )}
     </>
   );
