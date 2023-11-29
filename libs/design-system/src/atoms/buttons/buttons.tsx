@@ -33,6 +33,11 @@ type ButtonProps = {
    * Whether the button is loading (default: false)
    */
   isLoading?: boolean;
+
+  /**
+   * The state of the button (default: 'default')
+   */
+  state?: 'default' | 'disabled' | 'done';
 };
 
 const typeSpecificClasses = {
@@ -43,15 +48,25 @@ const typeSpecificClasses = {
     'plasmo-bg-main plasmo-px-2 plasmo-py-1 plasmo-rounded plasmo-text-3 hover:plasmo-bg-main-600 active:plasmo-bg-main-700',
 };
 
-const Button = ({ children, type = 'primary', className, onClick, isLoading = false }: ButtonProps) => {
+const Button = ({
+  children,
+  type = 'primary',
+  className,
+  onClick,
+  isLoading = false,
+  state = 'default',
+}: ButtonProps) => {
   return (
     <button
       className={cn(
         className,
         typeSpecificClasses[type],
-        'plasmo-text-white-transparent90 plasmo-px-8 plasmo-py-4 plasmo-rounded-md plasmo-flex plasmo-justify-center plasmo-items-center'
+        'plasmo-text-white-transparent90 plasmo-px-8 plasmo-py-4 plasmo-rounded-md plasmo-flex plasmo-justify-center plasmo-items-center',
+        state === 'disabled' ? 'plasmo-bg-main-200 plasmo-pointer-events-none' : '',
+        state === 'done' ? 'plasmo-bg-success plasmo-pointer-events-none' : ''
       )}
-      onClick={onClick}>
+      onClick={onClick}
+      disabled={state === 'disabled'}>
       {isLoading ? (
         <Icon type="Spinner" isSpinning={true} size={20} className="plasmo-fill-white-transparent90" />
       ) : (
