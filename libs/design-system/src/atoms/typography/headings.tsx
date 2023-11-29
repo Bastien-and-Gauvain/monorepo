@@ -4,7 +4,7 @@ import './../../index.css';
 
 import { cn } from '../../shared/classnames';
 
-type TitleProps = {
+type HeadingProps = {
   /**
    * Children elements
    */
@@ -35,20 +35,20 @@ type TitleProps = {
 };
 
 const headingsDesktop = {
-  h1: 'plasmo-text-15 plasmo-leading-14 plasmo-uppercase',
-  h2: 'plasmo-text-8 plasmo-leading-10 plasmo-tracking-widish',
+  h1: 'plasmo-text-9 plasmo-font-semibold plasmo-leading-11 plasmo-uppercase',
+  h2: 'plasmo-text-8 plasmo-font-semibold plasmo-leading-9 plasmo-tracking-widish',
   h3: 'plasmo-text-6 plasmo-leading-8',
   h4: '',
 };
 
-export const Title = ({
+export const Heading = ({
   children,
   className = '',
   color = 'plasmo-text-black',
   type = 'h1',
   onClick,
   ...props
-}: TitleProps) => {
+}: HeadingProps) => {
   return createElement(
     type,
     {
@@ -60,6 +60,6 @@ export const Title = ({
   );
 };
 
-export const Heading1 = (p: TitleProps) => <Title type="h1" {...p} />;
-export const Heading2 = (p: TitleProps) => <Title type="h2" {...p} />;
-export const Heading3 = (p: TitleProps) => <Title type="h3" {...p} />;
+export const Heading1 = (p: HeadingProps) => <Heading type="h1" {...p} />;
+export const Heading2 = (p: HeadingProps) => <Heading type="h2" {...p} />;
+export const Heading3 = (p: HeadingProps) => <Heading type="h3" {...p} />;

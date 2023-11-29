@@ -4,5 +4,4 @@ export * from './inputs';
 export * from './labels';
 export * from './logos';
 export * from './spinner';
-export * from './titles';
 export * from './typography';
