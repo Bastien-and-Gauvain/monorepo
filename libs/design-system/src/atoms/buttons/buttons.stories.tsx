@@ -15,9 +15,25 @@ const meta = {
 
 export default meta;
 
-export const PrimaryButton: StoryFn = () => (
+export const PrimaryButtonDefault: StoryFn = () => (
   <div className="plasmo-w-72 plasmo-flex plasmo-flex-col plasmo-justify-center plasmo-items-center">
     <ButtonPrimary onClick={() => console.log('Hello Primary')}>Update</ButtonPrimary>
+  </div>
+);
+
+export const PrimaryButtonDisabled: StoryFn = () => (
+  <div className="plasmo-w-72 plasmo-flex plasmo-flex-col plasmo-justify-center plasmo-items-center">
+    <ButtonPrimary onClick={() => console.log('Hello Primary')} state="disabled">
+      Go to Notion
+    </ButtonPrimary>
+  </div>
+);
+
+export const PrimaryButtonDone: StoryFn = () => (
+  <div className="plasmo-w-72 plasmo-flex plasmo-flex-col plasmo-justify-center plasmo-items-center">
+    <ButtonPrimary onClick={() => console.log('Hello Primary')} state="done">
+      Done
+    </ButtonPrimary>
   </div>
 );
 
