@@ -23,7 +23,7 @@ export const DeltaFlyerPage = () => {
         className="plasmo-absolute plasmo-top-0 plasmo-left-0 plasmo-m-9 plasmo-w-12 plasmo-h-12 plasmo-z-20"
       />
       <div className="plasmo-bg-background-dark plasmo-rounded-b-[236px] plasmo-h-[350px] plasmo-w-full plasmo-absolute" />
-      <div className="plasmo-flex plasmo-flex-col plasmo-items-center plasmo-absolute plasmo-z-10 xl:plasmo-pt-28 md:plasmo-pt-20 plasmo-p-12 plasmo-gap-12">
+      <div className="plasmo-flex plasmo-flex-col plasmo-items-center plasmo-absolute plasmo-z-10 xl:plasmo-pt-28 md:plasmo-pt-20 plasmo-p-12 plasmo-gap-12 plasmo-w-full">
         <Heading1 color="plasmo-text-white" className="plasmo-text-center plasmo-px-16">
           {tasks} SIMPLE STEPS AWAY FROM NEVER COPY PASTING INFORMATION FROM LINKEDIN AGAIN.
         </Heading1>
