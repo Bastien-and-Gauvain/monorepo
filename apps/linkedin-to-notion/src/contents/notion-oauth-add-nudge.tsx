@@ -33,7 +33,6 @@ export const getStyle: PlasmoGetStyle = () => {
 };
 
 const Nudge = () => {
-  console.log('aha');
   return (
     <div>
       <SmallParagraph className="plasmo-text-info-dark">Select this one 😉</SmallParagraph>
@@ -42,17 +41,3 @@ const Nudge = () => {
 };
 
 export default Nudge;
-
-// // a function that injects the nudge in the page
-// const injectNudge = () => {
-//   const parent = document.querySelector("div[style*='grid-template-rows: 1fr 1fr;']");
-//   const sibling = parent.querySelector("div[role='button']");
-//   const nudgeText = document.createElement('p');
-//   nudgeText.innerText = 'Select this one 😉';
-//   nudgeText.className = 'plasmo-text-info-dark';
-//   const nudge = document.createElement('div');
-//   nudge.appendChild(nudgeText);
-//   parent.insertBefore(nudge, sibling);
-// };
-
-// injectNudge();
