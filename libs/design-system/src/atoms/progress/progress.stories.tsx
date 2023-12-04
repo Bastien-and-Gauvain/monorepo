@@ -18,13 +18,15 @@ export const AnimatedProgressBar: StoryFn = () => {
   const [ratio, setRatio] = useState(0);
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setRatio((ratio) => (ratio + 1) % 100);
-    }, 100);
-
+    let intervalId: NodeJS.Timeout;
+    if (ratio !== 100) {
+      intervalId = setInterval(() => {
+        setRatio((ratio) => ratio + 1);
+      }, 100);
+    }
     // Clear interval on component unmount
     return () => clearInterval(intervalId);
-  }, []);
+  }, [ratio]);
 
   return (
     <div className="plasmo-w-80">
