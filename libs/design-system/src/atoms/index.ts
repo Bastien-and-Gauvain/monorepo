@@ -6,3 +6,4 @@ export * from './logos';
 export * from './spinner';
 export * from './titles';
 export * from './typography';
+export * from './progress';
