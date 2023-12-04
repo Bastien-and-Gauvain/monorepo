@@ -31,25 +31,25 @@ const chooseRandomMantra = () => {
 export const Mantra = ({ interval = 5, className }: MantraProps) => {
   // Choose a first random mantra and put it in the state
   const [mantra, setMantra] = useState(chooseRandomMantra());
-  const [opacity, setOpacity] = useState('plasmo-opacity-100');
+  const [opacity, setOpacity] = useState('1');
 
   useEffect(() => {
     // Choose a new mantra every `interval` seconds
     const intervalId = setInterval(async () => {
-      setOpacity('plasmo-opacity-0');
+      setOpacity('0');
       // Same duration as the transition duration
       await new Promise((resolve) => setTimeout(resolve, 500));
       setMantra(chooseRandomMantra());
-      setOpacity('plasmo-opacity-100');
+      setOpacity('1');
     }, interval * 1000);
     return () => clearInterval(intervalId);
   });
 
   return (
-    <BaseParagraph
-      className={cn('plasmo-text-grey-light plasmo-transition-opacity plasmo-duration-500', opacity, className)}
-      alignment="center">
-      {mantra}
-    </BaseParagraph>
+    <div style={{ transition: 'opacity 500ms', opacity }}>
+      <BaseParagraph className={cn('plasmo-text-grey-light', className)} alignment="center">
+        {mantra}
+      </BaseParagraph>
+    </div>
   );
 };
