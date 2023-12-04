@@ -17,14 +17,13 @@ type ProgressBarProps = {
   className?: string;
 };
 
-const percentagesMapping = Array(101)
-  .fill(0)
-  .map((_, i) => `plasmo-w-[${i}%]`);
-
 export const ProgressBar = ({ ratio, className }: ProgressBarProps) => {
   return (
     <div className={cn('plasmo-w-full plasmo-bg-grey-transparent plasmo-rounded-full plasmo-h-2.5', className)}>
-      <div className={cn('plasmo-bg-main-500 plasmo-h-full plasmo-rounded-full', percentagesMapping[ratio])}></div>
+      <div
+        className={cn('plasmo-bg-main-500 plasmo-h-full plasmo-rounded-full plasmo-transition-width')}
+        style={{ width: `${ratio}%` }}
+      />
     </div>
   );
 };
