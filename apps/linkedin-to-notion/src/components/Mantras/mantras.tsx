@@ -1,7 +1,5 @@
+import { BaseParagraph } from 'design-system';
 import { useEffect, useState } from 'react';
-
-import { BaseParagraph } from '../..';
-import { cn } from '../../shared/classnames';
 
 type MantraProps = {
   /**
@@ -28,7 +26,7 @@ const chooseRandomMantra = () => {
   return mantras[index];
 };
 
-export const Mantra = ({ interval = 5, className }: MantraProps) => {
+export const Mantra = ({ interval = 5 }: MantraProps) => {
   // Choose a first random mantra and put it in the state
   const [mantra, setMantra] = useState(chooseRandomMantra());
   const [opacity, setOpacity] = useState('1');
@@ -47,7 +45,7 @@ export const Mantra = ({ interval = 5, className }: MantraProps) => {
 
   return (
     <div style={{ transition: 'opacity 500ms', opacity }}>
-      <BaseParagraph className={cn('plasmo-text-grey-light', className)} alignment="center">
+      <BaseParagraph className="plasmo-text-grey-light" alignment="center">
         {mantra}
       </BaseParagraph>
     </div>
