@@ -1,6 +1,6 @@
 import type { PlasmoCSConfig } from 'plasmo';
 
-import { waitForElementToExist } from './utils/utils';
+import { waitForElementToExist } from './shared/waitForElementToExist';
 
 export const config: PlasmoCSConfig = {
   matches: ['https://www.notion.so/install-integration?response_type=code&client_id=$PLASMO_PUBLIC_NOTION_CLIENT_ID*'],

@@ -2,7 +2,7 @@ import cssText from 'data-text:~style.css';
 import { SmallParagraph } from 'design-system';
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor, PlasmoGetStyle, PlasmoMountShadowHost } from 'plasmo';
 
-import { waitForElementToExist } from './utils/utils';
+import { waitForElementToExist } from './shared/waitForElementToExist';
 
 export const config: PlasmoCSConfig = {
   matches: ['https://www.notion.so/install-integration?response_type=code&client_id=$PLASMO_PUBLIC_NOTION_CLIENT_ID*'],
