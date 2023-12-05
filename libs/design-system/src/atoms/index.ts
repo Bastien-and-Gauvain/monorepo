@@ -5,3 +5,4 @@ export * from './labels';
 export * from './logos';
 export * from './spinner';
 export * from './typography';
+export * from './progress';
