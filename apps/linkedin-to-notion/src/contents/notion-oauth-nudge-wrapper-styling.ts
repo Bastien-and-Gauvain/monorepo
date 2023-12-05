@@ -3,12 +3,11 @@ import type { PlasmoCSConfig } from 'plasmo';
 import { waitForElementToExist } from './utils/utils';
 
 export const config: PlasmoCSConfig = {
-  matches: [
-    'https://www.notion.so/install-integration?response_type=code&client_id=06ba891a-ecd0-4622-8489-6dae87349cde*',
-  ],
+  matches: ['https://www.notion.so/install-integration?response_type=code&client_id=$PLASMO_PUBLIC_NOTION_CLIENT_ID*'],
 };
 
 (async () => {
+  console.log('Notion OAuth nudge wrapper styling');
   await waitForElementToExist('div', 'Use a template provided by the developer');
   // Wait 0.1s with a promise
   await new Promise((resolve) => setTimeout(resolve, 100));

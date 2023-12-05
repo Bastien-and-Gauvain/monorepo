@@ -5,9 +5,7 @@ import type { PlasmoCSConfig, PlasmoGetInlineAnchor, PlasmoGetStyle, PlasmoMount
 import { waitForElementToExist } from './utils/utils';
 
 export const config: PlasmoCSConfig = {
-  matches: [
-    'https://www.notion.so/install-integration?response_type=code&client_id=06ba891a-ecd0-4622-8489-6dae87349cde*',
-  ],
+  matches: ['https://www.notion.so/install-integration?response_type=code&client_id=$PLASMO_PUBLIC_NOTION_CLIENT_ID*'],
   all_frames: false,
 };
 
@@ -33,6 +31,7 @@ export const getStyle: PlasmoGetStyle = () => {
 };
 
 const Nudge = () => {
+  console.log('Notion OAuth nudge wrapper styling');
   return (
     <div>
       <SmallParagraph className="plasmo-text-info-dark">Select this one 😉</SmallParagraph>
