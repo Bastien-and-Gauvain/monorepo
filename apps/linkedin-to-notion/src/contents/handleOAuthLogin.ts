@@ -9,7 +9,7 @@ import { supabase } from '~core/supabase';
  * @param scopes OAuth scopes
  * @returns
  */
-export const handleOAuthLogin = async (provider: Provider, redirectUrl: string, scopes?: string): Promise<void> => {
+export const handleOAuthLogin = async (provider: Provider, redirectUrl?: string, scopes?: string): Promise<void> => {
   await supabase.auth.signInWithOAuth({
     provider,
     options: {

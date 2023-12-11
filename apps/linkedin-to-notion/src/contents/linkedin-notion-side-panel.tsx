@@ -1,4 +1,3 @@
-import type { User } from '@supabase/supabase-js';
 import cssText from 'data-text:~style.css';
 import type { PlasmoCSConfig, PlasmoGetStyle } from 'plasmo';
 import { useEffect } from 'react';
@@ -24,32 +23,27 @@ export const getStyle: PlasmoGetStyle = () => {
 
 const LinkedinNotionSidePanel = () => {
   const [isOpen, setIsOpen] = useStorage('linkedInNotionSidePanelIsOpen', false);
-  const [user, setUser] = useStorage<User>('user');
-  const [selectedNotionDatabase, setSelectedNotionDatabase] = useStorage<string>('selectedNotionDatabase');
-  selectedNotionDatabase; // to remove ts error
+
   const [notionToken, setNotionToken] = useStorage<{
     refreshToken: string;
     accessToken: string;
   }>('notionToken');
   notionToken; // to remove ts error
 
-  useEffect(() => {
-    async function init() {
-      const { data, error } = await supabase.auth.getSession();
-      if (error) {
-        console.error(error);
-        return;
-      }
+  const [selectedNotionDatabase, setSelectedNotionDatabase] = useStorage<string>('selectedNotionDatabase');
+  selectedNotionDatabase; // to remove ts error
 
-      setUser(data.session.user);
+  useEffect(() => {
+    const initSession = async () => {
+      const { data } = await supabase.auth.getSession();
 
       setNotionToken({
         accessToken: data.session.provider_token,
         refreshToken: data.session.refresh_token,
       });
-    }
+    };
 
-    init();
+    initSession();
   }, []);
 
   // Listen the icon onClick message from the background script
@@ -68,16 +62,18 @@ const LinkedinNotionSidePanel = () => {
   return (
     <LinkedInNotionSidePanelContent
       isOpen={isOpen}
-      isLoggedIn={!!user?.id}
+      isLoggedIn={!!notionToken?.accessToken}
       loginCallback={() =>
         handleOAuthLogin('notion', window.location.href.match(/https:\/\/[a-z]{2,3}\.linkedin\.com\/in\/[^/]+\//)[0])
       }
-      logoutCallBack={() => [
-        supabase.auth.signOut(),
-        setUser(null),
-        setSelectedNotionDatabase(''),
-        setNotionToken(null),
-      ]}
+      logoutCallBack={async () => {
+        setSelectedNotionDatabase('');
+        setNotionToken({
+          accessToken: '',
+          refreshToken: '',
+        });
+        await supabase.auth.signOut();
+      }}
       onCloseCallback={() => setIsOpen(false)}
       id="linkedin-to-notion-side-panel"
     />
