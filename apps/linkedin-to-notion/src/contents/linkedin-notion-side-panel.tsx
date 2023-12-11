@@ -64,7 +64,9 @@ const LinkedinNotionSidePanel = () => {
       isOpen={isOpen}
       isLoggedIn={!!notionToken?.accessToken}
       loginCallback={() =>
-        handleOAuthLogin('notion', window.location.href.match(/https:\/\/[a-z]{2,3}\.linkedin\.com\/in\/[^/]+\//)[0])
+        handleOAuthLogin('notion', {
+          redirectUrl: window.location.href.match(/https:\/\/[a-z]{2,3}\.linkedin\.com\/in\/[^/]+\//)[0],
+        })
       }
       logoutCallBack={async () => {
         setSelectedNotionDatabase('');
