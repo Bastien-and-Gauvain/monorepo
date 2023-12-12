@@ -10,6 +10,7 @@ import type {
   NotionProfileInformation,
   NotionProfileStatus,
 } from '~src/background/messages/notion/notion.type';
+import { OnboardingStatus } from '~src/background/messages/users/services/user.service';
 
 import { type LinkedInProfileInformation } from './../../../contents/scrapers/linkedin-profile-scraper';
 import { Alert, type AlertState } from './../Alert';
@@ -46,6 +47,7 @@ export const Form = ({
 }) => {
   // We need to have the selected database stored somewhere
   const [selectedNotionDatabase] = useStorage<string>('selectedNotionDatabase');
+  const [user, setUser] = useStorage('user');
 
   const linkedinUrl = window.location.href.match(/https:\/\/[a-z]{2,4}\.linkedin\.com\/in\/[^/]+\//gim)?.[0];
   const [formValues, setFormValues] = useState<Inputs>({
@@ -166,6 +168,14 @@ export const Form = ({
       console.log("Couldn't save the profile", error);
       setAlertState('error');
       return;
+    }
+
+    if (user.onboarding_status === OnboardingStatus.CONNECTED_TO_NOTION) {
+      const updatedUser = await sendToBackground({
+        name: 'users/resolvers/updateOnboardingStatus',
+        body: { id: user.id, onboardingStatus: OnboardingStatus.FIRST_PROFILE_SAVED },
+      });
+      setUser(updatedUser);
     }
 
     setIsSaveLoading(false);
