@@ -11,7 +11,7 @@ export enum OnboardingStatus {
 export class UserService {
   constructor() {}
 
-  getOrCreateUser = async (authenticatedUserId: string): Promise<Tables<'users'>> => {
+  async getOrCreateUserWithAuthenticatedUserId(authenticatedUserId: string): Promise<Tables<'users'>> {
     const { data: users, error } = await supabase
       .from('users')
       .select('*')
@@ -19,9 +19,9 @@ export class UserService {
 
     if (error) {
       console.error(
-        `UserService - getOrCreateUser: couldn't get user ${authenticatedUserId}. Error: ${JSON.stringify(error)}`
+        `UserService - upsertUser: couldn't get user ${authenticatedUserId}. Error: ${JSON.stringify(error)}`
       );
-      throw new Error(`UserService - getOrCreateUser: couldn't get user ${authenticatedUserId}`);
+      throw new Error(`UserService - upsertUser: couldn't get user ${authenticatedUserId}`);
     }
 
     if (users.length > 0) {
@@ -37,15 +37,32 @@ export class UserService {
 
     if (newUserError || !newUser) {
       console.error(
-        `UserService - getOrCreateUser: couldn't create public user for ${authenticatedUserId}. Error: ${JSON.stringify(
+        `UserService - upsertUser: couldn't create public user for ${authenticatedUserId}. Error: ${JSON.stringify(
           newUserError
         )}`
       );
-      throw new Error(`UserService - getOrCreateUser: couldn't create public user for ${authenticatedUserId}`);
+      throw new Error(`UserService - upsertUser: couldn't create public user for ${authenticatedUserId}`);
     }
 
     return newUser[0];
-  };
+  }
+
+  async updateOnboardingStatus(id: string, onboardingStatus: OnboardingStatus): Promise<Tables<'users'>> {
+    const { data: user, error } = await supabase
+      .from('users')
+      .update({ onboarding_status: onboardingStatus })
+      .eq('id', id)
+      .select('*');
+
+    if (error) {
+      console.error(
+        `UserService - updateOnboardingStatus: couldn't update user ${id}. Error: ${JSON.stringify(error)}`
+      );
+      throw new Error(`UserService - updateOnboardingStatus: couldn't update user ${id}`);
+    }
+
+    return user[0];
+  }
 }
 
 export default {};
