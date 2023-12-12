@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 
 export const Confetti = () => {
   const [init, setInit] = useState(false);
-  console.log('🔥 ・ Confetti ・ init:', init);
 
   useEffect(() => {
     const init = async () => {
