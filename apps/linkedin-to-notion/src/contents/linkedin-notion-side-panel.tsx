@@ -2,6 +2,7 @@ import cssText from 'data-text:~style.css';
 import type { PlasmoCSConfig, PlasmoGetStyle } from 'plasmo';
 import { useEffect } from 'react';
 
+import { sendToBackground } from '@plasmohq/messaging';
 import { useStorage } from '@plasmohq/storage/hook';
 
 import { supabase } from '~core/supabase';
@@ -24,14 +25,17 @@ export const getStyle: PlasmoGetStyle = () => {
 const LinkedinNotionSidePanel = () => {
   const [isOpen, setIsOpen] = useStorage('linkedInNotionSidePanelIsOpen', false);
 
+  const [selectedNotionDatabase, setSelectedNotionDatabase] = useStorage<string>('selectedNotionDatabase');
+  selectedNotionDatabase; // to remove ts error
+
+  const [authenticatedUserId, setAuthenticatedUserId] = useStorage('authenticatedUserId');
+  const [user, setUser] = useStorage('user');
+  user; // to remove ts error
   const [notionToken, setNotionToken] = useStorage<{
     refreshToken: string;
     accessToken: string;
   }>('notionToken');
   notionToken; // to remove ts error
-
-  const [selectedNotionDatabase, setSelectedNotionDatabase] = useStorage<string>('selectedNotionDatabase');
-  selectedNotionDatabase; // to remove ts error
 
   useEffect(() => {
     const initSession = async () => {
@@ -41,10 +45,18 @@ const LinkedinNotionSidePanel = () => {
         accessToken: data.session.provider_token,
         refreshToken: data.session.refresh_token,
       });
+
+      const userData = await sendToBackground({
+        name: 'users/resolvers/getOrCreateUserWithAuthenticatedUserId',
+        body: { authenticatedUserId: data.session.user.id },
+      });
+
+      setAuthenticatedUserId(data.session.user.id);
+      setUser(userData);
     };
 
     initSession();
-  }, []);
+  }, [authenticatedUserId]);
 
   // Listen the icon onClick message from the background script
   chrome.runtime.onMessage.addListener(async (msg) => {
