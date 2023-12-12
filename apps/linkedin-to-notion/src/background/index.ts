@@ -43,3 +43,9 @@ chrome.runtime.onMessage.addListener(async (msg) => {
     }
   }
 });
+
+chrome.runtime.onInstalled.addListener(async ({ reason }) => {
+  if (reason === 'install') {
+    await chrome.tabs.create({ url: `chrome-extension://${process.env.PLASMO_PUBLIC_CRX_ID}/tabs/onboarding.html` });
+  }
+});
