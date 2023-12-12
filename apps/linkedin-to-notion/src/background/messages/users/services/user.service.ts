@@ -2,7 +2,6 @@ import { supabase } from '~core/supabase';
 import type { Tables } from '~src/background/types/supabase';
 
 export enum OnboardingStatus {
-  NOT_STARTED = 'NOT_STARTED',
   CONNECTED_TO_NOTION = 'CONNECTED_TO_NOTION',
   FIRST_PROFILE_SAVED = 'FIRST_PROFILE_SAVED',
   EXTENSION_PINNED = 'EXTENSION_PINNED',
@@ -31,7 +30,7 @@ export class UserService {
     const { data: newUser, error: newUserError } = await supabase.from('users').insert([
       {
         authenticated_user: authenticatedUserId,
-        onboarding_status: OnboardingStatus.NOT_STARTED,
+        onboarding_status: OnboardingStatus.CONNECTED_TO_NOTION, // Assume that the user is connected to Notion because they just logged in
       },
     ]);
 
