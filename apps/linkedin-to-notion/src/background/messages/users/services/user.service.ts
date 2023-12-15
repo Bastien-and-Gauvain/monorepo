@@ -10,42 +10,52 @@ export enum OnboardingStatus {
 export class UserService {
   constructor() {}
 
+  /**
+   * Get or create a user with the authenticated user ID
+   * @param authenticatedUserId Authenticated user ID
+   * @returns User
+   */
   async getOrCreateUserWithAuthenticatedUserId(authenticatedUserId: string): Promise<Tables<'users'>> {
     const { data: users, error } = await supabase
       .from('users')
       .select('*')
       .eq('authenticated_user', authenticatedUserId);
-
     if (error) {
-      console.error(
-        `UserService - upsertUser: couldn't get user ${authenticatedUserId}. Error: ${JSON.stringify(error)}`
+      throw new Error(
+        `getOrCreateUserWithAuthenticatedUserId: couldn't get user ${authenticatedUserId} - ${JSON.stringify(error)}`
       );
-      throw new Error(`UserService - upsertUser: couldn't get user ${authenticatedUserId}`);
     }
 
     if (users.length > 0) {
       return users[0];
     }
 
-    const { data: newUser, error: newUserError } = await supabase.from('users').insert([
-      {
-        authenticated_user: authenticatedUserId,
-        onboarding_status: OnboardingStatus.CONNECTED_TO_NOTION, // Assume that the user is connected to Notion because they just logged in
-      },
-    ]);
-
+    const { data: newUser, error: newUserError } = await supabase
+      .from('users')
+      .insert([
+        {
+          authenticated_user: authenticatedUserId,
+          onboarding_status: OnboardingStatus.CONNECTED_TO_NOTION, // Assume that the user is connected to Notion because they just logged in
+        },
+      ])
+      .select();
     if (newUserError || !newUser) {
-      console.error(
-        `UserService - upsertUser: couldn't create public user for ${authenticatedUserId}. Error: ${JSON.stringify(
+      throw new Error(
+        `getOrCreateUserWithAuthenticatedUserId: couldn't create public user for ${authenticatedUserId} - ${JSON.stringify(
           newUserError
         )}`
       );
-      throw new Error(`UserService - upsertUser: couldn't create public user for ${authenticatedUserId}`);
     }
 
     return newUser[0];
   }
 
+  /**
+   * Update the onboarding status of a user
+   * @param id User ID
+   * @param onboardingStatus Onboarding status
+   * @returns User
+   */
   async updateOnboardingStatus(id: string, onboardingStatus: OnboardingStatus): Promise<Tables<'users'>> {
     const { data: user, error } = await supabase
       .from('users')
@@ -54,10 +64,7 @@ export class UserService {
       .select('*');
 
     if (error) {
-      console.error(
-        `UserService - updateOnboardingStatus: couldn't update user ${id}. Error: ${JSON.stringify(error)}`
-      );
-      throw new Error(`UserService - updateOnboardingStatus: couldn't update user ${id}`);
+      throw new Error(`updateOnboardingStatus: couldn't update user ${id} - ${JSON.stringify(error)}`);
     }
 
     return user[0];
