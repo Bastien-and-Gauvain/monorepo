@@ -1,4 +1,5 @@
 import type { DatabaseObjectResponse } from '@notionhq/client/build/src/api-endpoints';
+import type { Session } from '@supabase/supabase-js';
 import { ButtonPrimary, ErrorAlert, SelectEntry } from 'design-system';
 import { useEffect, useState } from 'react';
 
@@ -10,28 +11,29 @@ import { getDatabaseTitle } from './utils/notionFormat.util';
 
 export const NotionDatabasesSelect = () => {
   const [notionDatabases, setNotionDatabases] = useState<DatabaseObjectResponse[]>([]);
-  const [selectedNotionDatabase, setSelectedNotionDatabase] = useStorage<string>('selectedNotionDatabase');
-  const [notionToken] = useStorage('notionToken');
+  const [selectedNotionDatabase, setSelectedNotionDatabase] = useStorage<string | null>('selectedNotionDatabase');
+  const [session] = useStorage<Session | null>('session');
   const [isLoading, setIsLoading] = useState(true);
-
-  const notionDatabasesSetter = async () => {
+  const notionDatabasesSetter = async (): Promise<void> => {
     setIsLoading(true);
 
     try {
       const databases = await sendToBackground<{ notionToken: string }, DatabaseObjectResponse[]>({
         name: 'notion/resolvers/getEligibleDatabases',
         body: {
-          notionToken: notionToken.accessToken,
+          notionToken: session.provider_token,
         },
       });
 
       if (databases.length) {
         setNotionDatabases(databases);
-        setSelectedNotionDatabase(selectedNotionDatabase || databases[0].id);
+        if (!selectedNotionDatabase || !databases.find((database) => database.id === selectedNotionDatabase)) {
+          setSelectedNotionDatabase(databases[0].id);
+        }
       }
 
       if (!databases.length) {
-        setSelectedNotionDatabase('');
+        setSelectedNotionDatabase(null);
       }
     } catch (error) {
       console.error(error);
@@ -41,10 +43,10 @@ export const NotionDatabasesSelect = () => {
   };
 
   useEffect(() => {
-    if (notionToken?.accessToken) {
+    if (session?.provider_token) {
       notionDatabasesSetter();
     }
-  }, [notionToken, selectedNotionDatabase]);
+  }, [session, selectedNotionDatabase]);
 
   if (isLoading) {
     return <FullScreenLoader />;
