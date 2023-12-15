@@ -2,7 +2,7 @@ import cssText from 'data-text:~style.css';
 import { SmallParagraph } from 'design-system';
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor, PlasmoGetStyle, PlasmoMountShadowHost } from 'plasmo';
 
-import { waitForElementToExist } from './shared/waitForElementToExist';
+import { waitForElement } from './shared/waitForElement';
 
 export const config: PlasmoCSConfig = {
   matches: ['https://www.notion.so/install-integration?response_type=code&client_id=$PLASMO_PUBLIC_NOTION_CLIENT_ID*'],
@@ -11,8 +11,7 @@ export const config: PlasmoCSConfig = {
 
 export const getInlineAnchor: PlasmoGetInlineAnchor = async () => {
   // The Notion OAuth page is a single page app, so we need to wait for the element to exist
-  await waitForElementToExist('div', 'Use a template provided by the developer');
-  return document.querySelector("div[style*='grid-template-rows: 1fr 1fr;']");
+  return await waitForElement("div[style*='grid-template-rows: 1fr 1fr;']");
 };
 
 // With getInlineAnchor, Plasmo mounts the component after the anchor by default.
