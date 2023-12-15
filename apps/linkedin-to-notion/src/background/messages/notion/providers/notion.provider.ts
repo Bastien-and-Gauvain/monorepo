@@ -132,7 +132,7 @@ export class NotionProvider {
           filter: {
             property: 'linkedinUrl',
             url: {
-              contains: slug,
+              contains: `/${slug}`,
             },
           },
         })
