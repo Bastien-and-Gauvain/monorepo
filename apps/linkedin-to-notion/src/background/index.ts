@@ -1,3 +1,5 @@
+import { routes } from '~src/routes';
+
 export {};
 
 // You can test the regex here: https://regex101.com/r/RJgYar/2
@@ -37,7 +39,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, { status }, tab): Promise<void> 
 chrome.runtime.onMessage.addListener(async (msg) => {
   if (msg === 'openLinkedInTab') {
     try {
-      await chrome.tabs.create({ url: 'https://www.linkedin.com/in/me/' });
+      await chrome.tabs.create({ url: routes.linkedin.me });
     } catch (e) {
       console.log('Error opening LinkedIn tab', e);
     }
@@ -46,6 +48,6 @@ chrome.runtime.onMessage.addListener(async (msg) => {
 
 chrome.runtime.onInstalled.addListener(async ({ reason }) => {
   if (reason === 'install') {
-    await chrome.tabs.create({ url: `chrome-extension://${process.env.PLASMO_PUBLIC_CRX_ID}/tabs/onboarding.html` });
+    await chrome.tabs.create({ url: routes.tabs.onboarding });
   }
 });
