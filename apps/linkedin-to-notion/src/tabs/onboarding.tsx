@@ -2,6 +2,7 @@ import { ButtonPrimary, Card, Heading1, Heading2 } from 'design-system';
 
 import '~style.css'; // mandatory to inject tailwindcss styles
 
+import type { Session } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 import arrow from 'url:./../../assets/arrow.svg';
 import linkedin_logo from 'url:./../../assets/linkedin_logo.svg';
@@ -13,38 +14,44 @@ import { useStorage } from '@plasmohq/storage/hook';
 
 import { supabase } from '~core/supabase';
 import { OnboardingStatus } from '~src/background/messages/users/services/user.service';
+import type { Tables } from '~src/background/types/supabase';
 import { BasicLayout } from '~src/components/Layouts/BasicLayout';
 import { Confetti } from '~src/components/Layouts/Confetti';
 import { handleOAuthLogin } from '~src/contents/handleOAuthLogin';
+import { routes } from '~src/routes';
 
 export const OnboardingPage = () => {
   const [numberOfTasks, setNumberOfTasks] = useState<number>(3);
-  const [authenticatedUserId] = useStorage('authenticatedUserId');
-  const [user, setUser] = useStorage('user');
-  const [notionToken, setNotionToken] = useStorage<{
-    refreshToken: string;
-    accessToken: string;
-  }>('notionToken');
-  notionToken; // to remove ts error
+  const [user, setUser] = useStorage<Tables<'users'> | null>('user');
+  const [session, setSession] = useStorage<null | Session>('session');
 
   useEffect(() => {
     const initSession = async () => {
       const { data } = await supabase.auth.getSession();
+      setSession(data.session);
+    };
 
-      setNotionToken({
-        accessToken: data.session.provider_token,
-        refreshToken: data.session.refresh_token,
-      });
-
-      const userData = await sendToBackground({
+    const initUser = async () => {
+      const userData = await sendToBackground<
+        {
+          authenticatedUserId: string;
+        },
+        Tables<'users'>
+      >({
         name: 'users/resolvers/getOrCreateUserWithAuthenticatedUserId',
-        body: { authenticatedUserId: data.session.user.id },
+        body: { authenticatedUserId: session.user.id },
       });
       setUser(userData);
     };
 
-    initSession();
-  }, [authenticatedUserId]);
+    if (!session || session?.expires_at > Date.now()) {
+      initSession();
+    }
+
+    if (session?.user && !user) {
+      initUser();
+    }
+  }, [session]);
 
   useEffect(() => {
     if (!user) {
@@ -69,13 +76,6 @@ export const OnboardingPage = () => {
     0: 'YOU ARE READY TO GO!',
   };
 
-  const loginInNewTab = async () => {
-    const { url } = await handleOAuthLogin('notion', {
-      skipBrowserRedirect: true,
-    });
-    window.open(url, '_blank');
-  };
-
   const state: Record<string, 'current' | 'done' | 'next'> = {
     connectToNotion: numberOfTasks === 3 ? 'current' : 'done',
     saveFirstProfile: numberOfTasks === 2 ? 'current' : numberOfTasks === 3 ? 'next' : 'done',
@@ -89,7 +89,7 @@ export const OnboardingPage = () => {
     done: 'done',
   };
 
-  const checkIsPinned = async () => {
+  const checkIsPinned = async (): Promise<void> => {
     const userSettings = await chrome.action.getUserSettings();
 
     if (userSettings.isOnToolbar === true) {
@@ -116,7 +116,13 @@ export const OnboardingPage = () => {
           title={<Heading2>1 - Connect to Notion</Heading2>}
           icon={<img src={notion_logo} alt="Notion Logo" width={150} height={150} />}
           callToAction={
-            <ButtonPrimary state={cardStateToButtonState[state.connectToNotion]} onClick={loginInNewTab}>
+            <ButtonPrimary
+              state={cardStateToButtonState[state.connectToNotion]}
+              onClick={async () =>
+                await handleOAuthLogin('notion', {
+                  redirectUrl: routes.tabs.onboarding,
+                })
+              }>
               {cardStateToButtonState[state.connectToNotion] === 'done' ? 'Done' : 'Connect to Notion'}
             </ButtonPrimary>
           }
@@ -130,7 +136,7 @@ export const OnboardingPage = () => {
             <ButtonPrimary
               state={cardStateToButtonState[state.saveFirstProfile]}
               onClick={() => {
-                chrome.tabs.create({ url: 'https://www.linkedin.com/in/me' });
+                window.location.href = routes.linkedin.me;
               }}>
               {cardStateToButtonState[state.saveFirstProfile] === 'done' ? 'Done' : 'Go to LinkedIn'}
             </ButtonPrimary>
