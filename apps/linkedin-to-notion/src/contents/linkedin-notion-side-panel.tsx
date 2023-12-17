@@ -23,7 +23,7 @@ export const getStyle: PlasmoGetStyle = () => {
 
 const LinkedinNotionSidePanel = () => {
   // Open the extension by default because we know that the user is on a LinkedIn profile
-  const [isOpen, setIsOpen] = useStorage('linkedInNotionSidePanelIsOpen', true);  
+  const [isOpen, setIsOpen] = useStorage('linkedInNotionSidePanelIsOpen', true);
   const [notionToken, setNotionToken] = useStorage<{
     refreshToken: string;
     accessToken: string;
