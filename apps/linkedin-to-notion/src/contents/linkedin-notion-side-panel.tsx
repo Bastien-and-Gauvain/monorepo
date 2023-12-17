@@ -52,7 +52,7 @@ const LinkedinNotionSidePanel = () => {
       setUser(userData);
     };
 
-    if (!session || session?.expires_at > Date.now()) {
+    if (!session || session?.expires_at < Date.now()) {
       initSession();
     }
 
