@@ -27,7 +27,6 @@ export const getStyle: PlasmoGetStyle = () => {
 const LinkedinNotionSidePanel = () => {
   // Open the extension by default because we know that the user is on a LinkedIn profile
   const [isOpen, setIsOpen] = useStorage('linkedInNotionSidePanelIsOpen', true);
-  
   const [selectedNotionDatabase, setSelectedNotionDatabase] = useStorage<string | null>('selectedNotionDatabase');
   selectedNotionDatabase; // to remove ts error
 
