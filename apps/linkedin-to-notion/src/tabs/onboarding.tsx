@@ -24,6 +24,7 @@ export const OnboardingPage = () => {
   const [numberOfTasks, setNumberOfTasks] = useState<number>(3);
   const [user, setUser] = useStorage<Tables<'users'> | null>('user');
   const [session, setSession] = useStorage<null | Session>('session');
+  const [checkIsPinnedInterval, setCheckIsPinnedInterval] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const initSession = async () => {
@@ -63,9 +64,12 @@ export const OnboardingPage = () => {
     }
     if (user.onboarding_status === OnboardingStatus.FIRST_PROFILE_SAVED) {
       setNumberOfTasks(1);
+      const interval = setInterval(checkIsPinned, 1000);
+      setCheckIsPinnedInterval(interval);
     }
     if (user.onboarding_status === OnboardingStatus.EXTENSION_PINNED) {
       setNumberOfTasks(0);
+      checkIsPinnedInterval && clearInterval(checkIsPinnedInterval);
     }
   }, [user]);
 
@@ -100,8 +104,6 @@ export const OnboardingPage = () => {
       setUser(userData);
       return;
     }
-
-    alert('Recruitivity does not seem to be pinned. Please pin it and try again.');
   };
 
   return (
@@ -155,11 +157,6 @@ export const OnboardingPage = () => {
           title={<Heading2>3 - Pin the extension</Heading2>}
           icon={<img src={pin_icon} alt="Pin Icon" width={150} height={150} />}
           state={state.pinExtension}
-          callToAction={
-            <ButtonPrimary state={cardStateToButtonState[state.pinExtension]} onClick={checkIsPinned}>
-              {cardStateToButtonState[state.pinExtension] === 'done' ? 'Done' : 'Validate'}
-            </ButtonPrimary>
-          }
         />
       </div>
     </BasicLayout>
