@@ -9,12 +9,27 @@ import { supabase } from '~core/supabase';
  * @param scopes OAuth scopes
  * @returns
  */
-export const handleOAuthLogin = async (provider: Provider, redirectUrl?: string, scopes?: string): Promise<void> => {
-  await supabase.auth.signInWithOAuth({
+export const handleOAuthLogin = async (
+  provider: Provider,
+  options: { redirectUrl?: string; scopes?: string; skipBrowserRedirect?: boolean }
+): Promise<
+  | {
+      provider: Provider;
+      url: string;
+    }
+  | {
+      provider: Provider;
+      url: null;
+    }
+> => {
+  const { data } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
-      redirectTo: redirectUrl,
-      scopes,
+      redirectTo: options.redirectUrl,
+      scopes: options.scopes,
+      skipBrowserRedirect: options.skipBrowserRedirect,
     },
   });
+
+  return data;
 };

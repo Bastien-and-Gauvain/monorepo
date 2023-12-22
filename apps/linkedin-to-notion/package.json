@@ -15,6 +15,9 @@
     "@plasmohq/messaging": "0.5.0",
     "@plasmohq/storage": "1.7.2",
     "@supabase/supabase-js": "2.32.0",
+    "@tsparticles/engine": "^3.0.2",
+    "@tsparticles/react": "^3.0.0",
+    "@tsparticles/slim": "^3.0.2",
     "design-system": "workspace:*",
     "plasmo": "0.84.0",
     "react": "18.2.0",
@@ -27,11 +30,12 @@
     "@types/react": "18.2.20",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "^10.4.15",
+    "htmlnano": "2.0.3",
     "postcss": "^8.4.28",
     "prettier": "3.0.2",
+    "supabase": ">=1.8.1",
     "tailwindcss": "^3.3.3",
-    "typescript": "5.1.6",
-    "htmlnano": "2.0.3"
+    "typescript": "5.1.6"
   },
   "manifest": {
     "key": "$CRX_KEY",
@@ -42,7 +46,8 @@
     "web_accessible_resources": [
       {
         "resources": [
-          "options.html"
+          "options.html",
+          "tabs/onboarding.html"
         ],
         "matches": [
           "<all_urls>"

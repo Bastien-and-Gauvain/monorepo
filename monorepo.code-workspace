@@ -21,7 +21,8 @@
       "recruitivity",
       "roboto",
       "supabase",
-      "tailwindcss"
+      "tailwindcss",
+      "upsert"
     ]
   }
 }

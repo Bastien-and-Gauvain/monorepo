@@ -1,10 +1,13 @@
+import type { Session } from '@supabase/supabase-js';
 import cssText from 'data-text:~style.css';
 import type { PlasmoCSConfig, PlasmoGetStyle } from 'plasmo';
 import { useEffect } from 'react';
 
+import { sendToBackground } from '@plasmohq/messaging';
 import { useStorage } from '@plasmohq/storage/hook';
 
 import { supabase } from '~core/supabase';
+import type { Tables } from '~src/background/types/supabase';
 
 import { LinkedInNotionSidePanelContent } from '../components/LinkedInNotionSidePanel/LinkedInNotionSidePanelContent';
 import { handleOAuthLogin } from './handleOAuthLogin';
@@ -24,27 +27,39 @@ export const getStyle: PlasmoGetStyle = () => {
 const LinkedinNotionSidePanel = () => {
   // Open the extension by default because we know that the user is on a LinkedIn profile
   const [isOpen, setIsOpen] = useStorage('linkedInNotionSidePanelIsOpen', true);
-  const [notionToken, setNotionToken] = useStorage<{
-    refreshToken: string;
-    accessToken: string;
-  }>('notionToken');
-  notionToken; // to remove ts error
-
-  const [selectedNotionDatabase, setSelectedNotionDatabase] = useStorage<string>('selectedNotionDatabase');
+  const [selectedNotionDatabase, setSelectedNotionDatabase] = useStorage<string | null>('selectedNotionDatabase');
   selectedNotionDatabase; // to remove ts error
+
+  const [user, setUser] = useStorage<Tables<'users'>>('user');
+  const [session, setSession] = useStorage<Session | null>('session');
 
   useEffect(() => {
     const initSession = async () => {
       const { data } = await supabase.auth.getSession();
-
-      setNotionToken({
-        accessToken: data.session.provider_token,
-        refreshToken: data.session.refresh_token,
-      });
+      setSession(data.session);
     };
 
-    initSession();
-  }, []);
+    const initUser = async () => {
+      const userData = await sendToBackground<
+        {
+          authenticatedUserId: string;
+        },
+        Tables<'users'>
+      >({
+        name: 'users/resolvers/getOrCreateUserWithAuthenticatedUserId',
+        body: { authenticatedUserId: session.user.id },
+      });
+      setUser(userData);
+    };
+
+    if (!session) {
+      initSession();
+    }
+
+    if (session?.user && !user) {
+      initUser();
+    }
+  }, [session]);
 
   // Listen the icon onClick message from the background script
   chrome.runtime.onMessage.addListener(async (msg) => {
@@ -67,16 +82,16 @@ const LinkedinNotionSidePanel = () => {
   return (
     <LinkedInNotionSidePanelContent
       isOpen={isOpen}
-      isLoggedIn={!!notionToken?.accessToken}
+      isLoggedIn={!!session?.provider_token}
       loginCallback={() =>
-        handleOAuthLogin('notion', window.location.href.match(/https:\/\/[a-z]{2,3}\.linkedin\.com\/in\/[^/]+\//)[0])
+        handleOAuthLogin('notion', {
+          redirectUrl: window.location.href.match(/https:\/\/[a-z]{2,3}\.linkedin\.com\/in\/[^/]+\//)[0],
+        })
       }
       logoutCallBack={async () => {
-        setSelectedNotionDatabase('');
-        setNotionToken({
-          accessToken: '',
-          refreshToken: '',
-        });
+        setSelectedNotionDatabase(null);
+        setUser(null);
+        setSession(null);
         await supabase.auth.signOut();
       }}
       onCloseCallback={() => setIsOpen(false)}

@@ -1,3 +1,5 @@
+import { routes } from '~src/routes';
+
 export {};
 
 // You can test the regex here: https://regex101.com/r/RJgYar/2
@@ -41,5 +43,11 @@ chrome.runtime.onMessage.addListener(async (msg) => {
     } catch (e) {
       console.log('Error opening LinkedIn tab', e);
     }
+  }
+});
+
+chrome.runtime.onInstalled.addListener(async ({ reason }) => {
+  if (reason === 'install') {
+    await chrome.tabs.create({ url: routes.tabs.onboarding });
   }
 });

@@ -1,4 +1,5 @@
 import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
+import type { Session } from '@supabase/supabase-js';
 import { SelectEntry, TextAreaEntry, TextEntry, ToggleEntry } from 'design-system';
 import { useEffect, useState } from 'react';
 
@@ -10,6 +11,9 @@ import type {
   NotionProfileInformation,
   NotionProfileStatus,
 } from '~src/background/messages/notion/notion.type';
+import { OnboardingStatus } from '~src/background/messages/users/services/user.service';
+import type { Tables } from '~src/background/types/supabase';
+import { routes } from '~src/routes';
 
 import { type LinkedInProfileInformation } from './../../../contents/scrapers/linkedin-profile-scraper';
 import { Alert, type AlertState } from './../Alert';
@@ -46,6 +50,7 @@ export const Form = ({
 }) => {
   // We need to have the selected database stored somewhere
   const [selectedNotionDatabase] = useStorage<string>('selectedNotionDatabase');
+  const [user, setUser] = useStorage<Tables<'users'>>('user');
 
   const linkedinUrl = window.location.href.match(/https:\/\/[a-z]{2,4}\.linkedin\.com\/in\/[^/]+\//gim)?.[0];
   const [formValues, setFormValues] = useState<Inputs>({
@@ -64,7 +69,7 @@ export const Form = ({
   const [displayNotionValues, setDisplayNotionValues] = useState<boolean>(false);
 
   // To handle the interactions with Notion
-  const [notionToken] = useStorage('notionToken');
+  const [session] = useStorage<Session | null>('session');
   const [notionId, setNotionId] = useState<string>('');
   const [alertState, setAlertState] = useState<AlertState>(null);
   const [isNotionLoading, setIsNotionLoading] = useState<boolean>(false);
@@ -101,7 +106,7 @@ export const Form = ({
       >({
         name: 'notion/resolvers/findProfileInDatabase',
         body: {
-          notionToken: notionToken.accessToken,
+          notionToken: session.provider_token,
           databaseId,
           linkedinUrl,
         },
@@ -150,7 +155,7 @@ export const Form = ({
       >({
         name: 'notion/resolvers/createProfileInDatabase',
         body: {
-          notionToken: notionToken.accessToken,
+          notionToken: session.provider_token,
           databaseId: selectedNotionDatabase,
           linkedInProfileInformation: fromInputsToNotionProfileInformation(
             formValues,
@@ -168,6 +173,16 @@ export const Form = ({
       return;
     }
 
+    if (user.onboarding_status === OnboardingStatus.CONNECTED_TO_NOTION) {
+      const updatedUser = await sendToBackground({
+        name: 'users/resolvers/updateOnboardingStatus',
+        body: { id: user.id, onboardingStatus: OnboardingStatus.FIRST_PROFILE_SAVED },
+      });
+      setUser(updatedUser);
+      // go back to the onboarding page
+      window.location.href = routes.tabs.onboarding;
+    }
+
     setIsSaveLoading(false);
   };
 
@@ -182,7 +197,7 @@ export const Form = ({
       >({
         name: 'notion/resolvers/updateProfileInDatabase',
         body: {
-          notionToken: notionToken.accessToken,
+          notionToken: session.provider_token,
           pageId: notionId,
           linkedInProfileInformation: fromInputsToNotionProfileInformation(
             formValues,
