@@ -28,12 +28,6 @@ const LinkedinNotionSidePanel = () => {
   // Open the extension by default because we know that the user is on a LinkedIn profile
   const [isOpen, setIsOpen] = useStorage('linkedInNotionSidePanelIsOpen', true);
   
-  const [notionToken, setNotionToken] = useStorage<{
-    refreshToken: string;
-    accessToken: string;
-  }>('notionToken');
-  notionToken; // to remove ts error
-
   const [selectedNotionDatabase, setSelectedNotionDatabase] = useStorage<string | null>('selectedNotionDatabase');
   selectedNotionDatabase; // to remove ts error
 
