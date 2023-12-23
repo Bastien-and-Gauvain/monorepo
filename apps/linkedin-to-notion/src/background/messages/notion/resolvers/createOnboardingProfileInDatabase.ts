@@ -77,12 +77,6 @@ const handler: PlasmoMessaging.MessageHandler<
         },
       },
     },
-    // {
-    //   type: 'embed',
-    //   embed: {
-    //     url: OnboardingContent.VIDEO_URL,
-    //   },
-    // },
   ];
   const response = await notionService.appendChildrenBlocksToPage((pageResponse as CreatePageResponse).id, blocks);
   if ((response as ErrorResponse).error) {
@@ -95,6 +89,11 @@ const handler: PlasmoMessaging.MessageHandler<
     url: (pageResponse as PageObjectResponse).url,
   };
   res.send(result);
+
+  // Open a new tab with the newly created page
+  const cleanDatabaseId = databaseId.replaceAll('-', '');
+  const cleanPageId = result.id.replaceAll('-', '');
+  chrome.tabs.create({ url: `https://www.notion.so/${cleanDatabaseId}?p=${cleanPageId}&pm=s`, active: true });
   return;
 };
 
