@@ -69,6 +69,26 @@ export class UserService {
 
     return user[0];
   }
+
+  /**
+   * Increment the number of profiles saved by a user
+   * @param id User ID
+   * @param numberProfilesSaved Number of profiles saved
+   * @returns User
+   */
+  async incrementNumberProfilesSaved(id: string): Promise<Tables<'users'>> {
+    const { error } = await supabase.rpc('increment_number_profiles_saved', { row_id: id });
+
+    if (error) {
+      throw new Error(
+        `updateOnboardingStatus: couldn't increment user's nb of profiles saved counter ${id} - ${JSON.stringify(
+          error
+        )}`
+      );
+    }
+
+    return;
+  }
 }
 
 export default {};
