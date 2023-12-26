@@ -3,8 +3,7 @@ import type { Session } from '@supabase/supabase-js';
 import { SelectEntry, TextAreaEntry, TextEntry, ToggleEntry } from 'design-system';
 import { useEffect, useState } from 'react';
 
-import { sendToBackground } from '@plasmohq/messaging';
-import type { MessagesMetadata } from '@plasmohq/messaging';
+import { sendToBackground, type MessagesMetadata } from '@plasmohq/messaging';
 import { useStorage } from '@plasmohq/storage/hook';
 
 import type {
@@ -147,6 +146,18 @@ export const Form = ({
     return;
   };
 
+  const incrementNumberProfilesSaved = async () => {
+    try {
+      await sendToBackground({
+        name: 'users/resolvers/incrementNumberProfilesSaved' as keyof MessagesMetadata,
+        body: { id: user.id },
+      });
+    } catch (error) {
+      console.log("Couldn't increment the number of profiles saved", error);
+      return;
+    }
+  };
+
   const saveLinkedInProfile = async (): Promise<void> => {
     setIsSaveLoading(true);
 
@@ -173,6 +184,7 @@ export const Form = ({
         },
       });
       console.log('Profile saved in Notion');
+      incrementNumberProfilesSaved();
       setCurrentNotionValues(fromInputsToNotionProfileInformation(formValues, res.id, res.url));
       setAlertState('profile-saved');
     } catch (error) {
