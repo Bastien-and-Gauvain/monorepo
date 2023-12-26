@@ -112,7 +112,7 @@ export class UserService {
 
     return;
   }
-  
+
   /**
    * Update the linkedin profile info of a user
    * @param id User ID
