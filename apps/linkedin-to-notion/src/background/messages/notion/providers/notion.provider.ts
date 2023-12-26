@@ -1,5 +1,7 @@
 import { Client } from '@notionhq/client';
 import type {
+  AppendBlockChildrenResponse,
+  BlockObjectRequest,
   CreatePageResponse,
   DatabaseObjectResponse,
   SearchResponse,
@@ -100,6 +102,35 @@ export class NotionProvider {
       throw new Error(
         JSON.stringify({
           error: "NotionProvider, createPageInDatabase, couldn't create page",
+          message: error,
+        })
+      );
+    }
+
+    return response;
+  }
+
+  /**
+   * Add content blocks to a page
+   * @param pageId The id of the page to update
+   * @param blocks The blocks to add to the page
+   * @returns the response from the Notion API
+   */
+  async appendChildrenBlocksToPage(
+    pageId: string,
+    blocks: BlockObjectRequest[]
+  ): Promise<AppendBlockChildrenResponse | ErrorResponse> {
+    let response: AppendBlockChildrenResponse;
+    try {
+      response = await this.notion.blocks.children.append({
+        block_id: pageId,
+        children: blocks,
+      });
+    } catch (error) {
+      console.error("NotionProvider, addPageBlocks, couldn't add content blocks to the page:", error);
+      throw new Error(
+        JSON.stringify({
+          error: "NotionProvider, addPageBlocks, couldn't add content blocks to the page",
           message: error,
         })
       );

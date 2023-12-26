@@ -1,11 +1,34 @@
 import { supabase } from '~core/supabase';
 import type { Tables } from '~src/background/types/supabase';
+import type { LinkedInProfileInformation } from '~src/contents/scrapers/linkedin-profile-scraper';
 
 export enum OnboardingStatus {
   CONNECTED_TO_NOTION = 'CONNECTED_TO_NOTION',
   FIRST_PROFILE_SAVED = 'FIRST_PROFILE_SAVED',
   EXTENSION_PINNED = 'EXTENSION_PINNED',
 }
+
+export type LinkedInProfileInformationForSupabase = {
+  first_name: string;
+  last_name: string;
+  job_title: string;
+  company_name: string;
+  location: string;
+};
+
+const transformLinkedInProfileInfoForSupabase = (
+  userLinkedInProfileInfo: LinkedInProfileInformation
+): LinkedInProfileInformationForSupabase => {
+  const { name, jobTitle, company, location } = userLinkedInProfileInfo;
+
+  return {
+    first_name: name.firstName,
+    last_name: name.lastName,
+    job_title: jobTitle,
+    company_name: company,
+    location: location,
+  };
+};
 
 export class UserService {
   constructor() {}
@@ -88,6 +111,32 @@ export class UserService {
     }
 
     return;
+  }
+  
+  /**
+   * Update the linkedin profile info of a user
+   * @param id User ID
+   * @param userLinkedInProfileInfo the linkedin profile info of the user to put in supabase
+   * @returns User
+   */
+  async updateUserLinkedInProfileInfo(
+    id: string,
+    userLinkedInProfileInfo: LinkedInProfileInformation
+  ): Promise<Tables<'users'>> {
+    const userLinkedInProfileInfoForSupabase = transformLinkedInProfileInfoForSupabase(userLinkedInProfileInfo);
+    const { data: user, error } = await supabase
+      .from('users')
+      .update(userLinkedInProfileInfoForSupabase)
+      .eq('id', id)
+      .select('*');
+
+    if (error) {
+      throw new Error(
+        `updateUserLinkedInProfileInfo: couldn't update linkedin profile info of user ${id} - ${JSON.stringify(error)}`
+      );
+    }
+
+    return user[0];
   }
 }
 
