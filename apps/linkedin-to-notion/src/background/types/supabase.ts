@@ -6,39 +6,39 @@ export interface Database {
       users: {
         Row: {
           authenticated_user: string | null;
-          created_at: string;
-          id: string;
-          onboarding_status: Database['public']['Enums']['onboarding_status'] | null;
-          first_name: string | null;
-          last_name: string | null;
-          job_title: string | null;
           company_name: string | null;
+          created_at: string;
+          first_name: string | null;
+          id: string;
+          job_title: string | null;
+          last_name: string | null;
           location: string | null;
           number_profiles_saved: number;
+          onboarding_status: Database['public']['Enums']['onboarding_status'] | null;
         };
         Insert: {
           authenticated_user?: string | null;
+          company_name?: string | null;
           created_at?: string;
+          first_name?: string | null;
           id?: string;
+          job_title?: string | null;
+          last_name?: string | null;
+          location?: string | null;
+          number_profiles_saved?: number;
           onboarding_status?: Database['public']['Enums']['onboarding_status'] | null;
-          first_name: string | null;
-          last_name: string | null;
-          job_title: string | null;
-          company_name: string | null;
-          location: string | null;
-          number_profiles_saved: number;
         };
         Update: {
           authenticated_user?: string | null;
+          company_name?: string | null;
           created_at?: string;
+          first_name?: string | null;
           id?: string;
+          job_title?: string | null;
+          last_name?: string | null;
+          location?: string | null;
+          number_profiles_saved?: number;
           onboarding_status?: Database['public']['Enums']['onboarding_status'] | null;
-          first_name: string | null;
-          last_name: string | null;
-          job_title: string | null;
-          company_name: string | null;
-          location: string | null;
-          number_profiles_saved: number;
         };
         Relationships: [
           {
@@ -55,7 +55,17 @@ export interface Database {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      increment_number_profiles_saved:
+        | {
+            Args: Record<PropertyKey, never>;
+            Returns: undefined;
+          }
+        | {
+            Args: {
+              row_id: string;
+            };
+            Returns: undefined;
+          };
     };
     Enums: {
       onboarding_status: 'CONNECTED_TO_NOTION' | 'FIRST_PROFILE_SAVED' | 'EXTENSION_PINNED';
