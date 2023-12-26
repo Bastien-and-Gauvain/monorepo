@@ -238,7 +238,7 @@ export const Form = ({
         {selectedNotionDatabase && (
           <>
             {!isBeingOnboarded && <Alert state={alertState} notionUrl={currentNotionValues?.notionUrl} />}
-            {!isBeingOnboarded && currentNotionValues && (
+            {currentNotionValues && (
               <ToggleEntry
                 options={{ unchecked: 'LinkedIn', checked: 'Notion' }}
                 inputId="linkedInOrNotion"
