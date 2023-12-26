@@ -4,6 +4,7 @@ import { SelectEntry, TextAreaEntry, TextEntry, ToggleEntry } from 'design-syste
 import { useEffect, useState } from 'react';
 
 import { sendToBackground } from '@plasmohq/messaging';
+import type { MessagesMetadata } from '@plasmohq/messaging';
 import { useStorage } from '@plasmohq/storage/hook';
 
 import type {
@@ -11,6 +12,7 @@ import type {
   NotionProfileInformation,
   NotionProfileStatus,
 } from '~src/background/messages/notion/notion.type';
+import type { OnboardingPageObjectResponse } from '~src/background/messages/notion/resolvers/createOnboardingProfileInDatabase';
 import { OnboardingStatus } from '~src/background/messages/users/services/user.service';
 import type { Tables } from '~src/background/types/supabase';
 import { routes } from '~src/routes';
@@ -149,11 +151,17 @@ export const Form = ({
     setIsSaveLoading(true);
 
     try {
+      // We don't send the profile to the same resolver depending on the onboarding status
+      // The first profile saved is special
       const res = await sendToBackground<
         { notionToken: string; databaseId: string; linkedInProfileInformation: NotionProfileInformation },
-        PageObjectResponse
+        PageObjectResponse | OnboardingPageObjectResponse
       >({
-        name: 'notion/resolvers/createProfileInDatabase',
+        name: `notion/resolvers/${
+          user.onboarding_status === OnboardingStatus.CONNECTED_TO_NOTION
+            ? 'createOnboardingProfileInDatabase'
+            : 'createProfileInDatabase'
+        }` as keyof MessagesMetadata,
         body: {
           notionToken: session.provider_token,
           databaseId: selectedNotionDatabase,
