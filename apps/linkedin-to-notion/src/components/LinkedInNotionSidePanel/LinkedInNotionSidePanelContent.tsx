@@ -59,7 +59,7 @@ export const LinkedInNotionSidePanelContent = ({
   }, []);
 
   useEffect(() => {
-    if (!!user && linkedInProfileInformation?.linkedInURL.match(/linkedin\.com\/in\/me/)) {
+    if (user?.id && linkedInProfileInformation?.linkedInURL.match(/linkedin\.com\/in\/me/)) {
       sendUserLinkedInProfileInfoToBackground(linkedInProfileInformation);
     }
   }, [linkedInProfileInformation, user]);
