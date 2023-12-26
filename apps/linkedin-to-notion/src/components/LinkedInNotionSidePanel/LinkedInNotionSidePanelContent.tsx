@@ -2,6 +2,11 @@ import cssText from 'data-text:~style.css';
 import { ButtonPrimary, IFramedSidePanel } from 'design-system';
 import { createElement, useEffect, useState } from 'react';
 
+import { sendToBackground } from '@plasmohq/messaging';
+import { useStorage } from '@plasmohq/storage/hook';
+
+import type { Tables } from '~src/background/types/supabase';
+
 import {
   getLinkedInProfileInformation,
   type LinkedInProfileInformation,
@@ -30,6 +35,7 @@ export const LinkedInNotionSidePanelContent = ({
 }) => {
   const [linkedInProfileInformation, setLinkedInProfileInformation] = useState<LinkedInProfileInformation | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [user] = useStorage<Tables<'users'>>('user');
 
   const setLinkedInValues = async () => {
     setIsLoading(true);
@@ -38,9 +44,25 @@ export const LinkedInNotionSidePanelContent = ({
     setIsLoading(false);
   };
 
+  const sendUserLinkedInProfileInfoToBackground = async (scrapingResults: LinkedInProfileInformation) => {
+    await sendToBackground({
+      name: 'users/resolvers/updateUserLinkedInProfileInfo',
+      body: {
+        id: user.id,
+        userLinkedInProfileInfo: scrapingResults,
+      },
+    });
+  };
+
   useEffect(() => {
     setLinkedInValues();
   }, []);
+
+  useEffect(() => {
+    if (user?.id && linkedInProfileInformation?.linkedInURL.match(/linkedin\.com\/in\/me/)) {
+      sendUserLinkedInProfileInfoToBackground(linkedInProfileInformation);
+    }
+  }, [linkedInProfileInformation, user]);
 
   // Listen the icon onClick message from the background script
   chrome.runtime.onMessage.addListener((msg) => {
