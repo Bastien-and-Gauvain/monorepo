@@ -21,7 +21,7 @@ import { type LinkedInProfileInformation } from './../../../contents/scrapers/li
 import { Alert, type AlertState } from './../Alert';
 import { FullScreenLoader } from './../FullScreenLoader';
 import { NotionDatabasesSelect } from './../NotionDatabasesSelect';
-import { CallToAction } from './CallToAction';
+import { CallToAction, OnboardingCallToAction } from './CallToAction';
 import {
   fromInputsToNotionProfileInformation,
   fromLinkedInProfileInformationToInputs,
@@ -235,99 +235,103 @@ export const Form = ({
     return <></>;
   }
 
+  const isBeingOnboarded = user?.onboarding_status === OnboardingStatus.CONNECTED_TO_NOTION;
   return (
-    <div className="plasmo-flex plasmo-flex-col plasmo-space-y-3">
-      <NotionDatabasesSelect />
-
-      {selectedNotionDatabase && (
-        <>
-          <Alert state={alertState} notionUrl={currentNotionValues?.notionUrl} />
-
-          {currentNotionValues && (
-            <ToggleEntry
-              options={{ unchecked: 'LinkedIn', checked: 'Notion' }}
-              inputId="linkedInOrNotion"
-              handleChange={setDisplayNotionValues}
-              labelText="Display data from"
-            />
-          )}
-
+    <>
+      {selectedNotionDatabase && isBeingOnboarded && (
+        <OnboardingCallToAction saveHandler={saveLinkedInProfile} isSaving={isSaveLoading} />
+      )}
+      <div className={`plasmo-flex plasmo-flex-col plasmo-space-y-3${isBeingOnboarded ? ' plasmo-opacity-60' : ''}`}>
+        <NotionDatabasesSelect />
+        {selectedNotionDatabase && (
           <>
-            <div className="plasmo-flex plasmo-space-x-2 plasmo-justify-between">
-              <div className="plasmo-flex-grow">
+            {!isBeingOnboarded && <Alert state={alertState} notionUrl={currentNotionValues?.notionUrl} />}
+            {currentNotionValues && (
+              <ToggleEntry
+                options={{ unchecked: 'LinkedIn', checked: 'Notion' }}
+                inputId="linkedInOrNotion"
+                handleChange={setDisplayNotionValues}
+                labelText="Display data from"
+              />
+            )}
+            <>
+              <div className="plasmo-flex plasmo-space-x-2 plasmo-justify-between">
+                <div className="plasmo-flex-grow">
+                  <SelectEntry
+                    labelText="Status"
+                    id="status"
+                    handleChange={(value) => setFormValues({ ...formValues, status: value as NotionProfileStatus })}
+                    value={formValues.status}
+                    options={statusOptions}
+                  />
+                </div>
                 <SelectEntry
-                  labelText="Status"
-                  id="status"
-                  handleChange={(value) => setFormValues({ ...formValues, status: value as NotionProfileStatus })}
-                  value={formValues.status}
-                  options={statusOptions}
+                  labelText="Gender"
+                  id="gender"
+                  handleChange={(value) => setFormValues({ ...formValues, gender: value as NotionProfileGender })}
+                  value={formValues.gender}
+                  options={genderOptions}
                 />
               </div>
-              <SelectEntry
-                labelText="Gender"
-                id="gender"
-                handleChange={(value) => setFormValues({ ...formValues, gender: value as NotionProfileGender })}
-                value={formValues.gender}
-                options={genderOptions}
-              />
-            </div>
-            <div className="plasmo-flex plasmo-space-x-2">
+              <div className="plasmo-flex plasmo-space-x-2">
+                <TextEntry
+                  initialValue={formValues.firstName}
+                  placeholder="Guy"
+                  inputId="linkedin-first-name"
+                  handleChange={(e) => setFormValues({ ...formValues, firstName: e.target.value })}
+                  labelText="First Name"
+                />
+                <TextEntry
+                  initialValue={formValues.lastName}
+                  placeholder="Tarenbois"
+                  inputId="linkedin-last-name"
+                  handleChange={(e) => setFormValues({ ...formValues, lastName: e.target.value })}
+                  labelText="Last Name"
+                />
+              </div>
               <TextEntry
-                initialValue={formValues.firstName}
-                placeholder="Guy"
-                inputId="linkedin-first-name"
-                handleChange={(e) => setFormValues({ ...formValues, firstName: e.target.value })}
-                labelText="First Name"
+                initialValue={formValues.jobTitle}
+                placeholder="Musicien"
+                inputId="linkedin-job-title"
+                handleChange={(e) => setFormValues({ ...formValues, jobTitle: e.target.value })}
+                labelText="Job title"
               />
               <TextEntry
-                initialValue={formValues.lastName}
-                placeholder="Tarenbois"
-                inputId="linkedin-last-name"
-                handleChange={(e) => setFormValues({ ...formValues, lastName: e.target.value })}
-                labelText="Last Name"
+                initialValue={formValues.company}
+                placeholder="Rock Band"
+                inputId="linkedin-current-company"
+                handleChange={(e) => setFormValues({ ...formValues, company: e.target.value })}
+                labelText="Current company"
               />
-            </div>
-            <TextEntry
-              initialValue={formValues.jobTitle}
-              placeholder="Musicien"
-              inputId="linkedin-job-title"
-              handleChange={(e) => setFormValues({ ...formValues, jobTitle: e.target.value })}
-              labelText="Job title"
-            />
-            <TextEntry
-              initialValue={formValues.company}
-              placeholder="Rock Band"
-              inputId="linkedin-current-company"
-              handleChange={(e) => setFormValues({ ...formValues, company: e.target.value })}
-              labelText="Current company"
-            />
-            <TextEntry
-              initialValue={formValues.location}
-              placeholder="Paris"
-              inputId="linkedin-location"
-              handleChange={(e) => setFormValues({ ...formValues, location: e.target.value })}
-              labelText="Location"
-            />
-            <TextAreaEntry
-              inputId="comment"
-              labelText="Comment"
-              value={formValues.comment}
-              handleChange={(e) => setFormValues({ ...formValues, comment: e.target.value })}
-            />
-            <CallToAction
-              hasNotionValues={!!currentNotionValues}
-              isDisplayingNotionValues={displayNotionValues}
-              updateHandler={updateLinkedInProfile}
-              isUpdating={isUpdateLoading}
-              saveHandler={saveLinkedInProfile}
-              isSaving={isSaveLoading}
-              reloadHandler={onReload}
-              isReloading={onReloadLoading}
-            />
-            <div className="plasmo-h-14"></div>
+              <TextEntry
+                initialValue={formValues.location}
+                placeholder="Paris"
+                inputId="linkedin-location"
+                handleChange={(e) => setFormValues({ ...formValues, location: e.target.value })}
+                labelText="Location"
+              />
+              <TextAreaEntry
+                inputId="comment"
+                labelText="Comment"
+                value={formValues.comment}
+                handleChange={(e) => setFormValues({ ...formValues, comment: e.target.value })}
+              />
+              {!isBeingOnboarded && (
+                <CallToAction
+                  hasNotionValues={!!currentNotionValues}
+                  isDisplayingNotionValues={displayNotionValues}
+                  updateHandler={updateLinkedInProfile}
+                  isUpdating={isUpdateLoading}
+                  saveHandler={saveLinkedInProfile}
+                  isSaving={isSaveLoading}
+                  reloadHandler={onReload}
+                  isReloading={onReloadLoading}
+                />
+              )}
+            </>
           </>
-        </>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 };
