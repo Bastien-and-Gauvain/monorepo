@@ -1,7 +1,7 @@
 {
   "name": "recruitivity",
   "displayName": "recruitivity",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "One-click LinkedIn profile export to Notion",
   "author": "gauvain.thery92@gmail.com",
   "scripts": {
