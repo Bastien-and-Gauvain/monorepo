@@ -13,7 +13,7 @@ import { NotionProvider } from '../providers/notion.provider';
 enum OnboardingContent {
   CALLOUT_TEXT = 'Bastien, congratulations! These 1-click exports are going to save a lot of your time each week. We wanted to thank you, so here’s a quick vid to show you how to get the most out of the extension 👇',
   CALLOUT_ICON = '✨',
-  VIDEO_URL = 'https://www.youtube.com/watch?v=ngwr44N6GGI',
+  VIDEO_URL = 'https://www.youtube.com/watch?v=vJfBo7rgl7o',
 }
 
 export type OnboardingPageObjectResponse = AppendBlockChildrenResponse & {
