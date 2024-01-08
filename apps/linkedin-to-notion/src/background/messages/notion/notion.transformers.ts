@@ -7,6 +7,7 @@ import type {
 import { getFullName } from '~src/background/shared.utils';
 import { getPropertyValue } from '~src/components/LinkedInNotionSidePanel/utils/notionFormat.util';
 
+import type { CandidateProfile } from '../candidate_profiles/candidateProfiles.type';
 import type { NotionProfileGender, NotionProfileInformation } from './notion.type';
 
 /**
@@ -61,19 +62,23 @@ export const databaseSearchResultsToNotionProfileInformation = (
  * @param profileInformation The profile information to convert to a Notion page
  * @returns
  */
-export const notionProfileInformationToPageProperties = (
-  profileInformation: NotionProfileInformation
+export const candidateProfileToPageProperties = (
+  candidateProfile: CandidateProfile
 ): CreatePageParameters['properties'] => {
-  const { firstName, lastName } = profileInformation.name;
-  const fullName = getFullName(firstName, lastName);
+  const fullName = getFullName(candidateProfile.firstName, candidateProfile.lastName);
 
-  const profileStatusMap = {
+  const candidateStatusMap = {
     NOT_CONTACTED: 'Not Contacted',
     CONTACTED: 'Contacted',
     IN_PROCESS: 'In Process',
     NO_MATCH: 'No Match',
     NOT_INTERESTED: 'Not Interested',
     HIRED: 'Hired',
+  };
+
+  const candidateGenderMap = {
+    M: 'M',
+    F: 'F',
   };
 
   const pageProperties: CreatePageParameters['properties'] = {
@@ -91,7 +96,7 @@ export const notionProfileInformationToPageProperties = (
         {
           type: 'text',
           text: {
-            content: firstName,
+            content: candidateProfile.firstName,
           },
         },
       ],
@@ -101,7 +106,7 @@ export const notionProfileInformationToPageProperties = (
         {
           type: 'text',
           text: {
-            content: lastName,
+            content: candidateProfile.lastName,
           },
         },
       ],
@@ -111,7 +116,7 @@ export const notionProfileInformationToPageProperties = (
         {
           type: 'text',
           text: {
-            content: profileInformation.jobTitle,
+            content: candidateProfile.jobTitle || '',
           },
         },
       ],
@@ -121,7 +126,7 @@ export const notionProfileInformationToPageProperties = (
         {
           type: 'text',
           text: {
-            content: profileInformation.company,
+            content: candidateProfile.company || '',
           },
         },
       ],
@@ -131,35 +136,35 @@ export const notionProfileInformationToPageProperties = (
         {
           type: 'text',
           text: {
-            content: profileInformation.location,
+            content: candidateProfile.location || '',
           },
         },
       ],
     },
     linkedinUrl: {
-      url: profileInformation.linkedinUrl,
+      url: candidateProfile.linkedinUrl || '',
     },
     comment: {
       rich_text: [
         {
           type: 'text',
           text: {
-            content: profileInformation.comment,
+            content: candidateProfile.comment || '',
           },
         },
       ],
     },
     status: {
       select: {
-        name: profileStatusMap[profileInformation.status],
+        name: candidateProfile.status ? candidateStatusMap[candidateProfile.status] : candidateStatusMap.NOT_CONTACTED,
       },
     },
   };
 
-  if (profileInformation.gender) {
+  if (candidateProfile.gender) {
     pageProperties['gender'] = {
       select: {
-        name: profileInformation.gender,
+        name: candidateProfile.gender ? candidateGenderMap[candidateProfile.gender] : '',
       },
     };
   }
@@ -173,11 +178,11 @@ export const notionProfileInformationToPageProperties = (
  * @param databaseId The database id to create the page in
  * @returns
  */
-export const notionProfileInformationToNotionPage = (
-  profileInformation: NotionProfileInformation,
+export const candidateProfileToNotionPage = (
+  candidateProfile: CandidateProfile,
   databaseId: string
 ): CreatePageParameters => {
-  const properties = notionProfileInformationToPageProperties(profileInformation);
+  const properties = candidateProfileToPageProperties(candidateProfile);
   return {
     icon: {
       type: 'emoji',
