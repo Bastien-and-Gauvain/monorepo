@@ -3,6 +3,83 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export interface Database {
   public: {
     Tables: {
+      linkedin_profiles: {
+        Row: {
+          id: string;
+          linkedin_url: string | null;
+          notion_database: string | null;
+          saved_at: string;
+          status: string | null;
+          status_updated_at: string | null;
+          user: string | null;
+        };
+        Insert: {
+          id?: string;
+          linkedin_url?: string | null;
+          notion_database?: string | null;
+          saved_at?: string;
+          status?: string | null;
+          status_updated_at?: string | null;
+          user?: string | null;
+        };
+        Update: {
+          id?: string;
+          linkedin_url?: string | null;
+          notion_database?: string | null;
+          saved_at?: string;
+          status?: string | null;
+          status_updated_at?: string | null;
+          user?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'linkedin_profiles_notion_database_fkey';
+            columns: ['notion_database'];
+            isOneToOne: false;
+            referencedRelation: 'notion_databases';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'linkedin_profiles_user_fkey';
+            columns: ['user'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      notion_databases: {
+        Row: {
+          description: Json | null;
+          id: string;
+          name: string | null;
+          notion_id: string | null;
+          user: string | null;
+        };
+        Insert: {
+          description?: Json | null;
+          id?: string;
+          name?: string | null;
+          notion_id?: string | null;
+          user?: string | null;
+        };
+        Update: {
+          description?: Json | null;
+          id?: string;
+          name?: string | null;
+          notion_id?: string | null;
+          user?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'notion_databases_user_fkey';
+            columns: ['user'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       users: {
         Row: {
           authenticated_user: string | null;

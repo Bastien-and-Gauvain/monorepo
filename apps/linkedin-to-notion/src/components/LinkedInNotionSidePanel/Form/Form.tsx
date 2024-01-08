@@ -3,15 +3,18 @@ import type { Session } from '@supabase/supabase-js';
 import { SelectEntry, TextAreaEntry, TextEntry, ToggleEntry } from 'design-system';
 import { useEffect, useState } from 'react';
 
-import { sendToBackground, type MessagesMetadata } from '@plasmohq/messaging';
+import { sendToBackground } from '@plasmohq/messaging';
 import { useStorage } from '@plasmohq/storage/hook';
 
+import type {
+  SaveOneCandidateProfileInput,
+  UpdateOneCandidateProfileInput,
+} from '~src/background/messages/candidate_profiles/candidateProfiles.type';
 import type {
   NotionProfileGender,
   NotionProfileInformation,
   NotionProfileStatus,
 } from '~src/background/messages/notion/notion.type';
-import type { OnboardingPageObjectResponse } from '~src/background/messages/notion/resolvers/createOnboardingProfileInDatabase';
 import { OnboardingStatus } from '~src/background/messages/users/services/user.service';
 import type { Tables } from '~src/background/types/supabase';
 import { routes } from '~src/routes';
@@ -22,13 +25,14 @@ import { FullScreenLoader } from './../FullScreenLoader';
 import { NotionDatabasesSelect } from './../NotionDatabasesSelect';
 import { CallToAction, OnboardingCallToAction } from './CallToAction';
 import {
+  fromFormInputToCandidateProfile,
   fromInputsToNotionProfileInformation,
   fromLinkedInProfileInformationToInputs,
   fromNotionProfileInformationToInputs,
 } from './formHelpers';
 import { genderOptions, statusOptions } from './formOptions';
 
-export type Inputs = {
+export type FormInput = {
   firstName: string;
   lastName: string;
   jobTitle: string;
@@ -37,7 +41,7 @@ export type Inputs = {
   status: NotionProfileStatus;
   gender: NotionProfileGender;
   comment: string;
-  linkedInUrl: string;
+  linkedinUrl: string;
 };
 
 export const Form = ({
@@ -51,10 +55,10 @@ export const Form = ({
 }) => {
   // We need to have the selected database stored somewhere
   const [selectedNotionDatabase] = useStorage<string>('selectedNotionDatabase');
-  const [user, setUser] = useStorage<Tables<'users'>>('user');
+  const [user, setUser] = useStorage<Tables<'users'> | undefined>('user');
 
   const linkedinUrl = window.location.href.match(/https:\/\/[a-z]{2,4}\.linkedin\.com\/in\/[^/]+\//gim)?.[0];
-  const [formValues, setFormValues] = useState<Inputs>({
+  const [formValues, setFormValues] = useState<FormInput>({
     firstName: '',
     lastName: '',
     jobTitle: '',
@@ -63,7 +67,7 @@ export const Form = ({
     status: 'NOT_CONTACTED',
     gender: '',
     comment: '',
-    linkedInUrl: window.location.href.match(/https:\/\/[a-z]{2,4}\.linkedin\.com\/in\/[^/]+\//gim)?.[0],
+    linkedinUrl: window.location.href.match(/https:\/\/[a-z]{2,4}\.linkedin\.com\/in\/[^/]+\//gim)?.[0],
   });
 
   // To handle the toggle switch
@@ -146,60 +150,27 @@ export const Form = ({
     return;
   };
 
-  const incrementNumberProfilesSaved = async () => {
-    try {
-      await sendToBackground({
-        name: 'users/resolvers/incrementNumberProfilesSaved' as keyof MessagesMetadata,
-        body: { id: user.id },
-      });
-    } catch (error) {
-      console.log("Couldn't increment the number of profiles saved", error);
-      return;
-    }
-  };
-
   const saveLinkedInProfile = async (): Promise<void> => {
     setIsSaveLoading(true);
 
-    try {
-      // We don't send the profile to the same resolver depending on the onboarding status
-      // The first profile saved is special
-      const res = await sendToBackground<
-        { notionToken: string; databaseId: string; linkedInProfileInformation: NotionProfileInformation },
-        PageObjectResponse | OnboardingPageObjectResponse
-      >({
-        name: `notion/resolvers/${
-          user.onboarding_status === OnboardingStatus.CONNECTED_TO_NOTION
-            ? 'createOnboardingProfileInDatabase'
-            : 'createProfileInDatabase'
-        }` as keyof MessagesMetadata,
-        body: {
-          notionToken: session.provider_token,
+    const profileSaved = await sendToBackground<SaveOneCandidateProfileInput, PageObjectResponse>({
+      name: 'candidate_profiles/resolvers/saveOneCandidateProfile',
+      body: {
+        candidateProfile: fromFormInputToCandidateProfile(formValues),
+        notion: {
+          accessToken: session.provider_token,
           databaseId: selectedNotionDatabase,
-          linkedInProfileInformation: fromInputsToNotionProfileInformation(
-            formValues,
-            currentNotionValues?.notionId,
-            currentNotionValues?.notionUrl
-          ),
+          notionPageId: currentNotionValues?.notionId,
+          notionUrl: currentNotionValues?.notionUrl,
         },
-      });
-      console.log('Profile saved in Notion');
-      incrementNumberProfilesSaved();
-      setCurrentNotionValues(fromInputsToNotionProfileInformation(formValues, res.id, res.url));
-      setAlertState('profile-saved');
-    } catch (error) {
-      console.log("Couldn't save the profile", error);
-      setAlertState('error');
-      return;
-    }
+        userId: user.id,
+      },
+    });
+    setCurrentNotionValues(fromInputsToNotionProfileInformation(formValues, profileSaved.id, profileSaved.url));
+    setAlertState('profile-saved');
 
     if (user.onboarding_status === OnboardingStatus.CONNECTED_TO_NOTION) {
-      const updatedUser = await sendToBackground({
-        name: 'users/resolvers/updateOnboardingStatus',
-        body: { id: user.id, onboardingStatus: OnboardingStatus.FIRST_PROFILE_SAVED },
-      });
-      setUser(updatedUser);
-      // go back to the onboarding page
+      setUser({ ...user, onboarding_status: OnboardingStatus.FIRST_PROFILE_SAVED });
       window.location.href = routes.tabs.onboarding;
     }
 
@@ -210,31 +181,22 @@ export const Form = ({
     setAlertState(null);
     setIsUpdateLoading(true);
 
-    try {
-      const res = await sendToBackground<
-        { notionToken: string; pageId: string; linkedInProfileInformation: NotionProfileInformation },
-        PageObjectResponse
-      >({
-        name: 'notion/resolvers/updateProfileInDatabase',
-        body: {
-          notionToken: session.provider_token,
-          pageId: notionId,
-          linkedInProfileInformation: fromInputsToNotionProfileInformation(
-            formValues,
-            currentNotionValues?.notionId,
-            currentNotionValues?.notionUrl
-          ),
+    const res = await sendToBackground<UpdateOneCandidateProfileInput, PageObjectResponse>({
+      name: 'candidate_profiles/resolvers/updateOneCandidateProfile',
+      body: {
+        notion: {
+          accessToken: session.provider_token,
+          databaseId: selectedNotionDatabase,
+          notionPageId: notionId,
+          notionUrl: currentNotionValues?.notionUrl,
         },
-      });
-      console.log('Profile updated in Notion');
-      setCurrentNotionValues(fromInputsToNotionProfileInformation(formValues, res.id, res.url));
-      setAlertState('profile-updated');
-    } catch (error) {
-      console.log("Couldn't update the profile", error);
-      setAlertState('error');
-      return;
-    }
+        userId: user.id,
+        candidateProfile: fromFormInputToCandidateProfile(formValues),
+      },
+    });
+    setCurrentNotionValues(fromInputsToNotionProfileInformation(formValues, res.id, res.url));
 
+    setAlertState('profile-updated');
     setIsUpdateLoading(false);
   };
 
@@ -247,17 +209,17 @@ export const Form = ({
     return <></>;
   }
 
-  const isBeingOnboarded = user?.onboarding_status === OnboardingStatus.CONNECTED_TO_NOTION;
+  const isUserOnboarding = user?.onboarding_status === OnboardingStatus.CONNECTED_TO_NOTION;
   return (
     <>
-      {selectedNotionDatabase && isBeingOnboarded && (
+      {selectedNotionDatabase && isUserOnboarding && (
         <OnboardingCallToAction saveHandler={saveLinkedInProfile} isSaving={isSaveLoading} />
       )}
-      <div className={`plasmo-flex plasmo-flex-col plasmo-space-y-3${isBeingOnboarded ? ' plasmo-opacity-60' : ''}`}>
+      <div className={`plasmo-flex plasmo-flex-col plasmo-space-y-3${isUserOnboarding ? ' plasmo-opacity-60' : ''}`}>
         <NotionDatabasesSelect />
         {selectedNotionDatabase && (
           <>
-            {!isBeingOnboarded && <Alert state={alertState} notionUrl={currentNotionValues?.notionUrl} />}
+            {!isUserOnboarding && <Alert state={alertState} notionUrl={currentNotionValues?.notionUrl} />}
             {currentNotionValues && (
               <ToggleEntry
                 options={{ unchecked: 'LinkedIn', checked: 'Notion' }}
@@ -328,7 +290,7 @@ export const Form = ({
                 value={formValues.comment}
                 handleChange={(e) => setFormValues({ ...formValues, comment: e.target.value })}
               />
-              {!isBeingOnboarded && (
+              {!isUserOnboarding && (
                 <CallToAction
                   hasNotionValues={!!currentNotionValues}
                   isDisplayingNotionValues={displayNotionValues}
