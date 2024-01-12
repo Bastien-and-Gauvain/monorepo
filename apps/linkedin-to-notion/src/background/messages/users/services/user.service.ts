@@ -138,6 +138,21 @@ export class UserService {
 
     return user[0];
   }
+
+  /**
+   * Get a user by its ID
+   * @param id User ID
+   * @returns User
+   */
+  async getUserById(id: string): Promise<Tables<'users'>> {
+    const { data: user, error } = await supabase.from('users').select('*').eq('id', id);
+
+    if (error) {
+      throw new Error(`getOneUser: couldn't get user ${id} - ${JSON.stringify(error)}`);
+    }
+
+    return user[0];
+  }
 }
 
 export default {};

@@ -2,19 +2,18 @@ import { Client } from '@notionhq/client';
 import type {
   AppendBlockChildrenResponse,
   BlockObjectRequest,
+  CreatePageParameters,
   CreatePageResponse,
   DatabaseObjectResponse,
+  GetDatabaseResponse,
   SearchResponse,
+  UpdatePageParameters,
   UpdatePageResponse,
 } from '@notionhq/client/build/src/api-endpoints';
 
 import { getLinkedinSlug, retryRequest } from '~src/background/shared.utils';
 
-import {
-  databaseSearchResultsToNotionProfileInformation,
-  notionProfileInformationToNotionPage,
-  notionProfileInformationToPageProperties,
-} from '../notion.transformers';
+import { databaseSearchResultsToNotionProfileInformation } from '../notion.transformers';
 import type { ErrorResponse, NotionProfileInformation } from '../notion.type';
 
 export class NotionProvider {
@@ -83,20 +82,15 @@ export class NotionProvider {
   }
 
   /**
-   * Create a new profile page in the database with the given id
-   * @param databaseId The id of the database in which the page will be created
-   * @param linkedInProfileInformation The information to be added to the page
+   * Create a page in notion
+   * @param pageBodyParameters The parameters to create the page
    * @returns the response from the Notion API
+   * @throws an error if the page couldn't be created
    */
-  async createPageInDatabase(
-    databaseId: string,
-    linkedInProfileInformation: NotionProfileInformation
-  ): Promise<CreatePageResponse | ErrorResponse> {
-    const pageParameters = notionProfileInformationToNotionPage(linkedInProfileInformation, databaseId);
-
+  async createPageInDatabase(pageBodyParameters: CreatePageParameters): Promise<CreatePageResponse> {
     let response: CreatePageResponse;
     try {
-      response = await this.notion.pages.create(pageParameters);
+      response = await this.notion.pages.create(pageBodyParameters);
     } catch (error) {
       console.error("NotionProvider, createPageInDatabase, couldn't create page:", error);
       throw new Error(
@@ -115,11 +109,9 @@ export class NotionProvider {
    * @param pageId The id of the page to update
    * @param blocks The blocks to add to the page
    * @returns the response from the Notion API
+   * @throws an error if the blocks couldn't be added
    */
-  async appendChildrenBlocksToPage(
-    pageId: string,
-    blocks: BlockObjectRequest[]
-  ): Promise<AppendBlockChildrenResponse | ErrorResponse> {
+  async appendChildrenBlocksToPage(pageId: string, blocks: BlockObjectRequest[]): Promise<AppendBlockChildrenResponse> {
     let response: AppendBlockChildrenResponse;
     try {
       response = await this.notion.blocks.children.append({
@@ -127,10 +119,10 @@ export class NotionProvider {
         children: blocks,
       });
     } catch (error) {
-      console.error("NotionProvider, addPageBlocks, couldn't add content blocks to the page:", error);
+      console.error("NotionProvider, appendChildrenBlocksToPage, couldn't add content blocks to the page:", error);
       throw new Error(
         JSON.stringify({
-          error: "NotionProvider, addPageBlocks, couldn't add content blocks to the page",
+          error: "NotionProvider, appendChildrenBlocksToPage, couldn't add content blocks to the page",
           message: error,
         })
       );
@@ -189,26 +181,43 @@ export class NotionProvider {
   }
 
   /**
-   * Updates a profile page with the given id
-   * @param pageId The id of the page to update
-   * @param linkedInProfileInformation The information to be added to the page
+   * Update a page in notion
+   * @param pageParameters The parameters to update the page
    * @returns the response from the Notion API
+   * @throws an error if the page couldn't be updated
    */
-  async updatePageInDatabase(
-    pageId: string,
-    linkedInProfileInformation: NotionProfileInformation
-  ): Promise<CreatePageResponse | ErrorResponse> {
-    const properties = notionProfileInformationToPageProperties(linkedInProfileInformation);
-    const pageParameters = { page_id: pageId, properties };
-
+  async updatePage(pageParameters: UpdatePageParameters): Promise<CreatePageResponse> {
     let response: UpdatePageResponse;
     try {
       response = await this.notion.pages.update(pageParameters);
     } catch (error) {
-      console.error("NotionProvider, updatePageInDatabase, couldn't update page:", error);
+      console.error("NotionProvider, updatePage, couldn't update page:", error);
       throw new Error(
         JSON.stringify({
-          error: "NotionProvider, updatePageInDatabase, couldn't update page",
+          error: "NotionProvider, updatePage, couldn't update page",
+          message: error,
+        })
+      );
+    }
+
+    return response;
+  }
+
+  /**
+   * Get a database by its id
+   * @param databaseId The id of the database to retrieve
+   * @returns the response from the Notion API
+   * @throws an error if the database couldn't be retrieved
+   */
+  async getDatabaseById(databaseId: string): Promise<GetDatabaseResponse> {
+    let response: GetDatabaseResponse;
+    try {
+      response = await this.notion.databases.retrieve({ database_id: databaseId });
+    } catch (error) {
+      console.error("NotionProvider, getDatabaseById, couldn't get database:", error);
+      throw new Error(
+        JSON.stringify({
+          error: "NotionProvider, getDatabaseById, couldn't get database",
           message: error,
         })
       );
