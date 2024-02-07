@@ -1,6 +1,6 @@
 import type { Meta, StoryFn } from '@storybook/react';
 
-import { Logo } from '.';
+import { ImageLogo, Logo } from '.';
 
 const meta = {
   title: 'Atoms/Logos',
@@ -16,3 +16,5 @@ export default meta;
 export const DarkLogo: StoryFn = () => <Logo className="plasmo-fill-black" scale={150} />;
 
 export const LightLogo: StoryFn = () => <Logo className="plasmo-fill-main" />;
+
+export const ExtensionLogo: StoryFn = () => <ImageLogo />;
