@@ -22,6 +22,7 @@ export const LinkedInNotionSidePanelContent = ({
   id,
   isOpen,
   onCloseCallback,
+  onOpenCallback,
   isLoggedIn,
   loginCallback,
   logoutCallBack,
@@ -29,6 +30,7 @@ export const LinkedInNotionSidePanelContent = ({
   id: string;
   isOpen: boolean;
   onCloseCallback: () => void;
+  onOpenCallback: () => void;
   isLoggedIn: boolean;
   loginCallback: () => void;
   logoutCallBack: () => void;
@@ -82,6 +84,7 @@ export const LinkedInNotionSidePanelContent = ({
       head={getIFrameStyle()}
       isOpen={isOpen}
       onCloseCallback={() => onCloseCallback()}
+      onOpenCallback={() => onOpenCallback()}
       onLogoutCallback={() => logoutCallBack()}
       id={id}
       className="plasmo-top-48 plasmo-space-y-4 plasmo-flex plasmo-flex-col">

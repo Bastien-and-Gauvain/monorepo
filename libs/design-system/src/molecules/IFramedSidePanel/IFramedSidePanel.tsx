@@ -128,7 +128,9 @@ export const IFramedSidePanel = ({
 
   const leftPosition = isOpen
     ? Math.min(Math.max(10, sidePanelLeftPosition), window.innerWidth - 356)
-    : window.innerWidth - 100;
+    : window.innerWidth - 116;
+
+  const topPosition = isOpen ? null : { top: '100px' };
 
   return (
     <iframe
@@ -140,7 +142,7 @@ export const IFramedSidePanel = ({
       className={cn(
         'plasmo-fixed plasmo-top-3 plasmo-h-[calc(100%-1.5rem)] plasmo-bg-transparent plasmo-z-10 plasmo-w-[346px] plasmo-drop-shadow-3xl plasmo-overflow-scroll plasmo-rounded-md'
       )}
-      style={{ left: `${leftPosition}px` }}
+      style={{ left: `${leftPosition}px`, ...topPosition }}
       ref={setContentRef}>
       {iframeHead && createPortal(head, iframeHead)}
       {iframeRoot && createPortal(isOpen ? openContent : closeContent, iframeRoot)}
