@@ -2,6 +2,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { cn, Header, Logo } from '../..';
+import { OpenExtensionBubble } from '../openExtensionBubble';
 
 type SidePanelProps = {
   /**
@@ -13,6 +14,11 @@ type SidePanelProps = {
    * Callback on the close button
    */
   onCloseCallback?: () => void;
+
+  /**
+   * Call back on the open floating bubble
+   */
+  onOpenCallback?: () => void;
 
   /**
    * Callback on the logout button
@@ -58,6 +64,7 @@ type SidePanelProps = {
 export const IFramedSidePanel = ({
   isOpen,
   onCloseCallback,
+  onOpenCallback,
   onLogoutCallback,
   hasCloseButton,
   hasDragButton,
@@ -99,7 +106,7 @@ export const IFramedSidePanel = ({
     };
   }, [contentRef, isDragMouseDown]);
 
-  const content = (
+  const openContent = (
     <>
       <Header
         hasCloseButton={hasCloseButton}
@@ -117,6 +124,12 @@ export const IFramedSidePanel = ({
     </>
   );
 
+  const closeContent = <OpenExtensionBubble onClick={onOpenCallback} />;
+
+  const leftPosition = isOpen
+    ? Math.min(Math.max(10, sidePanelLeftPosition), window.innerWidth - 356)
+    : window.innerWidth - 100;
+
   return (
     <iframe
       id={id}
@@ -125,13 +138,12 @@ export const IFramedSidePanel = ({
       // To avoid this, we're using fixed width and height
       // However, this remains true for breakpoints or default tailwind classes
       className={cn(
-        'plasmo-fixed plasmo-top-3 plasmo-h-[calc(100%-1.5rem)] plasmo-bg-transparent plasmo-w-[346px] plasmo-z-10 plasmo-drop-shadow-3xl plasmo-overflow-scroll plasmo-rounded-md',
-        isOpen ? '' : 'plasmo-hidden'
+        'plasmo-fixed plasmo-top-3 plasmo-h-[calc(100%-1.5rem)] plasmo-bg-transparent plasmo-z-10 plasmo-w-[346px] plasmo-drop-shadow-3xl plasmo-overflow-scroll plasmo-rounded-md'
       )}
-      style={{ left: `${Math.min(Math.max(10, sidePanelLeftPosition), window.innerWidth - 356)}px` }}
+      style={{ left: `${leftPosition}px` }}
       ref={setContentRef}>
       {iframeHead && createPortal(head, iframeHead)}
-      {iframeRoot && createPortal(content, iframeRoot)}
+      {iframeRoot && createPortal(isOpen ? openContent : closeContent, iframeRoot)}
     </iframe>
   );
 };
