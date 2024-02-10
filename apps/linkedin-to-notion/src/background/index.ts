@@ -25,13 +25,24 @@ chrome.tabs.onUpdated.addListener(async (tabId, { status }, tab): Promise<void> 
     }
   }
 
-  // We update the side panel's content when we are on a LinkedIn profile
-  if (isOnLinkedInProfile) {
-    try {
-      await chrome.tabs.sendMessage(tabId, 'updateLinkedInNotionSidePanel');
-    } catch (e) {
-      console.log('Error updating side panels', e);
+  if (isOnLinkedIn) {
+    // We update the side panel's content when we are on a LinkedIn profile
+    if (isOnLinkedInProfile) {
+      try {
+        await chrome.tabs.sendMessage(tabId, 'updateLinkedInNotionSidePanel');
+      } catch (e) {
+        console.log('Error updating side panels', e);
+      }
+      return;
     }
+
+    await chrome.tabs.sendMessage(tabId, 'askToGoBackToLinkedInProfile');
+  }
+});
+
+chrome.runtime.onMessage.addListener(({ msg }) => {
+  if (msg === 'openUserLinkedInProfile') {
+    chrome.tabs.update({ url: routes.linkedin.me });
   }
 });
 
