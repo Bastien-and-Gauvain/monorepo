@@ -18,10 +18,11 @@ export default function Popup() {
 
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-      const url = tabs[0].url;
-      if (url.match(linkedInProfileURLRegex)) {
+      const tab = tabs?.[0];
+      const url = tab?.url;
+      if (tab?.id && url && url?.match(linkedInProfileURLRegex)) {
         setIsLinkedInProfile(true);
-        await chrome.tabs.sendMessage(tabs[0].id, 'openLinkedInNotionSidePanel'); // Message sent to the content and not to the background
+        chrome.tabs.sendMessage(tab.id, 'openLinkedInNotionSidePanel'); // Message sent to the content and not to the background
       }
     });
   }, []);

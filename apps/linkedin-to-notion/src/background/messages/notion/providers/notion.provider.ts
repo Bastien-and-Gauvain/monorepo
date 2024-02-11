@@ -11,6 +11,7 @@ import type {
   UpdatePageResponse,
 } from '@notionhq/client/build/src/api-endpoints';
 
+import type { Nullable } from '~core/shared.types';
 import { getLinkedinSlug, retryRequest } from '~src/background/shared.utils';
 
 import { databaseSearchResultsToNotionProfileInformation } from '../notion.transformers';
@@ -67,16 +68,18 @@ export class NotionProvider {
       'location',
       'status',
     ];
-    const filteredEligibleDatabases = searchResults.results.filter((database: DatabaseObjectResponse) => {
-      const databaseProperties = Object.keys(database.properties);
-      let isEligible = true;
-      mandatoryProperties.forEach((property) => {
-        if (!databaseProperties.includes(property)) {
-          isEligible = false;
-        }
-      });
-      return isEligible;
-    }) as DatabaseObjectResponse[]; // safe casting based on the search filter
+    const filteredEligibleDatabases = (searchResults.results as DatabaseObjectResponse[]).filter(
+      (database: DatabaseObjectResponse) => {
+        const databaseProperties = Object.keys(database.properties);
+        let isEligible = true;
+        mandatoryProperties.forEach((property) => {
+          if (!databaseProperties.includes(property)) {
+            isEligible = false;
+          }
+        });
+        return isEligible;
+      }
+    ) as DatabaseObjectResponse[]; // safe casting based on the search filter
 
     return filteredEligibleDatabases;
   }
@@ -137,10 +140,7 @@ export class NotionProvider {
    * @param linkedInUrl The LinkedIn url of the profile to find
    * @returns the response from the Notion API
    */
-  async findProfileInDatabase(
-    databaseId: string,
-    linkedInUrl: string
-  ): Promise<null | NotionProfileInformation | ErrorResponse> {
+  async findProfileInDatabase(databaseId: string, linkedInUrl: string): Promise<Nullable<NotionProfileInformation>> {
     const slug = getLinkedinSlug(linkedInUrl);
     if (!slug) {
       console.log(`We couldn't find a slug for ${linkedInUrl}`);

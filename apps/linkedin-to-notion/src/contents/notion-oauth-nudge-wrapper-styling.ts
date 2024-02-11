@@ -10,6 +10,10 @@ export const config: PlasmoCSConfig = {
   console.log('Notion OAuth nudge wrapper styling');
   const wrapper = await waitForElement("div[style*='grid-template-rows: 1fr 1fr;']");
   const originalStyle = wrapper.getAttribute('style');
-  const newStyle = originalStyle.replace('grid-template-rows: 1fr 1fr;', 'grid-template-rows: 24px 1fr 1fr;');
+  const newStyle = originalStyle?.replace('grid-template-rows: 1fr 1fr;', 'grid-template-rows: 24px 1fr 1fr;');
+  if (!newStyle) {
+    console.error('No new style found');
+    return;
+  }
   wrapper.setAttribute('style', newStyle);
 })();

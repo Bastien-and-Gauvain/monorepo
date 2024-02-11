@@ -14,6 +14,9 @@ const handler: PlasmoMessaging.MessageHandler<UpdateOneCandidateProfileInput, Up
   req,
   res
 ) => {
+  if (!req.body) {
+    throw new Error('Request body is required');
+  }
   const notionProvider = new NotionProvider(req.body.notion.accessToken);
   const notionService = new NotionService(notionProvider);
   const userService = new UserService();

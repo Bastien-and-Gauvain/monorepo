@@ -47,7 +47,7 @@ export type NotionProfileInformation = {
   /**
    * The optional id of the page in Notion
    */
-  notionId?: string;
+  notionId: string;
 
   /**
    * The status of the profile that's stored in Notion

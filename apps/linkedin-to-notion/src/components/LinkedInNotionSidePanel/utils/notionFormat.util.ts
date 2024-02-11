@@ -21,15 +21,17 @@ export const getDatabaseTitle = (database: DatabaseObjectResponse): string => {
  * @returns The value of the property
  */
 export const getPropertyValue = (property: PageObjectResponse['properties'][0]): string => {
-  if (property.type === 'rich_text') {
-    return property.rich_text[0]?.plain_text;
+  if (property.type === 'rich_text' && property.rich_text[0]?.plain_text) {
+    return property.rich_text[0].plain_text;
   }
 
-  if (property.type === 'url') {
+  if (property.type === 'url' && property.url) {
     return property.url;
   }
 
-  if (property.type === 'select') {
-    return property.select ? property.select.name : '';
+  if (property.type === 'select' && property.select?.name) {
+    return property.select.name;
   }
+
+  return '';
 };

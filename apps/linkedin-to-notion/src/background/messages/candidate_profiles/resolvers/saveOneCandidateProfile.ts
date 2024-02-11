@@ -11,6 +11,9 @@ import type { SaveOneCandidateProfileInput } from '../candidateProfiles.type';
 import { CandidateProfilesService } from '../services/candidateProfiles.service';
 
 const handler: PlasmoMessaging.MessageHandler<SaveOneCandidateProfileInput, CreatePageResponse> = async (req, res) => {
+  if (!req.body) {
+    throw new Error('Request body is required');
+  }
   const notionProvider = new NotionProvider(req.body.notion.accessToken);
   const notionService = new NotionService(notionProvider);
   const userService = new UserService();

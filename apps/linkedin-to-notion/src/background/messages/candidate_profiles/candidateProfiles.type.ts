@@ -1,11 +1,13 @@
+import type { Nullable } from '~core/shared.types';
+
 export type CandidateProfile = {
   firstName: string;
   lastName: string;
   jobTitle?: string;
   company?: string;
   location?: string;
-  status?: CandidateStatus;
-  gender?: CandidateGender;
+  status?: Nullable<CandidateStatus>;
+  gender?: Nullable<CandidateGender>;
   comment?: string;
   linkedinUrl: string;
 };

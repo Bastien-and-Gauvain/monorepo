@@ -8,7 +8,7 @@ import { getFullName } from '~src/background/shared.utils';
 import { getPropertyValue } from '~src/components/LinkedInNotionSidePanel/utils/notionFormat.util';
 
 import type { CandidateProfile } from '../candidate_profiles/candidateProfiles.type';
-import type { NotionProfileGender, NotionProfileInformation } from './notion.type';
+import type { NotionProfileGender, NotionProfileInformation, NotionProfileStatus } from './notion.type';
 
 /**
  * Convert Notion page properties to NotionProfileInformation
@@ -19,7 +19,7 @@ import type { NotionProfileGender, NotionProfileInformation } from './notion.typ
 export const databaseSearchResultsToNotionProfileInformation = (
   databaseSearchResults: QueryDatabaseResponse
 ): NotionProfileInformation => {
-  const profileStatusMap = {
+  const profileStatusMap: Record<string, NotionProfileStatus> = {
     'Not Contacted': 'NOT_CONTACTED',
     Contacted: 'CONTACTED',
     'In Process': 'IN_PROCESS',
@@ -31,17 +31,21 @@ export const databaseSearchResultsToNotionProfileInformation = (
   const { properties, url, id } = databaseSearchResults.results[0] as PageObjectResponse;
 
   const name = {
-    firstName: getPropertyValue(properties.firstName),
-    lastName: getPropertyValue(properties.lastName),
+    firstName: getPropertyValue(properties['firstName'] as PageObjectResponse['properties'][number]) || '',
+    lastName: getPropertyValue(properties['lastName'] as PageObjectResponse['properties'][number]) || '',
   };
 
-  const jobTitle = getPropertyValue(properties.jobTitle);
-  const company = getPropertyValue(properties.company);
-  const location = getPropertyValue(properties.location);
-  const linkedinUrl = getPropertyValue(properties.linkedinUrl);
-  const status = profileStatusMap[getPropertyValue(properties.status)];
-  const gender = getPropertyValue(properties.gender) as NotionProfileGender;
-  const comment = getPropertyValue(properties.comment);
+  const jobTitle = getPropertyValue(properties['jobTitle'] as PageObjectResponse['properties'][number]) || '';
+  const company = getPropertyValue(properties['company'] as PageObjectResponse['properties'][number]) || '';
+  const location = getPropertyValue(properties['location'] as PageObjectResponse['properties'][number]);
+  const linkedinUrl = getPropertyValue(properties['linkedinUrl'] as PageObjectResponse['properties'][number]);
+  const status = profileStatusMap[
+    getPropertyValue(properties['status'] as PageObjectResponse['properties'][number])
+  ] as NotionProfileStatus;
+  const gender = getPropertyValue(
+    properties['gender'] as PageObjectResponse['properties'][number]
+  ) as NotionProfileGender;
+  const comment = getPropertyValue(properties['comment'] as PageObjectResponse['properties'][number]);
 
   return {
     name,
