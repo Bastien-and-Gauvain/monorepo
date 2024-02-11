@@ -2,7 +2,6 @@ import { ButtonPrimary, Card, Heading1, Heading2 } from 'design-system';
 
 import '~style.css'; // mandatory to inject tailwindcss styles
 
-import type { Session } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 import arrow from 'url:./../../assets/arrow.svg';
 import linkedin_logo from 'url:./../../assets/linkedin_logo.svg';
@@ -10,49 +9,18 @@ import notion_logo from 'url:./../../assets/notion_logo.svg';
 import pin_icon from 'url:./../../assets/pin_icon.svg';
 
 import { sendToBackground } from '@plasmohq/messaging';
-import { useStorage } from '@plasmohq/storage/hook';
 
-import { supabase } from '~core/supabase';
+import { signInWithOAuth } from '~core/supabase';
 import { OnboardingStatus } from '~src/background/messages/users/services/user.service';
-import type { Tables } from '~src/background/types/supabase';
 import { BasicLayout } from '~src/components/Layouts/BasicLayout';
 import { Confetti } from '~src/components/Layouts/Confetti';
-import { handleOAuthLogin } from '~src/contents/handleOAuthLogin';
+import { useGetUser } from '~src/components/Shared/getUser.hook';
 import { routes } from '~src/routes';
 
 export const OnboardingPage = () => {
   const [numberOfTasks, setNumberOfTasks] = useState<number>(3);
-  const [user, setUser] = useStorage<Tables<'users'> | null>('user');
-  const [session, setSession] = useStorage<null | Session>('session');
+  const [user, setUser] = useGetUser('network-only');
   const [checkIsPinnedInterval, setCheckIsPinnedInterval] = useState<NodeJS.Timeout | null>(null);
-
-  useEffect(() => {
-    const initSession = async () => {
-      const { data } = await supabase.auth.getSession();
-      setSession(data.session);
-    };
-
-    const initUser = async () => {
-      const userData = await sendToBackground<
-        {
-          authenticatedUserId: string;
-        },
-        Tables<'users'>
-      >({
-        name: 'users/resolvers/getOrCreateUserWithAuthenticatedUserId',
-        body: { authenticatedUserId: session.user.id },
-      });
-      setUser(userData);
-    };
-
-    if (!session) {
-      initSession();
-    }
-
-    if (session?.user && !user) {
-      initUser();
-    }
-  }, [session]);
 
   useEffect(() => {
     if (!user) {
@@ -73,14 +41,14 @@ export const OnboardingPage = () => {
     }
   }, [user]);
 
-  const headingContent = {
+  const headingContent: Record<number, string> = {
     3: '3 SIMPLE STEPS AWAY FROM NEVER COPY PASTING INFORMATION FROM LINKEDIN AGAIN.',
     2: '2 SIMPLE STEPS AWAY FROM NEVER COPY PASTING INFORMATION FROM LINKEDIN AGAIN.',
     1: '1 SIMPLE STEP AWAY FROM NEVER COPY PASTING INFORMATION FROM LINKEDIN AGAIN.',
     0: 'YOU ARE READY TO GO!',
   };
 
-  const state: Record<string, 'current' | 'done' | 'next'> = {
+  const state: Record<'connectToNotion' | 'saveFirstProfile' | 'pinExtension', 'current' | 'done' | 'next'> = {
     connectToNotion: numberOfTasks === 3 ? 'current' : 'done',
     saveFirstProfile: numberOfTasks === 2 ? 'current' : numberOfTasks === 3 ? 'next' : 'done',
     pinExtension:
@@ -96,7 +64,7 @@ export const OnboardingPage = () => {
   const checkIsPinned = async (): Promise<void> => {
     const userSettings = await chrome.action.getUserSettings();
 
-    if (userSettings.isOnToolbar === true) {
+    if (userSettings.isOnToolbar === true && user?.id) {
       const userData = await sendToBackground({
         name: 'users/resolvers/updateOnboardingStatus',
         body: { id: user.id, onboardingStatus: OnboardingStatus.EXTENSION_PINNED },
@@ -121,7 +89,7 @@ export const OnboardingPage = () => {
             <ButtonPrimary
               state={cardStateToButtonState[state.connectToNotion]}
               onClick={async () =>
-                await handleOAuthLogin('notion', {
+                await signInWithOAuth('notion', {
                   redirectUrl: routes.tabs.onboarding,
                 })
               }>

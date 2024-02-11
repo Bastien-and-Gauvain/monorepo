@@ -3,10 +3,8 @@ import { ButtonPrimary, IFramedSidePanel } from 'design-system';
 import { createElement, useEffect, useState } from 'react';
 
 import { sendToBackground } from '@plasmohq/messaging';
-import { useStorage } from '@plasmohq/storage/hook';
 
-import type { Tables } from '~src/background/types/supabase';
-
+import { useGetUser } from '../Shared/getUser.hook';
 import {
   getLinkedInProfileInformation,
   type LinkedInProfileInformation,
@@ -34,8 +32,9 @@ export const LinkedInNotionSidePanelContent = ({
   logoutCallBack: () => void;
 }) => {
   const [linkedInProfileInformation, setLinkedInProfileInformation] = useState<LinkedInProfileInformation | null>(null);
+  const isLoaded = !!linkedInProfileInformation;
   const [isLoading, setIsLoading] = useState(false);
-  const [user] = useStorage<Tables<'users'>>('user');
+  const [user] = useGetUser();
 
   const setLinkedInValues = async () => {
     setIsLoading(true);
@@ -44,11 +43,14 @@ export const LinkedInNotionSidePanelContent = ({
     setIsLoading(false);
   };
 
-  const sendUserLinkedInProfileInfoToBackground = async (scrapingResults: LinkedInProfileInformation) => {
+  const sendUserLinkedInProfileInfoToBackground = async (
+    scrapingResults: LinkedInProfileInformation,
+    userId: string
+  ) => {
     await sendToBackground({
       name: 'users/resolvers/updateUserLinkedInProfileInfo',
       body: {
-        id: user.id,
+        id: userId,
         userLinkedInProfileInfo: scrapingResults,
       },
     });
@@ -60,7 +62,7 @@ export const LinkedInNotionSidePanelContent = ({
 
   useEffect(() => {
     if (user?.id && linkedInProfileInformation?.linkedInURL.match(/linkedin\.com\/in\/me/)) {
-      sendUserLinkedInProfileInfoToBackground(linkedInProfileInformation);
+      sendUserLinkedInProfileInfoToBackground(linkedInProfileInformation, user.id);
     }
   }, [linkedInProfileInformation, user]);
 
@@ -87,7 +89,7 @@ export const LinkedInNotionSidePanelContent = ({
       className="plasmo-top-48 plasmo-space-y-4 plasmo-flex plasmo-flex-col">
       {!isLoggedIn ? (
         <ButtonPrimary onClick={loginCallback}>Sign in with Notion</ButtonPrimary>
-      ) : linkedInProfileInformation ? (
+      ) : isLoaded ? (
         <Form linkedinValues={linkedInProfileInformation} onReload={setLinkedInValues} onReloadLoading={isLoading} />
       ) : (
         <FullScreenLoader />
