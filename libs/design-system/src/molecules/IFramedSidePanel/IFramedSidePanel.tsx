@@ -2,7 +2,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { cn, Header, Logo } from '../..';
-import { OpenExtensionBubble } from '../openExtensionBubble';
+import { LogoBubble } from '../LogoBubble';
 
 type SidePanelProps = {
   /**
@@ -124,7 +124,7 @@ export const IFramedSidePanel = ({
     </>
   );
 
-  const closeContent = <OpenExtensionBubble onClick={onOpenCallback} />;
+  const closeContent = <LogoBubble onClick={onOpenCallback} />;
 
   const leftPosition = isOpen
     ? Math.min(Math.max(10, sidePanelLeftPosition), window.innerWidth - 356)
