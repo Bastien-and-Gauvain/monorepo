@@ -1,29 +1,34 @@
 import { BaseParagraph } from 'design-system';
+import { useEffect, useState } from 'react';
 
-import { linkedInURLRegex } from '~src/background';
+import { linkedInProfileURLRegex } from '~src/background';
+import GoToLinkedInProfileCTA from '~src/components/GoToLinkedInProfileCTA/GoToLinkedInProfileCTA';
 
 import '~style.css';
 
 export default function Popup() {
-  (async () => {
-    // Get the active tab (the result sometimes doesn't have a url)
+  const [onLinkedInProfile, setOnLinkedInProfile] = useState<boolean>(true);
+  const checkIfLinkedInProfile = async () => {
     const [{ id }] = await chrome.tabs.query({ active: true, currentWindow: true });
-    // Get all the info on the tab, incl. the url, the only thing we care about
     const { url } = await chrome.tabs.get(id);
-    if (url && url?.match(linkedInURLRegex)) {
+    if (url && url?.match(linkedInProfileURLRegex)) {
+      setOnLinkedInProfile(true);
       return;
     }
+    setOnLinkedInProfile(false);
+  };
 
-    try {
-      await chrome.tabs.create({ active: true, url: 'https://www.linkedin.com/in/me/' });
-    } catch (e) {
-      console.log('Error opening LinkedIn tab', e);
-    }
-  })();
+  useEffect(() => {
+    checkIfLinkedInProfile();
+  }, []);
 
-  return (
-    <div className="plasmo-flex plasmo-justify-center plasmo-items-top plasmo-bg-background-light plasmo-p-0 plasmo-text-lg plasmo-w-24 plasmo-h-6">
+  return onLinkedInProfile ? (
+    <div className="plasmo-flex plasmo-justify-center plasmo-items-center plasmo-bg-background-light plasmo-p-0 plasmo-text-lg plasmo-w-32 plasmo-h-12">
       <BaseParagraph className="plasmo-bg-background-light plasmo-font-semibold">{'Enjoy 🎉'}</BaseParagraph>
+    </div>
+  ) : (
+    <div className="plasmo-flex plasmo-flex-col plasmo-justify-center plasmo-items-top plasmo-bg-background-light plasmo-p-0 plasmo-w-96 plasmo-h-52">
+      <GoToLinkedInProfileCTA callback={() => window.close()} />
     </div>
   );
 }
