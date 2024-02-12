@@ -9,13 +9,13 @@ import { useStorage } from '@plasmohq/storage/hook';
 // import { linkedInProfileURLRegex } from '~src/background';
 import type { Tables } from '~src/background/types/supabase';
 
+import GoToLinkedInProfileCTA from '../GoToLinkedInProfileCTA/GoToLinkedInProfileCTA';
 import {
   getLinkedInProfileInformation,
   type LinkedInProfileInformation,
 } from './../../contents/scrapers/linkedin-profile-scraper';
 import { Form } from './Form/Form';
 import { FullScreenLoader } from './FullScreenLoader';
-import GoToLinkedInProfileCTA from './GoToLinkedInProfileCTA';
 
 export const getIFrameStyle = () => {
   return createElement('style', {}, cssText);

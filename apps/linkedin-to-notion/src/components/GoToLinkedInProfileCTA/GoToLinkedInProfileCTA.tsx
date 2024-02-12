@@ -1,6 +1,13 @@
 import { BaseParagraph, ButtonPrimary } from 'design-system';
 
-const GoToLinkedInProfileCTA = () => {
+type GoToLinkedInProfileCTAProps = {
+  /**
+   * A call back function to call on button click
+   */
+  callback?: () => void;
+};
+
+const GoToLinkedInProfileCTA = ({ callback }: GoToLinkedInProfileCTAProps) => {
   // First display a small paragraph stating that the extension only works on LinkedIn profiles
   // Then, add a primary button to redirect to the user's LinkedIn profile
   return (
@@ -11,7 +18,10 @@ const GoToLinkedInProfileCTA = () => {
         </BaseParagraph>
         <ButtonPrimary
           className="plasmo-mt-4"
-          onClick={() => chrome.runtime.sendMessage({ msg: 'openUserLinkedInProfile' })}>
+          onClick={() => {
+            chrome.runtime.sendMessage({ msg: 'openUserLinkedInProfile' });
+            callback && callback();
+          }}>
           {'...yours for instance ✨'}
         </ButtonPrimary>
       </span>
