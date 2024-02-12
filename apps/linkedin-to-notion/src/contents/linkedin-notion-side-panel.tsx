@@ -13,7 +13,7 @@ import { LinkedInNotionSidePanelContent } from '../components/LinkedInNotionSide
 import { handleOAuthLogin } from './handleOAuthLogin';
 
 export const config: PlasmoCSConfig = {
-  matches: ['https://www.linkedin.com/*'],
+  matches: ['https://www.linkedin.com/in/*'],
   all_frames: false,
 };
 
