@@ -6,6 +6,8 @@ import GoToLinkedInProfileCTA from '~src/components/GoToLinkedInProfileCTA/GoToL
 
 import '~style.css';
 
+import openExtensionGif from 'data-base64:~assets/openExtensionTutorial.gif';
+
 export default function Popup() {
   const [onLinkedInProfile, setOnLinkedInProfile] = useState<boolean>(true);
   const checkIfLinkedInProfile = async () => {
@@ -23,8 +25,14 @@ export default function Popup() {
   }, []);
 
   return onLinkedInProfile ? (
-    <div className="plasmo-flex plasmo-justify-center plasmo-items-center plasmo-bg-background-light plasmo-p-0 plasmo-text-lg plasmo-w-32 plasmo-h-12">
-      <BaseParagraph className="plasmo-bg-background-light plasmo-font-semibold">{'Enjoy 🎉'}</BaseParagraph>
+    <div className="plasmo-flex plasmo-flex-col plasmo-justify-between plasmo-bg-background-light plasmo-p-4 plasmo-w-96 plasmo-h-60">
+      <BaseParagraph className="plasmo-text-grey-light plasmo-text-center">
+        {'This is how to toggle the extension 👇 Enjoy!'}
+      </BaseParagraph>
+      <img
+        src={openExtensionGif}
+        alt="A tutorial on how to open the extension. Answer: by clicking on the floating bubble on the top right-hand corner of the screen"
+      />
     </div>
   ) : (
     <div className="plasmo-flex plasmo-flex-col plasmo-justify-center plasmo-items-top plasmo-bg-background-light plasmo-p-0 plasmo-w-96 plasmo-h-52">
