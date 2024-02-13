@@ -3,7 +3,7 @@ import type { Meta, StoryFn } from '@storybook/react';
 import { LogoBubble } from '.';
 
 const meta = {
-  title: 'Molecules/ExtensionBubble',
+  title: 'Molecules/LogoBubble',
   parameters: {
     layout: 'centered',
   },
