@@ -1,45 +1,46 @@
-import { BaseParagraph, cn } from 'design-system';
+import { BaseParagraph } from 'design-system';
 import { useEffect, useState } from 'react';
 
 import { linkedInProfileURLRegex } from '~src/background';
-import { GoBackToLinkedInProfile } from '~src/components/GoBackToLinkedInProfile/GoBackToLinkedInProfile';
+import GoToLinkedInProfileCTA from '~src/components/GoToLinkedInProfileCTA/GoToLinkedInProfileCTA';
 
 import '~style.css';
 
-export default function Popup() {
-  const [isLinkedInProfile, setIsLinkedInProfile] = useState<boolean>(false);
-  const [linkedInNotionSidePanelStatus, setLinkedInNotionSidePanelStatus] = useState<boolean>(false);
+import openExtensionGif from 'data-base64:~assets/openExtensionTutorial.gif';
 
-  chrome.runtime.onMessage.addListener((msg) => {
-    if (msg.name === 'linkedInNotionSidePanelStatus') {
-      setLinkedInNotionSidePanelStatus(msg.body.isOpen);
+export default function Popup() {
+  const [onLinkedInProfile, setOnLinkedInProfile] = useState<boolean>(true);
+  const checkIfLinkedInProfile = async () => {
+    const tab = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (!tab[0]?.id) {
+      setOnLinkedInProfile(false);
+      return;
     }
-  });
+    const { url } = await chrome.tabs.get(tab[0].id);
+    if (url && url?.match(linkedInProfileURLRegex)) {
+      setOnLinkedInProfile(true);
+      return;
+    }
+    setOnLinkedInProfile(false);
+  };
 
   useEffect(() => {
-    chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-      const tab = tabs?.[0];
-      const url = tab?.url;
-      if (tab?.id && url && url?.match(linkedInProfileURLRegex)) {
-        setIsLinkedInProfile(true);
-        chrome.tabs.sendMessage(tab.id, 'openLinkedInNotionSidePanel'); // Message sent to the content and not to the background
-      }
-    });
+    checkIfLinkedInProfile();
   }, []);
 
-  return (
-    <div
-      className={cn(
-        'plasmo-flex plasmo-justify-center plasmo-items-top plasmo-bg-background-light plasmo-p-0 plasmo-text-lg',
-        !isLinkedInProfile ? 'plasmo-w-96 plasmo-h-48' : 'plasmo-w-24 plasmo-h-6'
-      )}>
-      {!isLinkedInProfile ? (
-        <GoBackToLinkedInProfile callback={() => setIsLinkedInProfile(true)} />
-      ) : (
-        <BaseParagraph className="plasmo-bg-background-light plasmo-font-semibold">
-          {linkedInNotionSidePanelStatus ? 'Enjoy 🎉' : 'Goodbye 👋'}
-        </BaseParagraph>
-      )}
+  return onLinkedInProfile ? (
+    <div className="plasmo-flex plasmo-flex-col plasmo-justify-between plasmo-bg-background-light plasmo-p-4 plasmo-w-96 plasmo-h-60">
+      <BaseParagraph className="plasmo-text-grey-light plasmo-text-center">
+        {'This is how to toggle the extension 👇 Enjoy!'}
+      </BaseParagraph>
+      <img
+        src={openExtensionGif}
+        alt="A tutorial on how to open the extension. Answer: by clicking on the floating bubble on the top right-hand corner of the screen"
+      />
+    </div>
+  ) : (
+    <div className="plasmo-flex plasmo-flex-col plasmo-justify-center plasmo-items-top plasmo-bg-background-light plasmo-p-0 plasmo-w-96 plasmo-h-52">
+      <GoToLinkedInProfileCTA callback={() => window.close()} />
     </div>
   );
 }

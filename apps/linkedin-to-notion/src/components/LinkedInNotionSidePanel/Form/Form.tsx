@@ -95,10 +95,8 @@ export const Form = ({
   }, [displayNotionValues, currentNotionValues, linkedinValues]);
 
   useEffect(() => {
-    if (notionToken && selectedNotionDatabase) {
-      if (linkedinUrl) {
-        findProfileInNotionDatabase(selectedNotionDatabase, linkedinUrl);
-      }
+    if (notionToken && selectedNotionDatabase && linkedinUrl) {
+      findProfileInNotionDatabase(selectedNotionDatabase, linkedinUrl);
     }
   }, [notionToken, selectedNotionDatabase]);
 

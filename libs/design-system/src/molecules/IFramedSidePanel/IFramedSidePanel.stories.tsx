@@ -30,7 +30,7 @@ export const DefaultSidePanel: StoryFn = () => {
 
   return (
     <>
-      <ButtonPrimary onClick={() => setIsOpen(!isOpen)}>Toggle Side Panel</ButtonPrimary>
+      {/* <ButtonPrimary onClick={() => setIsOpen(!isOpen)}>Toggle Side Panel</ButtonPrimary> */}
       <IFramedSidePanel
         hasCloseButton={true}
         hasDragButton={true}
@@ -38,6 +38,7 @@ export const DefaultSidePanel: StoryFn = () => {
         head={styleNode}
         isOpen={isOpen}
         onCloseCallback={() => setIsOpen(false)}
+        onOpenCallback={() => setIsOpen(true)}
         id="default-side-panel"
         className="plasmo-space-y-4">
         <p>Hello, this is a side bar</p>

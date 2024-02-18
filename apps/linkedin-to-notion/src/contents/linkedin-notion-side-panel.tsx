@@ -2,8 +2,6 @@ import cssText from 'data-text:~style.css';
 import type { PlasmoCSConfig, PlasmoGetStyle } from 'plasmo';
 import { useEffect, useState } from 'react';
 
-import { useStorage } from '@plasmohq/storage/hook';
-
 import { clearLocalStorage } from '~core/storage';
 import { signInWithOAuth, supabase, useSupabaseSession } from '~core/supabase';
 
@@ -23,8 +21,8 @@ export const getStyle: PlasmoGetStyle = () => {
 
 const LinkedinNotionSidePanel = () => {
   // Open the extension by default because we know that the user is on a LinkedIn profile
-  const [isOpen, setIsOpen] = useStorage('linkedInNotionSidePanelIsOpen', true);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   const { notionToken } = useSupabaseSession();
 
@@ -33,24 +31,6 @@ const LinkedinNotionSidePanel = () => {
       setIsLoggedIn(true);
     }
   }, [notionToken]);
-
-  // Listen the icon onClick message from the background script
-  chrome.runtime.onMessage.addListener(async (msg) => {
-    if (msg === 'openLinkedInNotionSidePanel') {
-      setIsOpen(true);
-      await chrome.runtime.sendMessage({ name: 'linkedInNotionSidePanelStatus', body: { isOpen: true } });
-    }
-
-    if (msg === 'toggleLinkedInNotionSidePanel') {
-      setIsOpen(!isOpen);
-      await chrome.runtime.sendMessage({ name: 'linkedInNotionSidePanelStatus', body: { isOpen: !isOpen } });
-    }
-
-    if (msg === 'closeSidePanels') {
-      setIsOpen(false);
-      await chrome.runtime.sendMessage({ name: 'linkedInNotionSidePanelStatus', body: { isOpen: false } });
-    }
-  });
 
   return (
     <LinkedInNotionSidePanelContent
@@ -67,6 +47,7 @@ const LinkedinNotionSidePanel = () => {
         setIsLoggedIn(false);
       }}
       onCloseCallback={() => setIsOpen(false)}
+      onOpenCallback={() => setIsOpen(true)}
       id="linkedin-to-notion-side-panel"
     />
   );

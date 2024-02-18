@@ -29,35 +29,24 @@ chrome.tabs.onUpdated.addListener(async (tabId, { status }, tab): Promise<void> 
     }
   }
 
-  if (!isOnLinkedInProfile) {
-    try {
-      await chrome.tabs.sendMessage(tabId, 'closeSidePanels');
-    } catch (e) {
-      console.log('Error updating side panels', e);
+  if (isOnLinkedIn) {
+    // We update the side panel's content when we are on a LinkedIn profile
+    if (isOnLinkedInProfile) {
+      try {
+        await chrome.tabs.sendMessage(tabId, 'updateLinkedInNotionSidePanel');
+      } catch (e) {
+        console.log('Error updating side panels', e);
+      }
+      return;
     }
-  }
 
-  // We update the side panel's content when we are on a LinkedIn profile
-  if (isOnLinkedInProfile) {
-    try {
-      await chrome.tabs.sendMessage(tabId, 'openLinkedInNotionSidePanel');
-      await chrome.tabs.sendMessage(tabId, 'updateLinkedInNotionSidePanel');
-    } catch (e) {
-      console.log('Error updating side panels', e);
-    }
+    await chrome.tabs.sendMessage(tabId, 'askToGoBackToLinkedInProfile');
   }
 });
 
-chrome.runtime.onMessage.addListener(async (msg) => {
-  if (msg === 'openLinkedInTab') {
-    try {
-      const updatedTab = await chrome.tabs.update({ url: 'https://www.linkedin.com/in/me/' });
-      if (updatedTab?.id) {
-        chrome.tabs.sendMessage(updatedTab.id, 'openLinkedInNotionSidePanel');
-      }
-    } catch (e) {
-      console.log('Error opening LinkedIn tab', e);
-    }
+chrome.runtime.onMessage.addListener(({ msg }) => {
+  if (msg === 'openUserLinkedInProfile') {
+    chrome.tabs.update({ url: routes.linkedin.me });
   }
 });
 
