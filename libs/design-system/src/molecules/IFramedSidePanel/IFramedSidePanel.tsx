@@ -2,6 +2,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { cn, Header, Logo } from '../..';
+import { LogoBubble } from '../LogoBubble';
 
 type SidePanelProps = {
   /**
@@ -13,6 +14,11 @@ type SidePanelProps = {
    * Callback on the close button
    */
   onCloseCallback?: () => void;
+
+  /**
+   * Call back on the open floating bubble
+   */
+  onOpenCallback?: () => void;
 
   /**
    * Callback on the logout button
@@ -58,6 +64,7 @@ type SidePanelProps = {
 export const IFramedSidePanel = ({
   isOpen,
   onCloseCallback,
+  onOpenCallback,
   onLogoutCallback,
   hasCloseButton,
   hasDragButton,
@@ -68,11 +75,25 @@ export const IFramedSidePanel = ({
   id,
 }: SidePanelProps) => {
   const [contentRef, setContentRef] = useState<HTMLIFrameElement | null>(null);
-  const [sidePanelLeftPosition, setSidePanelLeftPosition] = useState(window.innerWidth - 356);
+  const [sidePanelLeftPosition, setSidePanelLeftPosition] = useState<number>(window.innerWidth - 356);
+  const [iframeLeftPosition, setIframeLeftPosition] = useState<number>(window.innerWidth - 356);
+  const [iframeTopPosition, setIframeTopPosition] = useState<number>(10);
   const [isDragMouseDown, setIsDragMouseDown] = useState(false);
 
   const iframeRoot = contentRef?.contentWindow?.document?.body;
   const iframeHead = contentRef?.contentWindow?.document?.head;
+
+  const fitIframePosition = () => {
+    if (isOpen) {
+      setIframeLeftPosition(Math.min(Math.max(10, sidePanelLeftPosition), window.innerWidth - 356));
+      setIframeTopPosition(10);
+      return;
+    }
+
+    setIframeLeftPosition(window.innerWidth - 116);
+    setIframeTopPosition(100);
+    return;
+  };
 
   useEffect(() => {
     const mouseMoveHandler = (e: MouseEvent) => {
@@ -99,7 +120,13 @@ export const IFramedSidePanel = ({
     };
   }, [contentRef, isDragMouseDown]);
 
-  const content = (
+  useEffect(() => {
+    fitIframePosition();
+  });
+
+  window.onresize = fitIframePosition;
+
+  const openContent = (
     <>
       <Header
         hasCloseButton={hasCloseButton}
@@ -117,6 +144,8 @@ export const IFramedSidePanel = ({
     </>
   );
 
+  const closeContent = <LogoBubble onClick={onOpenCallback} />;
+
   return (
     <iframe
       id={id}
@@ -125,13 +154,15 @@ export const IFramedSidePanel = ({
       // To avoid this, we're using fixed width and height
       // However, this remains true for breakpoints or default tailwind classes
       className={cn(
-        'plasmo-fixed plasmo-top-3 plasmo-h-[calc(100%-1.5rem)] plasmo-bg-transparent plasmo-w-[346px] plasmo-z-10 plasmo-drop-shadow-3xl plasmo-overflow-scroll plasmo-rounded-md',
-        isOpen ? '' : 'plasmo-hidden'
+        'plasmo-fixed plasmo-top-3 plasmo-h-[calc(100%-1.5rem)] plasmo-bg-transparent plasmo-z-10 plasmo-w-[346px] plasmo-drop-shadow-3xl plasmo-overflow-scroll plasmo-rounded-md'
       )}
-      style={{ left: `${Math.min(Math.max(10, sidePanelLeftPosition), window.innerWidth - 356)}px` }}
+      style={{
+        left: `${iframeLeftPosition}${iframeLeftPosition && 'px'}`,
+        top: `${iframeTopPosition}${iframeTopPosition && 'px'}`,
+      }}
       ref={setContentRef}>
       {iframeHead && createPortal(head, iframeHead)}
-      {iframeRoot && createPortal(content, iframeRoot)}
+      {iframeRoot && createPortal(isOpen ? openContent : closeContent, iframeRoot)}
     </iframe>
   );
 };
