@@ -11,7 +11,7 @@ export const splitName = (fullName: string): { firstName?: string; lastName?: st
     };
   }
   return {
-    firstName: names[0].trim(),
+    firstName: names[0]?.trim(),
     lastName: names.slice(1).join(' ').trim(),
   };
 };
@@ -22,5 +22,5 @@ export const splitName = (fullName: string): { firstName?: string; lastName?: st
  * @returns a clean job title
  */
 export const cleanJobTitle = (jobTitle: string): string => {
-  return jobTitle.split(/ at| @| chez/g)[0].trim();
+  return jobTitle.split(/ at| @| chez/g)[0]?.trim() || jobTitle;
 };

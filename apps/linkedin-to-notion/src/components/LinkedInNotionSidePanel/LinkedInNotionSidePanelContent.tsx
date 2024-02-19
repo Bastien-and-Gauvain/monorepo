@@ -3,13 +3,9 @@ import { ButtonPrimary, IFramedSidePanel } from 'design-system';
 import { createElement, useEffect, useState } from 'react';
 
 import { sendToBackground } from '@plasmohq/messaging';
-import { useStorage } from '@plasmohq/storage/hook';
-
-// For some reason, this causes the app to crash and have chrome.tabs.onUpdated errors
-// import { linkedInProfileURLRegex } from '~src/background';
-import type { Tables } from '~src/background/types/supabase';
 
 import GoToLinkedInProfileCTA from '../GoToLinkedInProfileCTA/GoToLinkedInProfileCTA';
+import { useGetUser } from '../Shared/getUser.hook';
 import {
   getLinkedInProfileInformation,
   type LinkedInProfileInformation,
@@ -40,10 +36,10 @@ export const LinkedInNotionSidePanelContent = ({
 }) => {
   const [linkedInProfileInformation, setLinkedInProfileInformation] = useState<LinkedInProfileInformation | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [user] = useGetUser();
   const [isLinkedInProfile, setIsLinkedInProfile] = useState<boolean>(
     !!window.location.href.match(/linkedin\.com\/in\/[^/]+\/#?/)
   );
-  const [user] = useStorage<Tables<'users'>>('user');
 
   const setLinkedInValues = async () => {
     setIsLoading(true);
@@ -52,11 +48,14 @@ export const LinkedInNotionSidePanelContent = ({
     setIsLoading(false);
   };
 
-  const sendUserLinkedInProfileInfoToBackground = async (scrapingResults: LinkedInProfileInformation) => {
+  const sendUserLinkedInProfileInfoToBackground = async (
+    scrapingResults: LinkedInProfileInformation,
+    userId: string
+  ) => {
     await sendToBackground({
       name: 'users/resolvers/updateUserLinkedInProfileInfo',
       body: {
-        id: user.id,
+        id: userId,
         userLinkedInProfileInfo: scrapingResults,
       },
     });
@@ -68,7 +67,7 @@ export const LinkedInNotionSidePanelContent = ({
 
   useEffect(() => {
     if (user?.id && linkedInProfileInformation?.linkedInURL.match(/linkedin\.com\/in\/me/)) {
-      sendUserLinkedInProfileInfoToBackground(linkedInProfileInformation);
+      sendUserLinkedInProfileInfoToBackground(linkedInProfileInformation, user.id);
     }
   }, [linkedInProfileInformation, user]);
 

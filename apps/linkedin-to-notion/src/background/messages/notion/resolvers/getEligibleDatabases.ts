@@ -11,6 +11,10 @@ const handler: PlasmoMessaging.MessageHandler<
   },
   DatabaseObjectResponse[] | ErrorResponse
 > = async (req, res) => {
+  if (!req.body) {
+    throw new Error('Request body is required');
+  }
+
   const notionService = new NotionProvider(req.body.notionToken);
   const databases = await notionService.getDatabases();
 

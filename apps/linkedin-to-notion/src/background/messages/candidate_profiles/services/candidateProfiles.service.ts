@@ -57,6 +57,7 @@ export class CandidateProfilesService {
       });
     } catch (error) {
       console.error(`saveOneCandidateProfile: couldn't create notion database ${JSON.stringify(error)}`);
+      return notionPage as PageObjectResponse; // safe casting as in this situation it cannot be a PartialPageObjectResponse
     }
 
     // we don't want to block the user if this fails
@@ -85,6 +86,10 @@ export class CandidateProfilesService {
       notion.notionPageId,
       candidateProfile
     );
+
+    if (!candidateProfile.status) {
+      return updatedCandidateProfile;
+    }
 
     try {
       // we don't want to block the user if this fails

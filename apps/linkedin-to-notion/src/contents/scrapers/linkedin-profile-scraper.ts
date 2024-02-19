@@ -25,7 +25,7 @@ const getName = (): {
   fullName: string;
 } => {
   const name = document.querySelector('h1.text-heading-xlarge');
-  if (!name) {
+  if (!name?.textContent) {
     return {
       fullName: '',
     };
@@ -41,7 +41,8 @@ const getName = (): {
 };
 
 const getJobTitle = (): string => {
-  const fallbackCurrentJob = cleanJobTitle(document.querySelector('div.text-body-medium.break-words')?.textContent);
+  const rawJobTitle = document.querySelector('div.text-body-medium.break-words')?.textContent;
+  const fallbackCurrentJob = rawJobTitle ? cleanJobTitle(rawJobTitle) : rawJobTitle;
 
   const experienceAnchor = document.getElementById('experience');
   if (!experienceAnchor) {
@@ -59,12 +60,12 @@ const getJobTitle = (): string => {
   }
 
   const jobTitle = lastJob.querySelector('div.display-flex.align-items-center.mr1.t-bold > span');
-  if (!jobTitle) {
+  if (!jobTitle?.textContent) {
     return fallbackCurrentJob ?? '';
   }
 
   // This covers the case of a person with several experiences in a same company
-  if (jobTitle.textContent === getCompany()) {
+  if (jobTitle.textContent === getCompany() && fallbackCurrentJob) {
     return fallbackCurrentJob;
   }
 
@@ -78,7 +79,7 @@ const getCompany = (): string => {
   }
 
   const company = detailsContainer.querySelector('ul > li div');
-  if (!company) {
+  if (!company?.textContent) {
     return '';
   }
 
@@ -87,7 +88,7 @@ const getCompany = (): string => {
 
 const getLocation = (): string => {
   const location = document.querySelector('span.text-body-small.inline.t-black--light.break-words');
-  if (!location) {
+  if (!location?.textContent) {
     return '';
   }
 
@@ -114,7 +115,7 @@ export const getLinkedInProfileInformation = async (
   let scrapingResult = {
     name: {
       firstName: firstName || fullName,
-      lastName: lastName,
+      lastName: lastName || '',
     },
     jobTitle,
     company,

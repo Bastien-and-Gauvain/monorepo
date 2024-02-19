@@ -17,9 +17,13 @@ export const getInlineAnchor: PlasmoGetInlineAnchor = async () => {
 // With getInlineAnchor, Plasmo mounts the component after the anchor by default.
 // In our case, we want the injected element to be the first.
 export const mountShadowHost: PlasmoMountShadowHost = async ({ shadowHost, anchor, mountState }) => {
-  const firstChild = anchor.element.querySelector('*');
-  anchor.element.insertBefore(shadowHost, firstChild);
-  mountState.observer.disconnect();
+  const firstChild = anchor?.element.querySelector('*');
+  if (!firstChild) {
+    console.error('No first child found');
+    return;
+  }
+  anchor?.element.insertBefore(shadowHost, firstChild);
+  mountState?.observer?.disconnect();
 };
 
 // Inject into the ShadowDOM

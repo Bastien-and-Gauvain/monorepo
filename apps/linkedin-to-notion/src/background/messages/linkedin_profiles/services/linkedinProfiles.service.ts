@@ -1,6 +1,7 @@
 import { supabase } from '~core/supabase';
 import type { Tables, TablesInsert } from '~src/background/types/supabase';
 
+import type { CandidateStatus } from '../../candidate_profiles/candidateProfiles.type';
 import type { NotionDatabasesService } from '../../notion_databases/services/notionDatabases.service';
 
 export class LinkedinProfilesService {
@@ -26,7 +27,7 @@ export class LinkedinProfilesService {
    * Update one linkedin profile in our DB
    */
   async updateLinkedinProfileStatus(
-    status: string,
+    status: CandidateStatus,
     profileIdentifier: { linkedinUrl: string; userId: string; notionDatabaseId: string }
   ): Promise<void> {
     const notionDatabaseId = await this.notionDatabasesService.getOrCreateOneNotionDatabase({

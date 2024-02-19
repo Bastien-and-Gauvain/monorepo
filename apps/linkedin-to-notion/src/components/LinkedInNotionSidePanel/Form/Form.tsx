@@ -1,11 +1,11 @@
 import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
-import type { Session } from '@supabase/supabase-js';
 import { SelectEntry, TextAreaEntry, TextEntry, ToggleEntry } from 'design-system';
 import { useEffect, useState } from 'react';
 
 import { sendToBackground } from '@plasmohq/messaging';
 import { useStorage } from '@plasmohq/storage/hook';
 
+import { useSupabaseSession } from '~core/supabase';
 import type {
   SaveOneCandidateProfileInput,
   UpdateOneCandidateProfileInput,
@@ -16,7 +16,7 @@ import type {
   NotionProfileStatus,
 } from '~src/background/messages/notion/notion.type';
 import { OnboardingStatus } from '~src/background/messages/users/services/user.service';
-import type { Tables } from '~src/background/types/supabase';
+import { useGetUser } from '~src/components/Shared/getUser.hook';
 import { routes } from '~src/routes';
 
 import { type LinkedInProfileInformation } from './../../../contents/scrapers/linkedin-profile-scraper';
@@ -55,9 +55,9 @@ export const Form = ({
 }) => {
   // We need to have the selected database stored somewhere
   const [selectedNotionDatabase] = useStorage<string>('selectedNotionDatabase');
-  const [user, setUser] = useStorage<Tables<'users'> | undefined>('user');
+  const [user, setUser] = useGetUser();
 
-  const linkedinUrl = window.location.href.match(/https:\/\/[a-z]{2,4}\.linkedin\.com\/in\/[^/]+\//gim)?.[0];
+  const linkedinUrl = window.location.href.match(/https:\/\/[a-z]{2,4}\.linkedin\.com\/in\/[^/]+\//gim)?.[0] ?? '';
   const [formValues, setFormValues] = useState<FormInput>({
     firstName: '',
     lastName: '',
@@ -67,14 +67,14 @@ export const Form = ({
     status: 'NOT_CONTACTED',
     gender: '',
     comment: '',
-    linkedinUrl: window.location.href.match(/https:\/\/[a-z]{2,4}\.linkedin\.com\/in\/[^/]+\//gim)?.[0],
+    linkedinUrl,
   });
 
   // To handle the toggle switch
   const [displayNotionValues, setDisplayNotionValues] = useState<boolean>(false);
 
   // To handle the interactions with Notion
-  const [session] = useStorage<Session | null>('session');
+  const { notionToken } = useSupabaseSession();
   const [notionId, setNotionId] = useState<string>('');
   const [alertState, setAlertState] = useState<AlertState>(null);
   const [isNotionLoading, setIsNotionLoading] = useState<boolean>(false);
@@ -95,29 +95,33 @@ export const Form = ({
   }, [displayNotionValues, currentNotionValues, linkedinValues]);
 
   useEffect(() => {
-    if (selectedNotionDatabase) {
+    if (notionToken && selectedNotionDatabase && linkedinUrl) {
       findProfileInNotionDatabase(selectedNotionDatabase, linkedinUrl);
     }
-  }, [selectedNotionDatabase]);
+  }, [notionToken, selectedNotionDatabase]);
 
   const findProfileInNotionDatabase = async (databaseId: string, linkedinUrl: string): Promise<void> => {
     setIsNotionLoading(true);
 
     let res: NotionProfileInformation;
     try {
+      if (!notionToken) {
+        console.error('No provider_token found');
+        return;
+      }
       res = await sendToBackground<
         { notionToken: string; databaseId: string; linkedinUrl: string },
         NotionProfileInformation
       >({
         name: 'notion/resolvers/findProfileInDatabase',
         body: {
-          notionToken: session.provider_token,
+          notionToken: notionToken,
           databaseId,
           linkedinUrl,
         },
       });
     } catch (error) {
-      console.log("The profile query didn't work", res);
+      console.log("The profile query didn't work for ", linkedinUrl);
       setAlertState('error');
       setCurrentNotionValues(null);
       setIsNotionLoading(false);
@@ -152,13 +156,22 @@ export const Form = ({
 
   const saveLinkedInProfile = async (): Promise<void> => {
     setIsSaveLoading(true);
+    if (!notionToken) {
+      console.error('No provider_token found');
+      return;
+    }
+
+    if (!user?.id) {
+      console.error('No user found');
+      return;
+    }
 
     const profileSaved = await sendToBackground<SaveOneCandidateProfileInput, PageObjectResponse>({
       name: 'candidate_profiles/resolvers/saveOneCandidateProfile',
       body: {
         candidateProfile: fromFormInputToCandidateProfile(formValues),
         notion: {
-          accessToken: session.provider_token,
+          accessToken: notionToken,
           databaseId: selectedNotionDatabase,
           notionPageId: currentNotionValues?.notionId,
           notionUrl: currentNotionValues?.notionUrl,
@@ -181,11 +194,21 @@ export const Form = ({
     setAlertState(null);
     setIsUpdateLoading(true);
 
+    if (!notionToken) {
+      console.error('No provider_token found');
+      return;
+    }
+
+    if (!user?.id) {
+      console.error('No user found');
+      return;
+    }
+
     const res = await sendToBackground<UpdateOneCandidateProfileInput, PageObjectResponse>({
       name: 'candidate_profiles/resolvers/updateOneCandidateProfile',
       body: {
         notion: {
-          accessToken: session.provider_token,
+          accessToken: notionToken,
           databaseId: selectedNotionDatabase,
           notionPageId: notionId,
           notionUrl: currentNotionValues?.notionUrl,

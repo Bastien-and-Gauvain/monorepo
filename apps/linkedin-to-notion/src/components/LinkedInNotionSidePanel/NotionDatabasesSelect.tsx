@@ -1,10 +1,11 @@
 import type { DatabaseObjectResponse } from '@notionhq/client/build/src/api-endpoints';
-import type { Session } from '@supabase/supabase-js';
 import { ButtonPrimary, ErrorAlert, SelectEntry } from 'design-system';
 import { useEffect, useState } from 'react';
 
 import { sendToBackground } from '@plasmohq/messaging';
 import { useStorage } from '@plasmohq/storage/hook';
+
+import { useSupabaseSession } from '~core/supabase';
 
 import { FullScreenLoader } from './FullScreenLoader';
 import { getDatabaseTitle } from './utils/notionFormat.util';
@@ -12,23 +13,29 @@ import { getDatabaseTitle } from './utils/notionFormat.util';
 export const NotionDatabasesSelect = () => {
   const [notionDatabases, setNotionDatabases] = useState<DatabaseObjectResponse[]>([]);
   const [selectedNotionDatabase, setSelectedNotionDatabase] = useStorage<string | null>('selectedNotionDatabase');
-  const [session] = useStorage<Session | null>('session');
+  const { notionToken } = useSupabaseSession();
   const [isLoading, setIsLoading] = useState(true);
+
   const notionDatabasesSetter = async (): Promise<void> => {
     setIsLoading(true);
+
+    if (!notionToken) {
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const databases = await sendToBackground<{ notionToken: string }, DatabaseObjectResponse[]>({
         name: 'notion/resolvers/getEligibleDatabases',
         body: {
-          notionToken: session.provider_token,
+          notionToken: notionToken,
         },
       });
 
       if (databases.length) {
         setNotionDatabases(databases);
         if (!selectedNotionDatabase || !databases.find((database) => database.id === selectedNotionDatabase)) {
-          setSelectedNotionDatabase(databases[0].id);
+          setSelectedNotionDatabase(databases[0]?.id || '');
         }
       }
 
@@ -43,10 +50,8 @@ export const NotionDatabasesSelect = () => {
   };
 
   useEffect(() => {
-    if (session?.provider_token) {
-      notionDatabasesSetter();
-    }
-  }, [session, selectedNotionDatabase]);
+    notionDatabasesSetter();
+  }, [selectedNotionDatabase, notionToken]);
 
   if (isLoading) {
     return <FullScreenLoader />;
@@ -67,7 +72,7 @@ export const NotionDatabasesSelect = () => {
           labelText="Notion databases"
           id="notion-databases"
           handleChange={setSelectedNotionDatabase}
-          value={selectedNotionDatabase}
+          value={selectedNotionDatabase || ''}
           options={notionDatabases.map((database: DatabaseObjectResponse) => ({
             id: database.id,
             label: getDatabaseTitle(database),

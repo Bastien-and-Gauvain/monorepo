@@ -97,9 +97,8 @@ export class UserService {
    * Increment the number of profiles saved by a user
    * @param id User ID
    * @param numberProfilesSaved Number of profiles saved
-   * @returns User
    */
-  async incrementNumberProfilesSaved(id: string): Promise<Tables<'users'>> {
+  async incrementNumberProfilesSaved(id: string): Promise<void> {
     const { error } = await supabase.rpc('increment_number_profiles_saved', { row_id: id });
 
     if (error) {
@@ -109,8 +108,6 @@ export class UserService {
         )}`
       );
     }
-
-    return;
   }
 
   /**

@@ -11,8 +11,12 @@ import openExtensionGif from 'data-base64:~assets/openExtensionTutorial.gif';
 export default function Popup() {
   const [onLinkedInProfile, setOnLinkedInProfile] = useState<boolean>(true);
   const checkIfLinkedInProfile = async () => {
-    const [{ id }] = await chrome.tabs.query({ active: true, currentWindow: true });
-    const { url } = await chrome.tabs.get(id);
+    const tab = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (!tab[0]?.id) {
+      setOnLinkedInProfile(false);
+      return;
+    }
+    const { url } = await chrome.tabs.get(tab[0].id);
     if (url && url?.match(linkedInProfileURLRegex)) {
       setOnLinkedInProfile(true);
       return;

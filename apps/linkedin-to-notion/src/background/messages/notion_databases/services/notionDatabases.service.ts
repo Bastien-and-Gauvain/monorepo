@@ -23,6 +23,9 @@ export class NotionDatabasesService {
     }
 
     {
+      if (!notionDatabase.notion_id) {
+        throw new Error('getOrCreateOneNotionDatabase: notion_id is required');
+      }
       const database = await this.notionService.getDatabaseById(notionDatabase.notion_id);
       const { data, error } = await supabase
         .from('notion_databases')
