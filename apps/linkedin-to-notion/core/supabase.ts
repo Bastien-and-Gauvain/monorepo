@@ -1,7 +1,8 @@
 import { createClient, type Provider, type Session } from '@supabase/supabase-js';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { Storage } from '@plasmohq/storage';
+import { useStorage } from '@plasmohq/storage/hook';
 
 import type { Nullable } from './shared.types';
 
@@ -30,8 +31,15 @@ export const supabase = createClient(
  * @returns The session from Supabase and the Notion token
  */
 export const useSupabaseSession = (): { session: Nullable<Session>; notionToken: Nullable<string> } => {
-  const [session, setSession] = useState<Nullable<Session>>(null);
-  const [notionToken, setNotionToken] = useState<Nullable<string>>(null);
+  const [session, setSession] = useStorage<Nullable<Session>>({
+    key: 'session',
+    instance: storage,
+  });
+
+  const [notionToken, setNotionToken] = useStorage<Nullable<string>>({
+    key: 'notionToken',
+    instance: storage,
+  });
 
   useEffect(() => {
     const getSession = async () => {
