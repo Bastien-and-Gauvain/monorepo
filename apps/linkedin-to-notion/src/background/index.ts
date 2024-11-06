@@ -1,5 +1,7 @@
 import { routes } from '~src/routes';
 
+import { retrySendMessage } from './shared.utils';
+
 export {};
 
 // You can test the regex here: https://regex101.com/r/RJgYar/2
@@ -33,14 +35,14 @@ chrome.tabs.onUpdated.addListener(async (tabId, { status }, tab): Promise<void> 
     // We update the side panel's content when we are on a LinkedIn profile
     if (isOnLinkedInProfile) {
       try {
-        await chrome.tabs.sendMessage(tabId, 'updateLinkedInNotionSidePanel');
+        await retrySendMessage(tabId, 'updateLinkedInNotionSidePanel');
       } catch (e) {
         console.log('Error updating side panels', e);
       }
       return;
     }
 
-    await chrome.tabs.sendMessage(tabId, 'askToGoBackToLinkedInProfile');
+    await retrySendMessage(tabId, 'askToGoBackToLinkedInProfile');
   }
 });
 
