@@ -26,4 +26,9 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
   },
   ignorePatterns: ['*.config.js'],
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
 };
