@@ -1,31 +1,28 @@
 name: Linter
 
 on:
-  pull_request:
   push:
-    branches:
-      - master
+    branches: [ main ]
+  pull_request:
 
 jobs:
-  eslint:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Cache pnpm modules
-        uses: actions/cache@v3
+      
+      - uses: actions/setup-node@v3
         with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-
-      - uses: pnpm/action-setup@v2.2.4
-        with:
-          version: latest
-          run_install: true
-      - name: Use Node.js 16.x
-        uses: actions/setup-node@v3.4.1
-        with:
-          node-version: 16.x
-          cache: 'pnpm'
-      - name: Run ESlint
+          node-version: 18.x
+      
+      - name: Enable corepack
+        run: corepack enable
+      
+      - name: Install dependencies
+        run: |
+          pnpm install
+          cd apps/linkedin-to-notion
+          pnpm install
+      
+      - name: Run ESLint
         run: pnpm exec eslint .

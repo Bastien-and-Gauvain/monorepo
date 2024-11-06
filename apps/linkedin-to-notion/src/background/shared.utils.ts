@@ -42,3 +42,14 @@ export const retryRequest = async <T>(fn: () => Promise<T>, retries = 3, delay =
     return await retryRequest(fn, retries - 1, delay);
   }
 };
+
+/**
+ * A function that retries sending a chrome message
+ * @param tabId The tab id to send the message to
+ * @param message The message to send
+ * @param retries The number of retries
+ * @param delay The delay between each retry
+ */
+export const retrySendMessage = async (tabId: number, message: string, retries = 3, delay = 1000): Promise<void> => {
+  return retryRequest(() => chrome.tabs.sendMessage(tabId, message), retries, delay);
+};

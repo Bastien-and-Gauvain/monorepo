@@ -24,7 +24,7 @@ const getName = (): {
   lastName?: string;
   fullName: string;
 } => {
-  const name = document.querySelector('h1.text-heading-xlarge');
+  const name = document.querySelector('main section:first-child h1');
   if (!name?.textContent) {
     return {
       fullName: '',
@@ -73,12 +73,11 @@ const getJobTitle = (): string => {
 };
 
 const getCompany = (): string => {
-  const detailsContainer = document.querySelector('.pv-text-details__right-panel');
-  if (!detailsContainer) {
+  const company = document.querySelector('button[aria-label^="Entreprise actuelle"]');
+  if (!company) {
     return '';
   }
 
-  const company = detailsContainer.querySelector('ul > li div');
   if (!company?.textContent) {
     return '';
   }
