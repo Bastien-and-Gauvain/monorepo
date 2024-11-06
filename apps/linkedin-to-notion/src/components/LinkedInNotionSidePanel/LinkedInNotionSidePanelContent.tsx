@@ -82,7 +82,7 @@ export const LinkedInNotionSidePanelContent = ({
 
   useEffect(() => {
     // Register this component's message handler
-    const handleMessage = (msg: any) => {
+    const handleMessage = (msg: string | Record<string, unknown>) => {
       if (msg === 'updateLinkedInNotionSidePanel') {
         setIsLinkedInProfile(true);
         setLinkedInProfileInformation(null);
