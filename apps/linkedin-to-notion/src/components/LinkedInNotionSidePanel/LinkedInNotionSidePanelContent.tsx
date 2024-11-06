@@ -13,6 +13,15 @@ import {
 import { Form } from './Form/Form';
 import { FullScreenLoader } from './FullScreenLoader';
 
+// Global message listener registry to handle messages even when component isn't mounted
+const messageListeners = new Set<(msg: any) => void>();
+
+// Single chrome message listener that delegates to all registered handlers
+chrome.runtime.onMessage.addListener((msg) => {
+  messageListeners.forEach((listener) => listener(msg));
+  return true;
+});
+
 export const getIFrameStyle = () => {
   return createElement('style', {}, cssText);
 };
@@ -71,20 +80,25 @@ export const LinkedInNotionSidePanelContent = ({
     }
   }, [linkedInProfileInformation, user]);
 
-  // Listen the icon onClick message from the background script
-  chrome.runtime.onMessage.addListener((msg) => {
-    if (msg === 'updateLinkedInNotionSidePanel') {
-      setIsLinkedInProfile(true);
-      setLinkedInProfileInformation(null);
-      // TODO: find a more robust alternative than a timeout
-      // Couldn't put the timeout in the bg (don't know why)
-      setTimeout(() => setLinkedInValues(), 2000);
-    }
+  useEffect(() => {
+    // Register this component's message handler
+    const handleMessage = (msg: any) => {
+      if (msg === 'updateLinkedInNotionSidePanel') {
+        setIsLinkedInProfile(true);
+        setLinkedInProfileInformation(null);
+        setTimeout(() => setLinkedInValues(), 2000);
+      }
 
-    if (msg === 'askToGoBackToLinkedInProfile') {
-      setIsLinkedInProfile(false);
-    }
-  });
+      if (msg === 'askToGoBackToLinkedInProfile') {
+        setIsLinkedInProfile(false);
+      }
+    };
+
+    messageListeners.add(handleMessage);
+    return () => {
+      messageListeners.delete(handleMessage);
+    };
+  }, []);
 
   const notALinkedInProfileContent = <GoToLinkedInProfileCTA />;
 
