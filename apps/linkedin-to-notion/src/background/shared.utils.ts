@@ -50,11 +50,6 @@ export const retryRequest = async <T>(fn: () => Promise<T>, retries = 3, delay =
  * @param retries The number of retries
  * @param delay The delay between each retry
  */
-export const retrySendMessage = async (
-  tabId: number,
-  message: string | Record<string, unknown>,
-  retries = 3,
-  delay = 1000
-): Promise<void> => {
+export const retrySendMessage = async (tabId: number, message: string, retries = 3, delay = 1000): Promise<void> => {
   return retryRequest(() => chrome.tabs.sendMessage(tabId, message), retries, delay);
 };
