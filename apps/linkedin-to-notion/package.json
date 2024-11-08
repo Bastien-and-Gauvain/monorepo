@@ -20,6 +20,7 @@
     "@tsparticles/slim": "^3.0.2",
     "design-system": "workspace:*",
     "plasmo": "0.82.0",
+    "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
@@ -32,7 +33,6 @@
     "htmlnano": "2.0.3",
     "postcss": "^8.4.28",
     "prettier": "3.0.2",
-    "react": "18.2.0",
     "supabase": ">=1.8.1",
     "tailwindcss": "^3.3.3",
     "typescript": "5.1.6"
